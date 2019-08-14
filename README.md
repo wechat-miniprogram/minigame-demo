@@ -6,13 +6,15 @@
 
 ## 导入项目与配置
 
-1. **克隆微信小游戏示例源码**
+1. 克隆微信小游戏示例源码
+```
 git clone https://github.com/wechat-miniprogram/minigame-demo.git
+```
 <br>
-2. **进行导入，填写开发者自己的小游戏 AppID（注意，因涉及到云开发相关功能，不能使用测试AppID）**
+2. 进行导入，填写开发者自己的小游戏 AppID（注意，因涉及到云开发相关功能，不能使用测试AppID）
 <img src="./readmeImages/15656998217946.png" />
 <br>
-3. **此示例demo使用了小程序云开发，所依赖的云开发环境搭建请参考[云开发示例说明](./CLOUD_REAMDE.md)。**
+3. 此示例demo使用了小程序云开发，所依赖的云开发环境搭建请参考[云开发示例说明](./CLOUD_REAMDE.md)。
 
 ## 目录结构
 ```
