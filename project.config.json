@@ -10,7 +10,7 @@
 		"coverView": true,
 		"nodeModules": false,
 		"autoAudits": false,
-		"uglifyFileName": true,
+		"uglifyFileName": false,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,

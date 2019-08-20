@@ -1,66 +1,52 @@
-import APIentry from './APIentry/index';
-import fileSystemManager from './fileSystemManager/index';
-import request from './network/request/index';
-import downloadFile from './network/downloadFile/index';
-import uploadFile from './network/uploadFile/index';
-import WebSocket from './network/webSocket/index';
-import rendering from './rendering/index';
-import voiceFrequency from './media/voiceFrequency/index';
-import video from './media/video/index';
-import worker from './worker/index';
-import userInfo from './abilityOpen/userInfo/index';
-import appletCode from './abilityOpen/appletCode/index';
-import transpond from './abilityOpen/transpond/index';
-import facility from './facility/index';
-
 const signIn = [
     {
         name: 'APIentry',
-        page: APIentry,
+        path: 'APIentry/index',
+        tabBar: 'index',
         children: [
             {
                 name: 'abilityOpen',
                 children: [
                     {
                         name: 'userInfo',
-                        page: userInfo
+                        path: 'abilityOpen/userInfo/index'
                     },
                     {
                         name: 'appletCode',
-                        page: appletCode
+                        path: 'abilityOpen/appletCode/index'
                     },
                     {
                         name: 'transpond',
-                        page: transpond
+                        path: 'abilityOpen/transpond/index'
                     }
                 ]
             },
             {
                 name: 'rendering',
-                page: rendering
+                path: 'rendering/index'
             },
             {
                 name: 'facility',
-                page: facility
+                path: 'facility/index'
             },
             {
                 name: 'network',
                 children: [
                     {
                         name: 'request',
-                        page: request
+                        path: 'network/request/index'
                     },
                     {
                         name: 'downloadFile',
-                        page: downloadFile
+                        path: 'network/downloadFile/index'
                     },
                     {
                         name: 'uploadFile',
-                        page: uploadFile
+                        path: 'network/uploadFile/index'
                     },
                     {
                         name: 'WebSocket',
-                        page: WebSocket
+                        path: 'network/webSocket/index'
                     }
                 ]
             },
@@ -68,23 +54,23 @@ const signIn = [
                 name: 'media',
                 children: [
                     {
-                        name: 'voiceFrequency',
-                        page: voiceFrequency
+                        name: 'video',
+                        path: 'media/video/index'
                     },
                     {
-                        name: 'video',
-                        page: video
+                        name: 'voiceFrequency',
+                        path: 'media/voiceFrequency/index'
                     }
                 ]
             },
             {
                 name: 'fileSystemManager',
-                page: fileSystemManager
+                path: 'fileSystemManager/index'
             },
 
             {
                 name: 'worker',
-                page: worker
+                path: 'worker/index'
             }
         ]
     }
@@ -92,44 +78,43 @@ const signIn = [
 
 function router(PIXI, app, parameter) {
     let treePage = {};
-    function regroup(arr, parent) {
-        for (var i = 0, len = arr.length; i < len; i++) {
+    function regroup(arr) {
+        let circularArr = arr;
+        while (circularArr.length) {
+            let page = circularArr.shift();
             parameter = { ...parameter };
-            parameter.name = arr[i].name;
-            if (parent) {
-                parameter.parent = true;
-            } else {
-                parameter.parent && delete parameter.parent;
-            }
-            arr[i].page &&
-                (treePage[[arr[i].name]] = {
-                    page: arr[i].page(PIXI, app, parameter)
+            parameter.name = page.name;
+            parameter.isTabBar = !!page.tabBar;
+            page.path &&
+                (treePage[page.name] = {
+                    path: page.path,
+                    parameter
                 });
-            if ((arr[i].children || []).length) {
-                regroup(arr[i].children, true);
-            }
+            if ((page.children || []).length) circularArr.unshift(...page.children);
         }
     }
     regroup(signIn);
 
+    treePage.APIentry.page = require(treePage.APIentry.path)(PIXI, app, treePage.APIentry.parameter);
+    treePage.APIentry.init = true;
+
     window.router = new (function() {
-        this.treeView = [
-            {
-                name: 'APIentry'
-            }
-        ];
+        this.treeView = ['APIentry'];
         this.to = function(newPage) {
-            let lastOne = this.treeView.length - 1;
-            if (this.treeView[lastOne].name === newPage) return;
-            treePage[this.treeView[lastOne].name].page.visible = false;
+            let lastOne = this.treeView.length - 1,
+                name = this.treeView[lastOne];
+            if (name === newPage) return;
+            if (!treePage[newPage].init) {
+                treePage[newPage].page = require(treePage[newPage].path)(PIXI, app, treePage[newPage].parameter);
+                treePage[newPage].init = true;
+            }
+            this.treeView.push(newPage);
+            treePage[name].page.visible = false;
             treePage[newPage].page.visible = true;
-            this.treeView.push({
-                name: newPage
-            });
         };
         this.goBack = function() {
-            treePage[this.treeView.pop().name].page.visible = false;
-            treePage[this.treeView[this.treeView.length - 1].name].page.visible = true;
+            treePage[this.treeView.pop()].page.visible = false;
+            treePage[this.treeView[this.treeView.length - 1]].page.visible = true;
         };
     })();
 }

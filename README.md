@@ -10,20 +10,22 @@
 ```
 git clone https://github.com/wechat-miniprogram/minigame-demo.git
 ```
-<br>
+<br/>
+
 2. 进行导入，填写开发者自己的小游戏 AppID（注意，因涉及到云开发相关功能，不能使用测试AppID）
 <img src="./readmeImages/15656998217946.png" />
-<br>
-3. 此示例demo使用了小程序云开发，所依赖的云开发环境搭建请参考[云开发示例说明](./CLOUD_REAMDE.md)。
+<br/>
+
+3. 此示例demo使用了小程序云开发，所依赖的云开发环境搭建请参考 [云开发示例说明](./CLOUD_REAMDE.md)。
 
 ## 目录结构
 ```
 .
-├── cloudfunction               // 云函数目录
+├── cloudfunction               // 云函数目录      
 ├── miniprogram                 // 运行示例dome目录
 │   ├── images                  // icon目录
-│   ├── js
-│   │   ├── api                 // API示例目录
+│   ├── js             
+│   │   ├── api                 // API示例目录 
 │   │   │   ├── abilityOpen     // 开放能力
 │   │   │   ├── facility        // 设备
 │   │   │   ├── media           // 媒体
@@ -31,20 +33,21 @@ git clone https://github.com/wechat-miniprogram/minigame-demo.git
 │   │   ├── errMsg              // 错误提示目录
 │   │   └── libs                // PIXI.js
 │   ├── workers                 // 多线程文件目录
-│   ├── game.js
-│   ├── game.json
-│   ├── test.zip
-│   └── TheSenom-2.ttf
-├── readmeImages
-├── .eslintrc.js
-├── CLOUD_REAMDE.md
-├── project.config.json
-└── README.md
+│   ├── game.js        
+│   ├── game.json 
+│   ├── test.zip 
+│   └── TheSenom-2.ttf   
+├── readmeImages            
+├── .eslintrc.js  
+├── CLOUD_REAMDE.md 
+├── project.config.json              
+└── README.md   
 ```
 ## 注意
 
 1. 目录里面的所有view.js仅用于UI绘制，开发者不需要关心。
 2. 如需正常运行网络相关功能，请开MP配置合法域名或打开“调试模式”。
+3. 使用手机预览时请在“详情”把“上传时进行代码保护”给剔除掉。
 
 ## 使用
 
