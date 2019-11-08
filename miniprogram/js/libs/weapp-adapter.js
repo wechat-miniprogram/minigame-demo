@@ -667,6 +667,12 @@
 
 	var _Canvas2 = _interopRequireDefault(_Canvas)
 
+	window.WebGLRenderingContext = window.WebGLRenderingContext || class WebGLRenderingContext {
+		constructor() {
+			// TODO
+		}
+	};
+
 	__webpack_require__(15)
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj } }

@@ -1,11 +1,13 @@
 import './js/libs/weapp-adapter';
-import * as PIXI from './js/libs/pixi';
+import * as PIXI from './js/libs/pixi.min';
 import pmgressBar from './js/libs/pmgressBar';
+import share from './js/libs/share';
 
 wx.cloud.init({ env: 'example-69d3b' });
 
 const { pixelRatio, windowWidth, windowHeight } = wx.getSystemInfoSync();
 
+// 初始化canvas
 let app = new PIXI.Application({
     width: windowWidth * pixelRatio,
     height: windowHeight * pixelRatio,
@@ -17,18 +19,13 @@ let app = new PIXI.Application({
 });
 
 // 因为在微信小游戏里canvas肯定是全屏的，所以映射起来就很简单暴力
-// 可以有两种修改
-app.renderer.plugins.interaction.mapPositionToPoint = (point, x, y) => {
-    point.x = x * pixelRatio;
-    point.y = y * pixelRatio;
-};
 
 PIXI.interaction.InteractionManager.prototype.mapPositionToPoint = (point, x, y) => {
     point.x = x * pixelRatio;
     point.y = y * pixelRatio;
 };
 
-PIXI.ratio = pixelRatio / 2;
+PIXI.ratio = (windowWidth * pixelRatio) / 750;
 
 let loadingFn = pmgressBar(PIXI, app, {
     width: windowWidth * pixelRatio,
@@ -50,23 +47,44 @@ PIXI.loader
         'images/customerService.png',
         'images/facility.png',
         'images/right.png',
-        'images/abilityOpen.png'
+        'images/abilityOpen.png',
+        'images/interface.png'
     ])
     .load(() => {
         wx.loadSubpackage({
             name: 'api',
             success() {
-                let router = require('./js/api/game');
+                let router = require('./js/api/game'),
+                    query = wx.getLaunchOptionsSync().query;
+
+                share(); //全局分享
+
                 router(PIXI, app, {
                     width: windowWidth * pixelRatio,
-                    height: windowHeight * pixelRatio
+                    height: windowHeight * pixelRatio,
+                    pixelRatio
                 });
+
+                if (Object.keys(query).length && query.pathName) window.router.navigateTo(query.pathName, query);
+
+                wx.onShow(res => {
+                    let query = Object.assign(window.query || {}, res.query),
+                        no_navigateTo_required = !['VoIPChat'].includes(query.pathName);
+
+                    if (Object.keys(query).length && query.pathName) {
+                        no_navigateTo_required &&
+                            query.pathName === window.router.getNowPageName() &&
+                            window.router.navigateBack();
+
+                        !window.query && !no_navigateTo_required && window.router.navigateTo(query.pathName, query);
+                        no_navigateTo_required && window.router.navigateTo(query.pathName, query);
+                    }
+                    no_navigateTo_required && (window.query = null);
+                });
+
                 loadingFn(100);
             }
         }).onProgressUpdate(res => {
             loadingFn(res.progress);
-            console.log('下载进度', res.progress);
-            console.log('已经下载的数据长度', res.totalBytesWritten);
-            console.log('预期需要下载的数据总长度', res.totalBytesExpectedToWrite);
         });
     });

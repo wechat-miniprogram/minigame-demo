@@ -9,6 +9,7 @@ module.exports = {
             title: title || '提示',
             content,
             showCancel: false,
+            confirmColor:'#02BB00',
             success() {
                 callback && callback();
             }
@@ -26,6 +27,9 @@ module.exports = {
         wx.showActionSheet({
             itemList,
             success(res) {
+                callback && callback(res);
+            },
+            fail(res) {
                 callback && callback(res);
             }
         });

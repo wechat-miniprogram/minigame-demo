@@ -12,7 +12,7 @@ module.exports = function(PIXI, app, obj) {
                     wx.hideLoading();
                     console.log('WebSocket 已连接');
                     show.Toast('Socket已连接', 'success', 1000);
-                    func();
+                    func(); // 更新 UI
                 });
 
                 wx.onSocketClose(() => {
@@ -21,9 +21,7 @@ module.exports = function(PIXI, app, obj) {
 
                 wx.onSocketError(error => {
                     wx.hideLoading();
-                    show.Modal(JSON.stringify(error), '发生错误', () => {
-                        func(true);
-                    });
+                    show.Modal(JSON.stringify(error), '发生错误');
                     console.error('socket error:', error);
                 });
 
@@ -42,13 +40,13 @@ module.exports = function(PIXI, app, obj) {
                 wx.closeSocket({
                     success() {
                         show.Toast('Socket已断开', 'success', 1000);
-                        func();
+                        func && func(); // 更新 UI
                     }
                 });
                 break;
-            default:
+            case 'sendMessage':
                 wx.sendSocketMessage({
-                    data: 'Hello, Miniprogram!'
+                    data: 'Hello, MiniGame!'
                 });
                 break;
         }

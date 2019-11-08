@@ -1,7 +1,7 @@
 module.exports = {
     request(callback) {
         wx.request({
-            url: 'https://res.wx.qq.com/wxdoc/dist/assets/js/app.4e693179.js',
+            url: 'https://developers.weixin.qq.com/minigame/dev/api/base/system/system-info/wx.getSystemInfoSync.html',
             success(res) {
                 wx.showToast({
                     title: '请求成功',
@@ -45,7 +45,7 @@ module.exports = {
             mask: true
         });
         wx.uploadFile({
-            url: 'https://14592619.qcloud.la/upload',
+            url: 'https://developers.weixin.qq.com/minigame/dev/api/render/image/wx.createImage.html',
             filePath: imageSrc,
             name: 'data',
             success(res) {

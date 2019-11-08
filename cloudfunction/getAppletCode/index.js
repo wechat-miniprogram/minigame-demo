@@ -4,7 +4,7 @@ const cloud = require('wx-server-sdk');
 cloud.init();
 
 // 云函数入口函数
-exports.main = async (event, context) => {
+exports.main = async () => {
     try {
         // 此处返回 Base64 图片仅作为演示用，在实际开发中，
         // 应上传图片至云文件存储，然后在小程序中通过云文件 ID 使用

@@ -96,9 +96,8 @@ function pixiScroll(PIXI, app, property) {
         this.drawHeight = 120 * PIXI.ratio;
         this.cornerRadius = 2 * PIXI.ratio;
 
-        let itemsName = value.children && Object.keys(value.children);
-        if (itemsName && itemsName.length) {
-            this.child = new ChildListItem(this, value.children, itemsName);
+        if ((value.children || []).length) {
+            this.child = new ChildListItem(this, value.children);
             this.child.po.y = this.drawHeight - this.cornerRadius;
             this.childHeight = this.child.po.height - this.cornerRadius;
             this.po.addChild(this.child.po);
@@ -110,15 +109,15 @@ function pixiScroll(PIXI, app, property) {
             .endFill();
         this.po.x = 30 * PIXI.ratio;
 
-        if (property.parent) {
-            text1.call(this, 26, 26);
-            text2.call(this);
-        } else {
+        if (property.isTabBar) {
             let sprite = new PIXI.Sprite(PIXI.loader.resources[`images/${apiName}.png`].texture);
             this.bg.addChild(sprite);
             sprite.width = sprite.height = sprite.width * 0.32 * PIXI.ratio;
             sprite.position.set(this.width - sprite.width - 32 * PIXI.ratio, (this.drawHeight - sprite.height) / 2);
             text1.call(this, 32, 44);
+        } else {
+            text1.call(this, 26, 26);
+            text2.call(this);
         }
 
         this.drawHeight += 20 * PIXI.ratio;
@@ -142,9 +141,10 @@ function pixiScroll(PIXI, app, property) {
                     sc.itemHeight = sc.items[lastOne].po.y + sc.items[lastOne].drawHeight;
                     return;
                 }
-                let callback = property.method[e.target.apiName].callback;
+                let methods = property.methods,
+                    callback = methods[methods.indexOf(value)].callback;
                 if (callback) return callback(e);
-                window.router.to(e.target.apiName);
+                window.router.navigateTo(e.target.apiName);
             }
         };
 
@@ -167,12 +167,12 @@ function pixiScroll(PIXI, app, property) {
         }
     }
 
-    function ChildListItem(parent, itemObj, itemsName) {
+    function ChildListItem(parent, itemList) {
         let po = new PIXI.Graphics(),
             line,
             text,
             icon;
-        for (let i = 0, item, len = itemsName.length; i < len; i++) {
+        for (let i = 0, item, len = itemList.length; i < len; i++) {
             item = new PIXI.Graphics();
             item.beginFill(0xffffff)
                 .drawRect(0, 0, parent.width, 96 * PIXI.ratio)
@@ -185,7 +185,7 @@ function pixiScroll(PIXI, app, property) {
                 item.addChild(line);
             }
 
-            text = new PIXI.Text(itemObj[itemsName[i]].label, {
+            text = new PIXI.Text(itemList[i].label, {
                 fontSize: `${32 * PIXI.ratio}px`
             });
             text.position.set(30 * PIXI.ratio, (item.height - text.height) / 2);
@@ -195,7 +195,6 @@ function pixiScroll(PIXI, app, property) {
             icon.position.set(item.width - icon.width - 32 * PIXI.ratio, (item.height - icon.height) / 2);
 
             item.y = i * item.height + parent.cornerRadius;
-            item.apiName = itemsName[i];
 
             item.interactive = true;
             item.touchstart = e => {
@@ -209,8 +208,8 @@ function pixiScroll(PIXI, app, property) {
                 e.currentTarget.touchend = e => {
                     e.target.touchmove = e.target.touchend = null;
                     if (Math.abs(e.recordY - e.data.global.y) < 5) {
-                        let callback = itemObj[item.apiName].callback;
-                        callback ? callback(e) : window.router.to(item.apiName);
+                        let callback = itemList[i].callback;
+                        callback ? callback(e) : window.router.navigateTo(itemList[i].name);
                         e.switchColorFn.call(item, 0xffffff);
                     }
                 };
@@ -241,7 +240,7 @@ function pixiScroll(PIXI, app, property) {
         let div = new PIXI.Container(),
             sprite = new PIXI.Sprite(PIXI.loader.resources['images/APIicon.png'].texture);
         sprite.width = sprite.height = 96 * PIXI.ratio;
-        sprite.position.set((property.width - sprite.width) / 2, 135 * (property.height / 1334));
+        sprite.position.set((property.width - sprite.width) / 2, 200 * (property.height / 1334));
         div.addChild(sprite);
 
         let text = new PIXI.Text('以下将演示小游戏接口能力，具体属性\n参数详见PC端的小游戏开发文档', {
@@ -281,19 +280,32 @@ function pixiScroll(PIXI, app, property) {
             .lineTo(50 * PIXI.ratio, 60 * PIXI.ratio);
         this.button.interactive = true;
         this.button.touchend = () => {
-            window.router.goBack();
+            window.router.navigateBack();
         };
 
         this.button.addChild(this.arrow);
     }
+    function Title() {
+        this.box = new PIXI.Graphics();
+        this.box
+            .beginFill(0, 0)
+            .drawRect(0, 0, property.width, 135 * (property.height / 1334))
+            .endFill();
+        this.text = new PIXI.Text('小游戏示例', {
+            fontSize: `${36 * PIXI.ratio}px`,
+            fill: 0x353535
+        });
+        this.text.position.set((property.width - this.text.width) / 2, 52 * Math.ceil(PIXI.ratio) + 15 * PIXI.ratio);
+        this.box.addChild(this.text);
+    }
 
     var sc = new ScrollContainer();
-    sc.items.push(property.parent ? new PlaceholderDiv() : new Headline());
+    sc.items.push(property.isTabBar ? new Headline() : new PlaceholderDiv());
     sc.itemHeight += sc.items[0].drawHeight;
 
     function drawItemsFn(methods) {
-        for (var i = 0, nameList = Object.keys(methods), len = nameList.length; i < len; i++) {
-            var li = new ListItem(methods[nameList[i]], nameList[i]);
+        for (var i = 0, len = methods.length; i < len; i++) {
+            var li = new ListItem(methods[i], methods[i].name);
             sc.scrollContainer.addChild(li.po);
             li.po.y = sc.items[i].po.y + sc.items[i].drawHeight;
             sc.itemHeight += li.drawHeight;
@@ -301,10 +313,10 @@ function pixiScroll(PIXI, app, property) {
         }
     }
 
-    drawItemsFn(property.method);
+    drawItemsFn(property.methods);
 
-    property.parent && sc.po.addChild(new GoBack().button);
-    property.parent && (sc.po.visible = false);
+    property.isTabBar ? sc.po.addChild(new Title().box) : sc.po.addChild(new GoBack().button);
+
     app.stage.addChild(sc.po);
     return sc.po;
 }

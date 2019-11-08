@@ -8,12 +8,15 @@ module.exports = function(PIXI, app, obj) {
             //取消监听音频自然播放至结束的事件
             innerAudioContext.offEnded();
         };
-    return view(PIXI, app, obj, (status, fn) => {
+
+    return view(PIXI, app, obj, (status, drawFn) => {
         switch (status) {
             case 'createInnerAudioContext':
+                // 创建内部 audio 上下文 InnerAudioContext 对象。
                 innerAudioContext = wx.createInnerAudioContext();
-                innerAudioContext.src =
-                    'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46';
+                innerAudioContext.src = 'https://wxamusic.wx.qq.com/wxag/xingji/music/bg1.mp3';
+
+                // 监听因加载音频来源所发生的错误
                 innerAudioContext.onError(res => {
                     show.Modal(
                         {
@@ -26,28 +29,30 @@ module.exports = function(PIXI, app, obj) {
                     );
                 });
                 break;
+
             case 'play':
                 //开始播放
                 innerAudioContext.play();
                 //监听音频播放进度更新事件
                 innerAudioContext.onTimeUpdate(function() {
-                    fn('upDate', innerAudioContext.duration, innerAudioContext.currentTime);
+                    drawFn('upDate', innerAudioContext.duration, innerAudioContext.currentTime); // 更新ui
                 });
                 //监听音频自然播放至结束的事件
                 innerAudioContext.onEnded(function() {
-                    fn('ended', innerAudioContext.duration);
+                    drawFn('ended', innerAudioContext.duration); // 更新ui
                     removeEventFn();
                 });
 
-                fn('play'); // ui切换
+                drawFn('play'); // 更新ui
                 break;
+
             case 'pause':
-                //停止播放
+                //暂停播放
                 innerAudioContext.pause();
                 removeEventFn();
 
-                fn('pause'); // ui切换
                 break;
+
             case 'stop':
                 //终止播放
                 innerAudioContext.stop();

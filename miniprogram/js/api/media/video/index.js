@@ -4,16 +4,18 @@ import show from '../../../libs/show';
 module.exports = function(PIXI, app, obj) {
     let video;
     return view(PIXI, app, obj, res => {
-        switch (res.status) {
+        let { status, data } = res;
+        switch (status) {
             case 'createVideo':
                 //调起视频控件
                 video = wx.createVideo({
-                    x: res.data.x,
-                    y: res.data.y,
-                    width: res.data.width,
-                    height: res.data.height,
+                    x: data.x,
+                    y: data.y,
+                    width: data.width,
+                    height: data.height,
                     // 显示默认的视频控件
                     controls: true,
+                    enablePlayGesture: true,
                     // 传入
                     src: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20190812/video.mp4'
                 });

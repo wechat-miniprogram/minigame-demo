@@ -1,74 +1,233 @@
 const signIn = [
     {
+        label: '小游戏示例',
         name: 'APIentry',
         path: 'APIentry/index',
         tabBar: 'index',
         children: [
             {
+                label: '开放能力',
                 name: 'abilityOpen',
                 children: [
                     {
-                        name: 'userInfo',
-                        path: 'abilityOpen/userInfo/index'
+                        label: '微信登录',
+                        name: 'login',
+                        path: 'abilityOpen/login/index'
                     },
                     {
+                        label: '获取用户信息',
+                        name: 'getUserInfo',
+                        path: 'abilityOpen/getUserInfo/index'
+                    },
+                    {
+                        label: '转发',
+                        name: 'onShareAppMessage',
+                        path: 'abilityOpen/onShareAppMessage/index'
+                    },
+                    {
+                        label: '主动转发',
+                        name: 'shareAppMessage',
+                        path: 'abilityOpen/shareAppMessage/index'
+                    },
+                    {
+                        label: '二维码',
                         name: 'appletCode',
                         path: 'abilityOpen/appletCode/index'
                     },
                     {
-                        name: 'transpond',
-                        path: 'abilityOpen/transpond/index'
+                        label: 'UnionID',
+                        name: 'UnionID',
+                        path: 'abilityOpen/UnionID/index'
+                    },
+                    {
+                        label: '客服服务',
+                        name: 'customerService',
+                        path: 'abilityOpen/customerService/index'
+                    },
+                    {
+                        label: '实时语音',
+                        name: 'VoIPChat',
+                        path: 'abilityOpen/VoIPChat/index'
+                    },
+                    {
+                        label: '录屏与回放',
+                        name: 'getGameRecorder',
+                        path: 'abilityOpen/getGameRecorder/index'
+                    },
+                    {
+                        label: '设置',
+                        name: 'setting',
+                        path: 'abilityOpen/setting/index'
                     }
                 ]
             },
             {
+                label: '界面',
+                name: 'interface',
+                children: [
+                    {
+                        label: '显示操作菜单',
+                        name: 'showActionSheet',
+                        path: 'interface/showActionSheet/index'
+                    },
+                    {
+                        label: '显示模态弹窗',
+                        name: 'showModal',
+                        path: 'interface/showModal/index'
+                    },
+                    {
+                        label: '显示消息提示框',
+                        name: 'showToast',
+                        path: 'interface/showToast/index'
+                    }
+                ]
+            },
+            {
+                label: '渲染',
                 name: 'rendering',
-                path: 'rendering/index'
+                children: [
+                    {
+                        label: '画布内容转换为URL',
+                        name: 'toDataURL',
+                        path: 'rendering/toDataURL/index'
+                    },
+                    {
+                        label: '截图生成一个临时文件',
+                        name: 'toTempFilePath',
+                        path: 'rendering/toTempFilePath/index'
+                    },
+                    {
+                        label: '渲染帧率',
+                        name: 'setPreferredFramesPerSecond',
+                        path: 'rendering/setPreferredFramesPerSecond/index'
+                    },
+                    {
+                        label: '加载自定义字体文件',
+                        name: 'loadFont',
+                        path: 'rendering/loadFont/index'
+                    },
+                    {
+                        label: '创建一个图片对象',
+                        name: 'createImage',
+                        path: 'rendering/createImage/index'
+                    }
+                ]
             },
             {
+                label: '设备',
                 name: 'facility',
-                path: 'facility/index'
+                children: [
+                    {
+                        label: '振动',
+                        name: 'vibrate',
+                        path: 'facility/vibrate/index'
+                    },
+                    {
+                        label: '剪贴板',
+                        name: 'clipboardData',
+                        path: 'facility/clipboardData/index'
+                    },
+                    {
+                        label: '获取手机网络状态',
+                        name: 'getNetworkType',
+                        path: 'facility/getNetworkType/index'
+                    },
+                    {
+                        label: '监听手机网络变化',
+                        name: 'onNetworkStatusChange',
+                        path: 'facility/onNetworkStatusChange/index'
+                    },
+                    {
+                        label: '获取设备电量状态',
+                        name: 'getBatteryInfo',
+                        path: 'facility/getBatteryInfo/index'
+                    },
+                    {
+                        label: '屏幕亮度',
+                        name: 'screenBrightness',
+                        path: 'facility/screenBrightness/index'
+                    },
+                    {
+                        label: '设置保持常亮状态',
+                        name: 'setKeepScreenOn',
+                        path: 'facility/setKeepScreenOn/index'
+                    },
+                    {
+                        label: '监听罗盘数据',
+                        name: 'compassChange',
+                        path: 'facility/compassChange/index'
+                    },
+                    {
+                        label: '重力感应',
+                        name: 'accelerometerChange',
+                        path: 'facility/accelerometerChange/index'
+                    },
+                    {
+                        label: '监听设备方向',
+                        name: 'deviceMotionChange',
+                        path: 'facility/deviceMotionChange/index'
+                    },
+                    {
+                        label: '监听陀螺仪数据',
+                        name: 'gyroscopeChange',
+                        path: 'facility/gyroscopeChange/index'
+                    },
+                    {
+                        label: '横竖屏切换',
+                        name: 'deviceOrientationChange',
+                        path: 'facility/deviceOrientationChange/index'
+                    }
+                ]
             },
             {
+                label: '网络',
                 name: 'network',
                 children: [
                     {
+                        label: '发送请求',
                         name: 'request',
                         path: 'network/request/index'
                     },
                     {
+                        label: '下载文件',
                         name: 'downloadFile',
                         path: 'network/downloadFile/index'
                     },
                     {
+                        label: '上传文件',
                         name: 'uploadFile',
                         path: 'network/uploadFile/index'
                     },
                     {
+                        label: 'WebSocket',
                         name: 'WebSocket',
                         path: 'network/webSocket/index'
                     }
                 ]
             },
             {
+                label: '媒体',
                 name: 'media',
                 children: [
                     {
+                        label: '视频',
                         name: 'video',
                         path: 'media/video/index'
                     },
                     {
+                        label: '音频',
                         name: 'voiceFrequency',
                         path: 'media/voiceFrequency/index'
                     }
                 ]
             },
             {
+                label: '数据与文件系统',
                 name: 'fileSystemManager',
                 path: 'fileSystemManager/index'
             },
-
             {
+                label: '多线程',
                 name: 'worker',
                 path: 'worker/index'
             }
@@ -78,8 +237,8 @@ const signIn = [
 
 function router(PIXI, app, parameter) {
     let treePage = {};
-    function regroup(arr) {
-        let circularArr = arr;
+    function regroup(circularArr) {
+        circularArr = circularArr.map(item => item);
         while (circularArr.length) {
             let page = circularArr.shift();
             parameter = { ...parameter };
@@ -87,34 +246,64 @@ function router(PIXI, app, parameter) {
             parameter.isTabBar = !!page.tabBar;
             page.path &&
                 (treePage[page.name] = {
+                    label: page.label,
                     path: page.path,
                     parameter
                 });
-            if ((page.children || []).length) circularArr.unshift(...page.children);
+            if ((page.children || []).length) {
+                circularArr.unshift(...page.children.map(item => item));
+            }
         }
     }
     regroup(signIn);
 
-    treePage.APIentry.page = require(treePage.APIentry.path)(PIXI, app, treePage.APIentry.parameter);
-    treePage.APIentry.init = true;
+    for (let i = 0, len = signIn.length; i < len; i++) {
+        let name = signIn[i].name;
+        treePage[name].page = require(treePage[name].path)(PIXI, app, treePage[name].parameter, signIn[i].children);
+        treePage[name].init = true;
+    }
 
     window.router = new (function() {
         this.treeView = ['APIentry'];
-        this.to = function(newPage) {
+        this.navigateTo = function(newPage, query) {
             let lastOne = this.treeView.length - 1,
                 name = this.treeView[lastOne];
             if (name === newPage) return;
             if (!treePage[newPage].init) {
-                treePage[newPage].page = require(treePage[newPage].path)(PIXI, app, treePage[newPage].parameter);
+                treePage[newPage].page = require(treePage[newPage].path)(PIXI, app, {
+                    ...treePage[newPage].parameter,
+                    ...query
+                });
                 treePage[newPage].init = true;
             }
             this.treeView.push(newPage);
+
             treePage[name].page.visible = false;
+            treePage[newPage].reload && treePage[newPage].reload();
             treePage[newPage].page.visible = true;
         };
-        this.goBack = function() {
+        this.navigateBack = function() {
+            if (this.treeView.length < 2) return;
             treePage[this.treeView.pop()].page.visible = false;
-            treePage[this.treeView[this.treeView.length - 1]].page.visible = true;
+            treePage[this.getNowPageName()].page.visible = true;
+        };
+        this.delPage = function() {
+            if (this.treeView.length < 2) return;
+            let name = this.treeView.pop();
+            treePage[name].page.visible = false;
+            app.stage.removeChild(treePage[name].page).destroy(true);
+            treePage[name].page = null;
+            treePage[name].init = false;
+            treePage[this.getNowPageName()].page.visible = true;
+        };
+        this.getNowPageName = function() {
+            return this.treeView[this.treeView.length - 1];
+        };
+        this.getNowPageLabel = function() {
+            return treePage[this.treeView[this.treeView.length - 1]].label;
+        };
+        this.getNowPage = function(callBack) {
+            callBack(treePage[this.treeView[this.treeView.length - 1]]);
         };
     })();
 }

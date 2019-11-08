@@ -173,7 +173,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     }
     goBack.button.interactive = true;
     goBack.button.touchend = () => {
-        window.router.goBack();
+        window.router.navigateBack();
     };
 
     goBack.button.addChild(goBack.arrow);

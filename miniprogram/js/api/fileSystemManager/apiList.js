@@ -1,6 +1,7 @@
 import * as errMsgObj from '../../errMsg/index';
 let fs = wx.getFileSystemManager();
 module.exports = {
+    fs,
     access(obj) {
         fs.access({
             path: `${obj.path}`,

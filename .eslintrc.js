@@ -11,7 +11,8 @@ module.exports = {
         canvas: 'readonly',
         require: 'readonly',
         module: 'readonly',
-        worker: 'readonly'
+        worker: 'readonly',
+        exports: 'readonly'
     },
     parserOptions: {
         ecmaVersion: 2018,
