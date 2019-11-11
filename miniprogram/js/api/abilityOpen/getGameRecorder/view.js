@@ -1,12 +1,12 @@
 import { p_button, p_text, p_line, p_box, p_img, p_goBackBtn } from '../../../libs/component/index';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, 'delPage', () => {
+        goBack = p_goBackBtn(PIXI, 'navigateBack', () => {
             callBack({ status: 'hide' });
             app.ticker.remove(rotatingFn);
         }),
         title = p_text(PIXI, {
-            content: '录屏',
+            content: '游戏对局回放',
             fontSize: 36 * PIXI.ratio,
             fill: 0x353535,
             y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
@@ -274,6 +274,16 @@ module.exports = function(PIXI, app, obj, callBack) {
         resumeVisible && resume[funcName]();
         button[funcName]();
     }
+
+    setTimeout(() => {
+        window.router.getNowPage(page => {
+            page.reload = function() {
+                app.ticker.add(rotatingFn);
+                del.visible && callBack({ status: 'show' });
+                logo.turnImg({ src: 'images/logo.png' });
+            };
+        });
+    }, 0);
 
     container.addChild(
         goBack,

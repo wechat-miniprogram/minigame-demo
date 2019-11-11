@@ -50,7 +50,7 @@ const signIn = [
                         path: 'abilityOpen/VoIPChat/index'
                     },
                     {
-                        label: '录屏与回放',
+                        label: '游戏对局回放',
                         name: 'getGameRecorder',
                         path: 'abilityOpen/getGameRecorder/index'
                     },
@@ -238,7 +238,7 @@ const signIn = [
 function router(PIXI, app, parameter) {
     let treePage = {};
     function regroup(circularArr) {
-        circularArr = circularArr.map(item => item);
+        circularArr = circularArr.slice(0);
         while (circularArr.length) {
             let page = circularArr.shift();
             parameter = { ...parameter };
@@ -251,7 +251,7 @@ function router(PIXI, app, parameter) {
                     parameter
                 });
             if ((page.children || []).length) {
-                circularArr.unshift(...page.children.map(item => item));
+                circularArr.unshift(...page.children.slice(0));
             }
         }
     }

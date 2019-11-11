@@ -101,6 +101,10 @@ module.exports = function(PIXI, app, obj) {
                 // 隐藏分享按钮
                 gameRecorderShareButton && gameRecorderShareButton.hide();
                 break;
+            case 'show':
+                // 显示分享按钮
+                gameRecorderShareButton && gameRecorderShareButton.show();
+              break;    
         }
     });
 };
