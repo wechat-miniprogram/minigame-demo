@@ -1,15 +1,17 @@
 module.exports = {
     Modal(content, title, callback) {
+        if (title && typeof title === 'string') title = { title };
+
         if (typeof title === 'function') {
             callback = title;
             title = void 0;
         }
 
         wx.showModal({
-            title: title || '提示',
+            ...title,
             content,
             showCancel: false,
-            confirmColor:'#02BB00',
+            confirmColor: '#02BB00',
             success() {
                 callback && callback();
             }

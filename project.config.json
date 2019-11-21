@@ -22,7 +22,7 @@
 		"bundle": false
 	},
 	"compileType": "game",
-	"libVersion": "2.8.3",
+	"libVersion": "2.9.3",
 	"appid": "wx20afc706a711eefc",
 	"projectname": "miniGameExample",
 	"miniprogramRoot": "miniprogram/",

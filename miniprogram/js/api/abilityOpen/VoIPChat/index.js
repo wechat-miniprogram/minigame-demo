@@ -4,7 +4,7 @@ module.exports = function(PIXI, app, obj) {
     return view(PIXI, app, obj, data => {
         let { status, drawFn, groupId, re_enter, muteMicrophone, muteEarphone, drawRoomNumFn, listeningFn } = data;
         switch (status) {
-            //加入 (创建) 实时语音通话
+            // 加入 (创建) 实时语音通话
             case 'joinVoIPChat':
                 // 判断groupId是否存在，不存在就创建房间否则进入房间
                 if (!groupId) {
@@ -14,13 +14,13 @@ module.exports = function(PIXI, app, obj) {
                         .toString(36)
                         .substr(2)}`;
 
-                    //先获取有效 签名signature
+                    // 先获取有效 签名signature
                     getSignature(groupId, res => {
                         wx.joinVoIPChat({
                             ...res,
                             success(res) {
                                 wx.hideLoading();
-                                drawFn(res, groupId);
+                                drawFn(res, groupId); // 更新UI
                                 listeningFn();
                                 console.log(res);
                             },
@@ -33,13 +33,14 @@ module.exports = function(PIXI, app, obj) {
                     });
                 } else {
                     wx.showLoading({ title: re_enter || '正在进入房间', mask: true });
-                    //先获取有效 签名signature
+
+                    // 先获取有效 签名signature
                     getSignature(groupId, res => {
                         wx.joinVoIPChat({
                             ...res,
                             success(res) {
                                 wx.hideLoading();
-                                drawFn(res, groupId);
+                                drawFn(res, groupId); // 更新UI
                                 listeningFn();
                                 console.log(res);
                             },
@@ -83,13 +84,16 @@ module.exports = function(PIXI, app, obj) {
             case 'exitVoIPChat':
                 //退出（销毁）实时语音通话
                 wx.showToast({ title: '你已退出房间' });
+
                 wx.exitVoIPChat();
+
                 window.query = null;
                 break;
             case 'updateVoIPChatMuteConfig':
                 //更新实时语音设置
                 if (typeof muteMicrophone !== 'undefined') muteMicrophone = { muteMicrophone };
                 if (typeof muteEarphone !== 'undefined') muteEarphone = { muteEarphone };
+
                 wx.updateVoIPChatMuteConfig({
                     muteConfig: { ...muteMicrophone, ...muteEarphone },
                     success() {

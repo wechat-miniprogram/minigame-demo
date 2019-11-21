@@ -241,18 +241,14 @@ function router(PIXI, app, parameter) {
         circularArr = circularArr.slice(0);
         while (circularArr.length) {
             let page = circularArr.shift();
-            parameter = { ...parameter };
-            parameter.name = page.name;
-            parameter.isTabBar = !!page.tabBar;
+            parameter = { ...parameter, name: page.name, isTabBar: !!page.tabBar };
             page.path &&
                 (treePage[page.name] = {
                     label: page.label,
                     path: page.path,
                     parameter
                 });
-            if ((page.children || []).length) {
-                circularArr.unshift(...page.children.slice(0));
-            }
+            (page.children || []).length && circularArr.unshift(...page.children.slice(0));
         }
     }
     regroup(signIn);

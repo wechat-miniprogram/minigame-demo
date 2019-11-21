@@ -57,13 +57,13 @@ PIXI.loader
                 let router = require('./js/api/game'),
                     query = wx.getLaunchOptionsSync().query;
 
-                share(); //全局分享
-
                 router(PIXI, app, {
                     width: windowWidth * pixelRatio,
                     height: windowHeight * pixelRatio,
                     pixelRatio
                 });
+
+                share(); //全局分享
 
                 if (Object.keys(query).length && query.pathName) window.router.navigateTo(query.pathName, query);
 

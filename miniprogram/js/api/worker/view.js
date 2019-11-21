@@ -1,105 +1,166 @@
+import { p_text, p_line, p_box, p_circle, p_button, p_goBackBtn } from '../../libs/component/index';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = {
-            button: new PIXI.Graphics(),
-            arrow: new PIXI.Graphics()
-        },
-        background = new PIXI.Graphics(),
-        title = new PIXI.Text('多线程 Worker', {
-            fontSize: `${30 * PIXI.ratio}px`,
-            fill: 0xffffff
+        background = p_box(PIXI, {
+            width: obj.width,
+            height: obj.height,
+            background: { color: 0x000000 }
         }),
-        line = new PIXI.Graphics(),
-        box = new PIXI.Graphics(),
-        hint = new PIXI.Text(
-            '提示: 使用单线程进行计算时，动画会出现明显的\n卡顿现象。使用 Worker 线程进行计算，则可以保\n证动画的流畅。',
+        goBack = p_goBackBtn(PIXI, 'navigateBack:0xffffff', () => {
+            app.ticker.remove(delta);
+        }),
+        title = p_text(PIXI, {
+            content: '多线程',
+            fontSize: 36 * PIXI.ratio,
+            fill: 0xffffff,
+            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
+            relative_middle: { containerWidth: obj.width }
+        }),
+        api_name = p_text(PIXI, {
+            content: 'Worker',
+            fontSize: 32 * PIXI.ratio,
+            fill: 0xffffff,
+            y: title.height + title.y + 78 * PIXI.ratio,
+            relative_middle: { containerWidth: obj.width }
+        }),
+        underline = p_line(
+            PIXI,
             {
-                fontSize: `${28 * PIXI.ratio}px`,
-                fill: 0x777777
-            }
+                width: PIXI.ratio | 0,
+                color: 0xffffff
+            },
+            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
+            [150 * PIXI.ratio, 0]
         ),
+        box = p_box(PIXI, {
+            width: obj.width - 60 * PIXI.ratio,
+            height: 180 * PIXI.ratio,
+            radius: 10 * PIXI.ratio,
+            y: obj.height - 340 * PIXI.ratio
+        }),
         fabonacciIndex = 35,
-        fabonacciText = new PIXI.Text(`当前计算斐波拉契数列的第${fabonacciIndex}个数`, {
-            fontSize: `${28 * PIXI.ratio}px`,
-            fill: 0x333333
+        fabonacciText = p_text(PIXI, {
+            content: `计算斐波拉契数列第${fabonacciIndex}位数值`,
+            fontSize: 28 * PIXI.ratio,
+            fill: 0x333333,
+            x: 30 * PIXI.ratio,
+            y: box.height - 50 * PIXI.ratio
         });
 
-    goBack.button.position.set(0, 52 * Math.ceil(PIXI.ratio));
-    goBack.button
-        .beginFill(0xffffff, 0)
-        .drawRect(0, 0, 80 * PIXI.ratio, 80 * PIXI.ratio)
-        .endFill();
-    goBack.arrow
-        .lineStyle(5 * PIXI.ratio, 0xffffff)
-        .moveTo(50 * PIXI.ratio, 20 * PIXI.ratio)
-        .lineTo(30 * PIXI.ratio, 40 * PIXI.ratio)
-        .lineTo(50 * PIXI.ratio, 60 * PIXI.ratio);
-
-    background
-        .beginFill(0x000000)
-        .drawRect(0, 0, obj.width, obj.height)
-        .endFill();
-
-    title.position.set((obj.width - title.width) / 2, 180 * PIXI.ratio);
-
-    line.beginFill(0xffffff)
-        .drawRect(0, 0, title.width, 1 * PIXI.ratio)
-        .endFill();
-    line.position.set((obj.width - title.width) / 2, title.y + title.height + 10 * PIXI.ratio);
-
-    box.position.set(30 * PIXI.ratio, obj.height - 420 * PIXI.ratio);
-    box.beginFill(0xffffff)
-        .drawRoundedRect(0, 0, obj.width - box.x * 2, 180 * PIXI.ratio, 10 * PIXI.ratio)
-        .endFill();
-    hint.position.set((box.width - hint.width) / 2, box.height / 10);
-    fabonacciText.position.set(hint.x, hint.y + hint.height + box.height / 10);
-
-    let button,
-        siteY,
-        buttonArr = [];
-    function drawButtonFn(text, y) {
-        button = new PIXI.Graphics();
-        text = new PIXI.Text(text, {
-            fontSize: `${30 * PIXI.ratio}px`,
-            fill: 0xffffff
+    // 滑动调节1~42的斐波拉契数列的下标 开始
+    let transparentLine = p_box(PIXI, {
+            width: 580 * PIXI.ratio,
+            height: 4 * PIXI.ratio,
+            radius: 2 * PIXI.ratio,
+            background: { alpha: 0 },
+            y: box.y - 100 * PIXI.ratio
+        }),
+        whiteLine = p_box(PIXI, {
+            width: 35 * (transparentLine.width / 42),
+            height: transparentLine.height,
+            radius: 2 * PIXI.ratio,
+            x: transparentLine.x,
+            y: transparentLine.y
+        }),
+        circle = p_circle(PIXI, {
+            radius: 20 * PIXI.ratio,
+            background: { color: 0xffffff },
+            x: whiteLine.x + whiteLine.width,
+            y: whiteLine.y + whiteLine.height / 2
         });
-        button.position.set(30 * PIXI.ratio, y);
-        button
-            .beginFill(0x07c160)
-            .drawRoundedRect(0, 0, obj.width - button.x * 2, 80 * PIXI.ratio, 10 * PIXI.ratio)
-            .endFill();
-        button.addChild(text);
-        text.position.set((button.width - text.width) / 2, (button.height - text.height) / 2);
-        button.interactive = true;
-        siteY = button.height + button.y;
-        buttonArr.push(button);
-    }
 
-    drawButtonFn('单线程计算', box.y + box.height + 20 * PIXI.ratio);
-    button.touchend = () => {
+    circle.onTouchMoveFn(e => {
+        if (e.data.global.x >= transparentLine.x && transparentLine.x + transparentLine.width >= e.data.global.x) {
+            circle.setPositionFn({ x: e.data.global.x });
+            whiteLine.width = e.data.global.x - whiteLine.x;
+            fabonacciIndex = 1 + Math.round(41 * (whiteLine.width / transparentLine.width));
+            fabonacciText.turnText(`计算斐波拉契数列第${fabonacciIndex}个数的值`);
+        }
+    });
+    // 滑动调节1~42的斐波拉契数列的下标 结束
+
+    box.addChild(
+        p_text(PIXI, {
+            content:
+                '提示: 使用单线程进行计算时，动画会出现明显的\n卡顿现象。使用 Worker 线程进行计算，则可以保\n证动画的流畅。',
+            fontSize: 28 * PIXI.ratio,
+            fill: 0xbebebe,
+            y: 20 * PIXI.ratio,
+            relative_middle: { containerWidth: box.width }
+        }),
+        fabonacciText
+    );
+
+    // 单线程“按钮” 开始
+    let single_threaded_button = p_button(PIXI, {
+        width: 335 * PIXI.ratio,
+        height: 80 * PIXI.ratio,
+        fill: 0x07c160,
+        x: 30 * PIXI.ratio,
+        y: box.y + box.height + 20 * PIXI.ratio
+    });
+    single_threaded_button.addChild(
+        p_text(PIXI, {
+            content: '单线程计算',
+            fontSize: 30 * PIXI.ratio,
+            fill: 0xffffff,
+            relative_middle: {
+                containerWidth: single_threaded_button.width,
+                containerHeight: single_threaded_button.height
+            }
+        })
+    );
+    single_threaded_button.onClickFn(() => {
         callBack({
             status: 'noWorker',
-            fabonacciIndex,
-            draw() {
-                fabonacciIndex = fabonacciIndex === 35 ? 37 : 35;
-                fabonacciText.text = `当前计算斐波拉契数列的第${fabonacciIndex}个数`;
-            }
+            fabonacciIndex
         });
-    };
+    });
+    // 单线程“按钮” 结束
 
-    //Worker start
-    drawButtonFn('利用 Worker 线程计算', siteY + 20 * PIXI.ratio);
-    button.touchend = () => {
+    box.addChild(
+        p_text(PIXI, {
+            content: '1',
+            fontSize: 30 * PIXI.ratio,
+            fill: 0xffffff,
+            y: - 60 * PIXI.ratio,
+            relative_middle: { point: transparentLine.x - box.x }
+        }),
+        p_text(PIXI, {
+            content: '42',
+            fontSize: 30 * PIXI.ratio,
+            fill: 0xffffff,
+            y: - 60 * PIXI.ratio,
+            relative_middle: { point: transparentLine.x + transparentLine.width - box.x }
+        })
+    );
+
+    // Worker“按钮” 开始
+    let worker_button = p_button(PIXI, {
+        width: single_threaded_button.width,
+        height: single_threaded_button.height,
+        fill: 0x07c160,
+        x: obj.width - single_threaded_button.width - 30 * PIXI.ratio,
+        y: single_threaded_button.y
+    });
+    worker_button.addChild(
+        p_text(PIXI, {
+            content: '利用 Worker 线程计算',
+            fontSize: 30 * PIXI.ratio,
+            fill: 0xffffff,
+            relative_middle: {
+                containerWidth: worker_button.width,
+                containerHeight: worker_button.height
+            }
+        })
+    );
+    worker_button.onClickFn(() => {
         callBack({
             status: 'Worker',
-            fabonacciIndex,
-            draw() {
-                fabonacciIndex = fabonacciIndex === 35 ? 37 : 35;
-                fabonacciText.text = `当前计算斐波拉契数列的第${fabonacciIndex}个数`;
-            }
+            fabonacciIndex
         });
-    };
-    //Worker end
+    });
+    // Worker“按钮” 结束
 
     let cameraZ = 0,
         speed = 0,
@@ -171,26 +232,34 @@ module.exports = function(PIXI, app, obj, callBack) {
             star.sprite.rotation = Math.atan2(dyCenter, dxCenter) + Math.PI / 2;
         }
     }
-    goBack.button.interactive = true;
-    goBack.button.touchend = () => {
-        window.router.navigateBack();
+
+    app.ticker.add(delta);
+
+    setTimeout(() => {
+        window.router.getNowPage(page => {
+            page.reload = function() {
+                app.ticker.add(delta);
+            };
+        });
+    }, 0);
+    container.interactive = true;
+    container.touchend = () => {
+        circle.touchmove = null;
     };
-
-    goBack.button.addChild(goBack.arrow);
-    box.addChild(hint, fabonacciText);
-    container.addChild(background, goBack.button, title, line, box, ...buttonArr);
-    let visible = (container.visible = false);
+    container.addChild(
+        background,
+        goBack,
+        title,
+        api_name,
+        underline,
+        transparentLine,
+        whiteLine,
+        circle,
+        box,
+        single_threaded_button,
+        worker_button
+    );
     app.stage.addChild(container);
-
-    Object.defineProperty(container, 'visible', {
-        get() {
-            return visible;
-        },
-        set(value) {
-            visible = value;
-            visible ? app.ticker.add(delta) : app.ticker.remove(delta);
-        }
-    });
 
     return container;
 };
