@@ -1,4 +1,4 @@
-import * as TweenMax from '../TweenMax.min';
+import Scroller from '../Scroller/index';
 module.exports = function(PIXI, deploy = {}) {
     let { width = canvas.width, height = 0, x = (canvas.width - width) / 2, y = 0 } = deploy;
 
@@ -26,70 +26,64 @@ module.exports = function(PIXI, deploy = {}) {
                 this.totalHeight = prevSpace + prevDist + itemArr[i].y + itemArr[i].height;
                 prevSpace && (prevSpace = itemArr[i].y + itemArr[i].height);
             }
-
             container.addChild(...itemArr);
+            this.scroller.setDimensions(width, height, width, this.totalHeight);
         };
 
-        var mousedown = false;
-        var lastPos = null;
-        var lastDiff = null;
-        var scrollTween = null;
-        this.interactive = true;
-        this.touchmove = function(e) {
-            var clientY = e.data.global.y;
-            if (mousedown) {
-                lastDiff = clientY - lastPos.y;
-                lastPos.y = clientY;
-
-                if (-container.y < 0) {
-                    container.y += lastDiff / 2;
-                } else {
-                    container.y += lastDiff;
-                }
-            }
+        this.isTouchable = function(boolean) {
+            this.interactive = boolean;
         };
-        this.touchstart = function(e) {
-            var clientY = e.data.global.y;
-            mousedown = true;
-            if (scrollTween) scrollTween.kill();
-            lastPos = {
-                y: clientY
-            };
+
+        this.scroller = new Scroller(
+            (...args) => {
+                container.position.y = -args[1];
+            },
+            {
+                scrollingX: false,
+                scrollingY: true,
+                bouncing: false
+            }
+        );
+
+        let touchstart = false;
+
+        this.touchstart = e => {
+            let data = e.data;
+            this.scroller.doTouchStart(
+                [
+                    {
+                        pageX: data.global.x,
+                        pageY: data.global.y
+                    }
+                ],
+                data.originalEvent.timeStamp
+            );
+            touchstart = true;
         };
-        this.touchend = function() {
-            var goY = container.y + lastDiff * 10,
-                ease = 'Quad.easeOut',
-                time = Math.abs(lastDiff / this.totalHeight);
 
-            if (goY < -this.totalHeight + height) {
-                goY = -this.totalHeight + height;
-                ease = 'Back.easeOut';
-                time = 0.1 + Math.abs(lastDiff / this.totalHeight);
-            }
-            if (goY > 0) {
-                goY = 0;
-                ease = 'Back.easeOut';
-                time = 0.1 + Math.abs(lastDiff / this.totalHeight);
-            }
-
-            if (container.y > 0) {
-                time = Math.abs(container.y / (height * 2));
-                ease = 'Linear';
-            }
-            if (container.y < -this.totalHeight + height) {
-                time = Math.abs(container.y / (height * 2));
-                ease = 'Linear';
-            }
-
-            scrollTween = TweenMax.to(container, time, {
-                y: goY,
-                ease: ease
-            });
-
-            mousedown = false;
-            lastPos = null;
-            lastDiff = null;
+        this.touchmove = e => {
+            if (!touchstart) return;
+            let data = e.data;
+            this.scroller.doTouchMove(
+                [
+                    {
+                        pageX: data.global.x,
+                        pageY: data.global.y
+                    }
+                ],
+                data.originalEvent.timeStamp
+            );
+            touchstart = true;
         };
+
+        this.touchend = e => {
+            if (!touchstart) return;
+            let data = e.data;
+            this.scroller.doTouchEnd(data.originalEvent.timeStamp);
+            touchstart = false;
+        };
+
+        this.isTouchable(true);
 
         for (let i = 0, arr = ['width', 'height'], len = arr.length; i < len; i++) {
             Object.defineProperty(this, arr[i], {

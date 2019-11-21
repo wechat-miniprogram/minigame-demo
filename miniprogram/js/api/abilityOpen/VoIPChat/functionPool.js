@@ -1,7 +1,7 @@
 import show from '../../../libs/show';
 module.exports = (function() {
     function getSignature(groupId, callBack) {
-        //首先检查是否有授权record
+        // 首先检查是否有授权record
         authorization(() => {
             // 这里我们调用云函数来获取signature
             wx.cloud.callFunction({
@@ -25,12 +25,15 @@ module.exports = (function() {
     }
     let scopeRecord;
     function authorization(callBack) {
-        if (scopeRecord) return callBack(); //下一次调用时，有授权直接回调
+        if (scopeRecord) return callBack(); // 下一次调用时，有授权直接回调
+
         wx.getSetting({
             success(res) {
                 scopeRecord = res.authSetting['scope.record'];
-                if (scopeRecord) return callBack(); //首次调用时，有授权直接回调
-                //调起api触发授权弹窗
+
+                if (scopeRecord) return callBack(); // 首次调用时，有授权直接回调
+
+                // 调起api触发授权弹窗
                 wx.authorize({
                     scope: 'scope.record',
                     success() {

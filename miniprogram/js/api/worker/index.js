@@ -15,7 +15,6 @@ module.exports = function(PIXI, app, obj) {
 
                 show.Modal(`${num}`, '计算结果');
 
-                res.draw(); //修改文案
                 break;
             case 'Worker':
                 worker.postMessage({
@@ -24,8 +23,6 @@ module.exports = function(PIXI, app, obj) {
 
                 worker.onMessage(obj => {
                     show.Modal(`${obj.msg}`, '计算结果');
-
-                    res.draw(); //修改文案
                 });
                 break;
         }

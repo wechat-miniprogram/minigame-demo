@@ -1,4 +1,4 @@
-import * as TweenMax from './TweenMax.min';
+import Scroller from './Scroller/index';
 function pixiScroll(PIXI, app, property) {
     function ScrollContainer() {
         this.po = new PIXI.Container();
@@ -14,78 +14,58 @@ function pixiScroll(PIXI, app, property) {
         this.po.addChild(this.mask);
         this.scrollContainer.mask = this.mask;
 
+        this.scroller = new Scroller(
+            (...args) => {
+                this.scrollContainer.position.y = -args[1];
+            },
+            {
+                scrollingX: false,
+                scrollingY: true,
+                bouncing: false
+            }
+        );
+
         this.itemHeight = 0;
 
-        var _this = this;
+        let touchstart = false;
 
-        var mousedown = false;
-        var lastPos = null;
-        var lastDiff = null;
-        var scrollTween = null;
-        // var maxVel = 0;
+        this.po.touchstart = e => {
+            let data = e.data;
+            this.scroller.doTouchStart(
+                [
+                    {
+                        pageX: data.global.x,
+                        pageY: data.global.y
+                    }
+                ],
+                data.originalEvent.timeStamp
+            );
+            touchstart = true;
+        };
 
-        function onmousemove(e) {
-            var clientY = e.data.global.y;
+        this.po.touchmove = e => {
+            if (!touchstart) return;
+            let data = e.data;
+            this.scroller.doTouchMove(
+                [
+                    {
+                        pageX: data.global.x,
+                        pageY: data.global.y
+                    }
+                ],
+                data.originalEvent.timeStamp
+            );
+            touchstart = true;
+        };
 
-            if (mousedown) {
-                lastDiff = clientY - lastPos.y;
-                lastPos.y = clientY;
-
-                if (-_this.scrollContainer.y < 0) {
-                    _this.scrollContainer.y += lastDiff / 2;
-                } else {
-                    _this.scrollContainer.y += lastDiff;
-                }
-            }
-        }
-        function onmousedown(e) {
-            var clientY = e.data.global.y;
-            mousedown = true;
-            if (scrollTween) scrollTween.kill();
-            lastPos = {
-                y: clientY
-            };
-        }
-        function onmouseup() {
-            var goY = _this.scrollContainer.y + lastDiff * 10,
-                ease = 'Quad.easeOut',
-                time = Math.abs(lastDiff / _this.itemHeight),
-                contentHigh = property.height;
-
-            if (goY < -_this.itemHeight + contentHigh) {
-                goY = -_this.itemHeight + contentHigh;
-                ease = 'Back.easeOut';
-                time = 0.1 + Math.abs(lastDiff / _this.itemHeight);
-            }
-            if (goY > 0) {
-                goY = 0;
-                ease = 'Back.easeOut';
-                time = 0.1 + Math.abs(lastDiff / _this.itemHeight);
-            }
-
-            if (_this.scrollContainer.y > 0) {
-                time = Math.abs(_this.scrollContainer.y / (contentHigh * 2));
-                ease = 'Linear';
-            }
-            if (_this.scrollContainer.y < -_this.itemHeight + contentHigh) {
-                time = Math.abs(_this.scrollContainer.y / (contentHigh * 2));
-                ease = 'Linear';
-            }
-
-            scrollTween = TweenMax.to(_this.scrollContainer, time, {
-                y: goY,
-                ease: ease
-            });
-
-            mousedown = false;
-            lastPos = null;
-            lastDiff = null;
-        }
+        this.po.touchend = e => {
+            if (!touchstart) return;
+            let data = e.data;
+            this.scroller.doTouchEnd(data.originalEvent.timeStamp);
+            touchstart = false;
+        };
 
         this.po.interactive = true;
-        this.po.touchmove = onmousemove;
-        this.po.touchstart = onmousedown;
-        this.po.touchend = onmouseup;
     }
 
     function ListItem(value, apiName) {
@@ -139,6 +119,7 @@ function pixiScroll(PIXI, app, property) {
                     }
                     let lastOne = sc.items.length - 1;
                     sc.itemHeight = sc.items[lastOne].po.y + sc.items[lastOne].drawHeight;
+                    sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight);
                     return;
                 }
                 let methods = property.methods,
@@ -316,6 +297,8 @@ function pixiScroll(PIXI, app, property) {
     drawItemsFn(property.methods);
 
     property.isTabBar ? sc.po.addChild(new Title().box) : sc.po.addChild(new GoBack().button);
+
+    sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight);
 
     app.stage.addChild(sc.po);
     return sc.po;

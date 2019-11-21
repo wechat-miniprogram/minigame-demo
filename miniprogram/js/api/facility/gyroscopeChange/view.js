@@ -154,14 +154,13 @@ module.exports = function(PIXI, app, obj, callBack) {
         run();
     } else {
         run();
-        setTimeout(() => {
-            window.router.getNowPage(page => {
-                page.reload = function() {
-                    logo.turnImg({ src: 'images/logo.png' });
-                    run();
-                };
-            });
-        }, 0);
+
+        window.router.getNowPage(page => {
+            page.reload = function() {
+                logo.turnImg({ src: 'images/logo.png' });
+                run();
+            };
+        });
     }
 
     container.addChild(goBack, title, api_name, underline, div, startListening, stopListening, logo, logoName);

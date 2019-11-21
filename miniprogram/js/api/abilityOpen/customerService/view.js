@@ -59,13 +59,11 @@ module.exports = function(PIXI, app, obj, callBack) {
         });
     });
 
-    setTimeout(() => {
-        window.router.getNowPage(page => {
-            page.reload = function() {
-                logo.turnImg({ src: 'images/logo.png' });
-            };
-        });
-    }, 0);
+    window.router.getNowPage(page => {
+        page.reload = function() {
+            logo.turnImg({ src: 'images/logo.png' });
+        };
+    });
 
     container.addChild(goBack, title, api_name, underline, prompt, icon, logo, logoName);
     app.stage.addChild(container);

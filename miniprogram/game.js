@@ -5,6 +5,10 @@ import share from './js/libs/share';
 
 wx.cloud.init({ env: 'example-69d3b' });
 
+wx.updateShareMenu({
+    withShareTicket: true,
+});
+
 const { pixelRatio, windowWidth, windowHeight } = wx.getSystemInfoSync();
 
 // 初始化canvas
@@ -57,28 +61,33 @@ PIXI.loader
                 let router = require('./js/api/game'),
                     query = wx.getLaunchOptionsSync().query;
 
-                share(); //全局分享
-
                 router(PIXI, app, {
                     width: windowWidth * pixelRatio,
                     height: windowHeight * pixelRatio,
                     pixelRatio
                 });
 
-                if (Object.keys(query).length && query.pathName) window.router.navigateTo(query.pathName, query);
+                share(); //全局分享
+
+                let res = wx.getLaunchOptionsSync();
+                if (Object.keys(query).length && query.pathName) {
+                    window.router.navigateTo(query.pathName, query, res);
+                }
 
                 wx.onShow(res => {
                     let query = Object.assign(window.query || {}, res.query),
-                        no_navigateTo_required = !['VoIPChat'].includes(query.pathName);
+                        noNavigateToRequired = !['VoIPChat'].includes(query.pathName);
 
                     if (Object.keys(query).length && query.pathName) {
-                        no_navigateTo_required &&
+                        noNavigateToRequired &&
                             query.pathName === window.router.getNowPageName() &&
                             window.router.navigateBack();
 
-                        !window.query && !no_navigateTo_required && window.router.navigateTo(query.pathName, query);
-                        no_navigateTo_required && window.router.navigateTo(query.pathName, query);
+                        !window.query && !no_navigateTo_required && window.router.navigateTo(query.pathName, query, res);
+
+                        no_navigateTo_required && window.router.navigateTo(query.pathName, query, res);
                     }
+
                     no_navigateTo_required && (window.query = null);
                 });
 
