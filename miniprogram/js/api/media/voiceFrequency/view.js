@@ -196,13 +196,11 @@ module.exports = function(PIXI, app, obj, callBack) {
     callBack('createInnerAudioContext');
     // 创建内部 audio 上下文 InnerAudioContext 对象 结束
 
-    setTimeout(() => {
-        window.router.getNowPage(page => {
-            page.reload = function() {
-                logo.turnImg({ src: 'images/logo.png' });
-            };
-        });
-    }, 0);
+    window.router.getNowPage(page => {
+        page.reload = function() {
+            logo.turnImg({ src: 'images/logo.png' });
+        };
+    });
 
     box.addChild(timerText, progressBar.gray, progressBar.green, progressBar.circle, startingTime, finishTime);
     container.addChild(

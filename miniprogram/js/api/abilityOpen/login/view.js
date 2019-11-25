@@ -88,13 +88,11 @@ module.exports = function(PIXI, app, obj, callBack) {
     });
     //微信登录“按钮” 结束
 
-    setTimeout(() => {
-        window.router.getNowPage(page => {
-            page.reload = function() {
-                logo.turnImg({ src: 'images/logo.png' });
-            };
-        });
-    }, 0);
+    window.router.getNowPage(page => {
+        page.reload = function() {
+            logo.turnImg({ src: 'images/logo.png' });
+        };
+    });
 
     container.addChild(goBack, title, api_name, underline, prompt, wxLogin, logo, logoName);
 
