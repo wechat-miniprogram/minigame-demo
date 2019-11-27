@@ -60,13 +60,13 @@ module.exports = function(PIXI, app, obj, callBack) {
             infoMapping = {
                 filePath: {
                     name: '文件路径',
-                    func(path, arr, index) {
+                    func(path, arr) {
                         path = p_text(PIXI, {
                             content: path,
                             fontSize: 30 * PIXI.ratio,
                             lineHeight: 40 * PIXI.ratio,
                             x: 200 * PIXI.ratio,
-                            y: arr[index].y
+                            y: arr[arr.length- 1].y
                         });
                         let boxWidth = 500 * PIXI.ratio,
                             textWidth = path.width;
@@ -105,28 +105,28 @@ module.exports = function(PIXI, app, obj, callBack) {
                 },
                 size: {
                     name: '文件大小',
-                    func(size, arr, index) {
+                    func(size, arr) {
                         arr.push(
                             p_text(PIXI, {
                                 content: `${size}B`,
                                 fontSize: 30 * PIXI.ratio,
                                 lineHeight: 40 * PIXI.ratio,
                                 x: 200 * PIXI.ratio,
-                                y: arr[index + 1].y
+                                y: arr[arr.length- 1].y
                             })
                         );
                     }
                 },
                 createTime: {
                     name: '储存时间',
-                    func(time, arr, index) {
+                    func(time, arr) {
                         arr.push(
                             p_text(PIXI, {
-                                content: dateFormat(new Date(time), 'yyyy-MM-dd hh:mm:ss'),
+                                content: dateFormat(new Date(time * 1000), 'yyyy-MM-dd hh:mm:ss'),
                                 fontSize: 30 * PIXI.ratio,
                                 lineHeight: 40 * PIXI.ratio,
                                 x: 200 * PIXI.ratio,
-                                y: arr[index + 1].y
+                                y: arr[arr.length- 1].y
                             })
                         );
                     }
@@ -147,7 +147,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                         y: j ? storageTextArr[index].y + storageTextArr[index].height + lineHeight : lineHeight
                     })
                 );
-                infoMapping[arr[j]].func(paperFile[i][arr[j]], storageTextArr, index);
+                infoMapping[arr[j]].func(paperFile[i][arr[j]], storageTextArr);
             }
             lastOne = storageTextArr[storageTextArr.length - 1];
             div_child_arr[i] = p_box(PIXI, {
