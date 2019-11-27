@@ -355,6 +355,5 @@ function router(PIXI, app, parameter) {
             callBack(treePage[this.treeView[this.treeView.length - 1]]);
         };
     })();
-    window.router.navigateTo('savedFile');
 }
 module.exports = router;
