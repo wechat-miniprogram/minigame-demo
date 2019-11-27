@@ -10,7 +10,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             relative_middle: { containerWidth: obj.width }
         }),
         api_name = p_text(PIXI, {
-            content: 'write/read/append/File&unlink',
+            content: 'write/read/append/copy/File&unlink',
             fontSize: 32 * PIXI.ratio,
             fill: 0xbebebe,
             y: title.height + title.y + 78 * PIXI.ratio,
@@ -58,12 +58,19 @@ module.exports = function(PIXI, app, obj, callBack) {
             alpha: 0,
             y: readFileButton.height + readFileButton.y + 21 * PIXI.ratio
         }),
-        unlinkButton = p_button(PIXI, {
+        copyButton = p_button(PIXI, {
             width: 576 * PIXI.ratio,
             height: 90 * PIXI.ratio,
             border: { width: 2 * PIXI.ratio, color: 0xd1d1d1 },
             alpha: 0,
             y: appendFileButton.height + appendFileButton.y + 21 * PIXI.ratio
+        }),
+        unlinkButton = p_button(PIXI, {
+            width: 576 * PIXI.ratio,
+            height: 90 * PIXI.ratio,
+            border: { width: 2 * PIXI.ratio, color: 0xd1d1d1 },
+            alpha: 0,
+            y: copyButton.height + copyButton.y + 21 * PIXI.ratio
         }),
         logo = p_img(PIXI, {
             width: 36 * PIXI.ratio,
@@ -109,7 +116,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             status: 'writeFile',
             drawFn() {
                 path.turnText(pathTextFn('/hello.txt'));
-                isVisibleFn([readFileButton, appendFileButton, unlinkButton], 'showFn');
+                isVisibleFn([readFileButton, appendFileButton, copyButton, unlinkButton], 'showFn');
             }
         });
     });
@@ -126,8 +133,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     );
     readFileButton.onClickFn(() => {
         callBack({
-            status: 'readFile',
-            drawFn() {}
+            status: 'readFile'
         });
     });
     // 读取文件内容 “按钮” 结束
@@ -143,11 +149,26 @@ module.exports = function(PIXI, app, obj, callBack) {
     );
     appendFileButton.onClickFn(() => {
         callBack({
-            status: 'appendFile',
-            drawFn() {}
+            status: 'appendFile'
         });
     });
     // 追加文件内容 “按钮” 结束
+
+    // 复制文件 “按钮” 开始
+    copyButton.myAddChildFn(
+        p_text(PIXI, {
+            content: '复制文件',
+            fontSize: 36 * PIXI.ratio,
+            fill: 0x53535f,
+            relative_middle: { containerWidth: copyButton.width, containerHeight: copyButton.height }
+        })
+    );
+    copyButton.onClickFn(() => {
+        callBack({
+            status: 'copyFile'
+        });
+    });
+    // 复制文件 “按钮” 结束
 
     // 删除文件 “按钮” 开始
     unlinkButton.myAddChildFn(
@@ -163,11 +184,10 @@ module.exports = function(PIXI, app, obj, callBack) {
             status: 'unlink',
             drawFn() {
                 path.turnText(pathTextFn());
-                isVisibleFn([readFileButton, appendFileButton, unlinkButton], 'hideFn');
+                isVisibleFn([readFileButton, appendFileButton, copyButton, unlinkButton], 'hideFn');
             }
         });
     });
-
     // 删除文件 “按钮” 结束
 
     function isVisibleFn(arr, method) {
@@ -180,13 +200,13 @@ module.exports = function(PIXI, app, obj, callBack) {
         return `${wx.env.USER_DATA_PATH}/fileA${str || ''}`;
     }
 
-    isVisibleFn([readFileButton, appendFileButton, unlinkButton], 'hideFn');
+    isVisibleFn([readFileButton, appendFileButton, copyButton, unlinkButton], 'hideFn');
 
     wx.getFileSystemManager().access({
         path: pathTextFn('/hello.txt'),
         success() {
             path.turnText(pathTextFn('/hello.txt'));
-            isVisibleFn([readFileButton, appendFileButton, unlinkButton], 'showFn');
+            isVisibleFn([readFileButton, appendFileButton, copyButton, unlinkButton], 'showFn');
         }
     });
 
@@ -200,6 +220,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         writeFileButton,
         readFileButton,
         appendFileButton,
+        copyButton,
         unlinkButton,
         logo,
         logoName

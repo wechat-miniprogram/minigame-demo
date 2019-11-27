@@ -43,9 +43,20 @@ module.exports = function(PIXI, app, obj) {
                 // 先获取全局唯一的文件管理器，接着调起appendFile方法
                 wx.getFileSystemManager().appendFile({
                     filePath: `${wx.env.USER_DATA_PATH}/fileA/hello.txt`,
-                    data: ' The Testing API', // 这里是追加的内容
+                    data: ' The Testing API', // 新追加的内容
                     success() {
                         show.Toast('追加成功', 'success', 800);
+                    }
+                });
+                break;
+
+            case 'copyFile':
+                // 先获取全局唯一的文件管理器，接着调起copyFile方法
+                wx.getFileSystemManager().copyFile({
+                    srcPath: `${wx.env.USER_DATA_PATH}/fileA/hello.txt`,  
+                    destPath: `${wx.env.USER_DATA_PATH}/fileA/hello - copy.txt`, // 复制并重新命名文件路径
+                    success() {
+                        show.Toast('复制成功', 'success', 800);
                     }
                 });
                 break;

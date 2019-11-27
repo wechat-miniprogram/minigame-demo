@@ -7,7 +7,7 @@ module.exports = function(PIXI, app, obj) {
             case 'unzip':
                 // 先获取全局唯一的文件管理器，接着调起unzip方法
                 wx.getFileSystemManager().unzip({
-                    zipFilePath: 'test.zip', // 压缩包在根路径
+                    zipFilePath: 'test.zip', // 压缩包在代码包的根路径上面
                     targetPath: `${wx.env.USER_DATA_PATH}/fileA`,
                     success() {
                         show.Toast('解压成功', 'success', 800);

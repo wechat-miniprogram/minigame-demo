@@ -236,9 +236,19 @@ const signIn = [
                         path: 'fileSystemManager/access/index'
                     },
                     {
+                        label: '重命名',
+                        name: 'rename',
+                        path: 'fileSystemManager/rename/index'
+                    },
+                    {
                         label: '保存临时文件到本地',
                         name: 'saveFile',
                         path: 'fileSystemManager/saveFile/index'
+                    },
+                    {
+                        label: '查看目录内容',
+                        name: 'readdir',
+                        path: 'fileSystemManager/readdir/index'
                     },
                     {
                         label: '操作文件',
@@ -246,19 +256,24 @@ const signIn = [
                         path: 'fileSystemManager/operationFile/index'
                     },
                     {
-                        label: '重命名文件',
-                        name: 'rename',
-                        path: 'fileSystemManager/rename/index'
-                    },
-                    {
                         label: '获取文件信息',
                         name: 'getFileInfo',
                         path: 'fileSystemManager/getFileInfo/index'
                     },
                     {
+                        label: '判断文件路径是否是目录',
+                        name: 'stat',
+                        path: 'fileSystemManager/stat/index'
+                    },
+                    {
                         label: '解压文件',
                         name: 'unzip',
                         path: 'fileSystemManager/unzip/index'
+                    },
+                    {
+                        label: '本地缓存文件',
+                        name: 'savedFile',
+                        path: 'fileSystemManager/savedFile/index'
                     }
                 ]
             },
@@ -340,6 +355,6 @@ function router(PIXI, app, parameter) {
             callBack(treePage[this.treeView[this.treeView.length - 1]]);
         };
     })();
-    window.router.navigateTo('rename');
+    window.router.navigateTo('savedFile');
 }
 module.exports = router;

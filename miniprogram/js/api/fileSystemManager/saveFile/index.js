@@ -11,18 +11,15 @@ module.exports = function(PIXI, app, obj) {
                     url: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20190813/advideo.MP4',
                     success(res) {
                         wx.hideLoading();
-                        let pathArr = [`${wx.env.USER_DATA_PATH}/fileA`, '无路径'],
-                            filePath;
+                        let pathArr = [`${wx.env.USER_DATA_PATH}/fileA`, '无路径'];
 
-                        // 不传入filePath就会保存为缓存文件
-                        pathArr[index] === '无路径'
-                            ? (filePath = void 0)
-                            : (filePath = { filePath: `${pathArr[index]}/video.mp4` });
+                        // 当filePath为空时就会保存为本地缓存文件
+                        let filePath = pathArr[index] !== '无路径' ? `${pathArr[index]}/video.mp4` : '';
 
                         // 先获取全局唯一的文件管理器，接着调起saveFile方法
                         wx.getFileSystemManager().saveFile({
                             tempFilePath: res.tempFilePath,
-                            ...filePath,
+                            filePath,
                             recursive: true,
                             success() {
                                 show.Toast('保存成功', 'success', 800);
@@ -34,7 +31,6 @@ module.exports = function(PIXI, app, obj) {
                                     return show.Modal('超过文件存储限制的最大大小50M', '发生错误');
 
                                 if (res.errMsg.includes('fail no such file or directory')) {
-   
                                     res.errMsg = `上级目录 ${JSON.stringify(pathArr[index])} 不存在，请去创建目录`;
 
                                     show.Modal(res.errMsg, '发生错误');
