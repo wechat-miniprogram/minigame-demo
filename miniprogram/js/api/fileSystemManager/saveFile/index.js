@@ -11,10 +11,10 @@ module.exports = function(PIXI, app, obj) {
                     url: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20190813/advideo.MP4',
                     success(res) {
                         wx.hideLoading();
-                        let pathArr = [`${wx.env.USER_DATA_PATH}/fileA`, '无路径'];
+                        let pathArr = [`${wx.env.USER_DATA_PATH}/fileA`, '选择保存为本地缓存路径'];
 
                         // 当filePath为空时就会保存为本地缓存文件
-                        let filePath = pathArr[index] !== '无路径' ? `${pathArr[index]}/video.mp4` : '';
+                        let filePath = pathArr[index] !== '选择保存为本地缓存路径' ? `${pathArr[index]}/video.mp4` : '';
 
                         // 先获取全局唯一的文件管理器，接着调起saveFile方法
                         wx.getFileSystemManager().saveFile({

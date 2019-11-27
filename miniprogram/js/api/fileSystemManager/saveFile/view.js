@@ -26,7 +26,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             [150 * PIXI.ratio, 0]
         ),
         tipText = p_text(PIXI, {
-            content: '提示：如果需要把临时文件缓存起来，请选择无路\n径。这里会保存一个mp4文件，文件来源看源码',
+            content: '提示：这里会保存一个mp4文件，文件来源看源码',
             fontSize: 32 * PIXI.ratio,
             fill: 0xbebebe,
             align: 'center',
@@ -50,7 +50,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         pitch_on,
         div;
 
-    let pathArr = [`${wx.env.USER_DATA_PATH}/fileA/video.mp4`, '无路径'],
+    let pathArr = [`${wx.env.USER_DATA_PATH}/fileA/video.mp4`, '选择保存为本地缓存路径'],
         divDeploy = {
             height: 0,
             border: {
@@ -107,7 +107,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     // 点击保存 “按钮” 开始
     let button = p_button(PIXI, {
         width: 580 * PIXI.ratio,
-        y: tipText.height + tipText.y + 90.5 * PIXI.ratio
+        y: tipText.height + tipText.y + 60.5 * PIXI.ratio
     });
     button.myAddChildFn(
         p_text(PIXI, {
@@ -128,6 +128,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     window.router.getNowPage(page => {
         page.reload = function() {
             logo.turnImg({ src: 'images/logo.png' });
+            pitch_on.turnImg({ src: 'images/pitch_on.png'});
         };
     });
 
