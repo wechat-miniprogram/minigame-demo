@@ -10,6 +10,11 @@ module.exports = function(PIXI, app, obj) {
                     filePath: 'images/weapp.jpg',
                     success(res) {
                         show.Modal(`这个文件的size：${res.size}B`, '获取成功');
+                    },
+                    fail(res) {
+                        if (!res.errMsg) return;
+                        
+                        show.Modal(res.errMsg, '发生错误');
                     }
                 });
                 break;

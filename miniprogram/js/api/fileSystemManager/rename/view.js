@@ -1,10 +1,10 @@
 import { p_button, p_text, p_line, p_box, p_img, p_goBackBtn } from '../../../libs/component/index';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, 'delPage',()=>{
+        goBack = p_goBackBtn(PIXI, 'delPage', () => {
             wx.getFileSystemManager().rmdir({
                 dirPath: `${wx.env.USER_DATA_PATH}/newTestFile`,
-                recursive: true,
+                recursive: true
             });
         }),
         title = p_text(PIXI, {
@@ -67,6 +67,12 @@ module.exports = function(PIXI, app, obj, callBack) {
         pathArr = [`${wx.env.USER_DATA_PATH}/fileA`, `${wx.env.USER_DATA_PATH}/newTestFile`];
 
     pathBox.addChild(
+        p_text(PIXI, {
+            content: '目录路径',
+            fontSize: 34 * PIXI.ratio,
+            x: 30 * PIXI.ratio,
+            relative_middle: { containerHeight: pathBox.height }
+        }),
         (path = p_text(PIXI, {
             content: pathArr[0],
             fontSize: 34 * PIXI.ratio,
@@ -88,8 +94,8 @@ module.exports = function(PIXI, app, obj, callBack) {
             status: 'rename',
             pathArr,
             drawFn() {
-                pathArr=[pathArr[1],pathArr[0]]
-                path.turnText(pathArr[0])
+                pathArr = [pathArr[1], pathArr[0]];
+                path.turnText(pathArr[0]);
             }
         });
     });

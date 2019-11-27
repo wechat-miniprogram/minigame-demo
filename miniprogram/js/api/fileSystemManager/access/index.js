@@ -9,19 +9,19 @@ module.exports = function(PIXI, app, obj) {
                 // 先获取全局唯一的文件管理器，接着调起access方法
                 wx.getFileSystemManager().access({
                     path,
-                    success: () => {
+                    success() {
                         wx.showModal({
                             content: path + ' 目录存在',
                             showCancel: false,
                             confirmColor: '#02BB00'
                         });
                     },
-                    fail: res => {
-                        if(res.errMsg){
-                            let err = res.errMsg.split(',');
-                            err[0] = '文件/目录不存在'
-                            show.Modal(err.join(','));
-                        }
+                    fail(res) {
+                        if (!res.errMsg) return;
+                        
+                        let err = res.errMsg.split(',');
+                        err[0] = '文件/目录不存在';
+                        show.Modal(err.join(','));
                     }
                 });
                 break;

@@ -25,9 +25,14 @@ module.exports = function(PIXI, app, obj, callBack) {
             [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
             [150 * PIXI.ratio, 0]
         ),
+        pathBox = p_box(PIXI, {
+            height: 88 * PIXI.ratio,
+            border: { width: PIXI.ratio, color: 0xe5e5e5 },
+            y: underline.height + underline.y + 61 * PIXI.ratio
+        }),
         readdirButton = p_button(PIXI, {
             width: 580 * PIXI.ratio,
-            y: underline.height + underline.y + 89 * PIXI.ratio
+            y: pathBox.height + pathBox.y + 107 * PIXI.ratio
         }),
         logo = p_img(PIXI, {
             width: 36 * PIXI.ratio,
@@ -44,6 +49,20 @@ module.exports = function(PIXI, app, obj, callBack) {
             relative_middle: { point: 404 * PIXI.ratio }
         });
 
+    pathBox.addChild(
+        p_text(PIXI, {
+            content: '目录路径',
+            fontSize: 34 * PIXI.ratio,
+            x: 30 * PIXI.ratio,
+            relative_middle: { containerHeight: pathBox.height }
+        }),
+        p_text(PIXI, {
+            content: `${wx.env.USER_DATA_PATH}/fileA`,
+            fontSize: 34 * PIXI.ratio,
+            relative_middle: { containerWidth: pathBox.width, containerHeight: pathBox.height }
+        })
+    );
+
     function showListFn(pathArr) {
         let div,
             divDeploy = {
@@ -52,7 +71,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                     width: PIXI.ratio | 0,
                     color: 0xe5e5e5
                 },
-                y: underline.height + underline.y + 78 * PIXI.ratio
+                y: pathBox.height + pathBox.y - PIXI.ratio
             },
             div_child_arr = [];
 
@@ -82,7 +101,10 @@ module.exports = function(PIXI, app, obj, callBack) {
                     content: pathArr[i].path.replace('/', ''),
                     fontSize: 34 * PIXI.ratio,
                     x: 200 * PIXI.ratio,
-                    relative_middle: { containerHeight: div_child_arr[i].height }
+                    relative_middle: {
+                        containerWidth: div_child_arr[i].width,
+                        containerHeight: div_child_arr[i].height
+                    }
                 })
             );
         }
@@ -120,7 +142,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     });
     // 点击查看 “按钮” 结束
 
-    container.addChild(goBack, title, api_name, underline, readdirButton, logo, logoName);
+    container.addChild(goBack, title, api_name, underline, pathBox, readdirButton, logo, logoName);
     app.stage.addChild(container);
 
     return container;

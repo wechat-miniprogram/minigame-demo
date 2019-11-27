@@ -18,10 +18,9 @@ module.exports = function(PIXI, app, obj) {
                 break;
 
             case 'removeSavedFile':
-                // 先获取全局唯一的文件管理器，接着调起removeSavedFile方法
-
                 paperFile = paperFile.map(item => {
                     return new Promise(res => {
+                        // 先获取全局唯一的文件管理器，接着调起removeSavedFile方法
                         wx.getFileSystemManager().removeSavedFile({
                             filePath: item.filePath,
                             success() {
@@ -33,7 +32,7 @@ module.exports = function(PIXI, app, obj) {
 
                 Promise.all(paperFile).then(() => {
                     show.Toast('已清空', 'success', 800);
-                    
+
                     drawFn(); // 更新UI
                 });
                 break;
