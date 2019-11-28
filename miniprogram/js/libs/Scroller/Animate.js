@@ -80,16 +80,12 @@ module.exports = (function() {
          *   usage of requestAnimationFrame.
          * @return {Integer} Identifier of animation. Can be used to stop it any time.
          */
-        start: function(stepCallback, verifyCallback, completedCallback, duration, easingMethod, root) {
+        start: function(stepCallback, verifyCallback, completedCallback, duration, easingMethod) {
             var start = time();
             var lastFrame = start;
             var percent = 0;
             var dropCounter = 0;
             var id = counter++;
-
-            if (!root) {
-                root = document.body;
-            }
 
             // Compacting running db automatically every few new animations
             if (id % 20 === 0) {
@@ -150,7 +146,7 @@ module.exports = (function() {
                         );
                 } else if (render) {
                     lastFrame = now;
-                    requestAnimationFrame(step, root);
+                    requestAnimationFrame(step);
                 }
             };
 
@@ -158,7 +154,7 @@ module.exports = (function() {
             running[id] = true;
 
             // Init first step
-            requestAnimationFrame(step, root);
+            requestAnimationFrame(step);
 
             // Return unique animation ID
             return id;

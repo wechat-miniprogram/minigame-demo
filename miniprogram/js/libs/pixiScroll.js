@@ -27,7 +27,6 @@ function pixiScroll(PIXI, app, property) {
 
         this.itemHeight = 0;
 
-        // var maxVel = 0;
         let touchstart = false;
 
         this.po.touchstart = e => {
@@ -56,7 +55,6 @@ function pixiScroll(PIXI, app, property) {
                 ],
                 data.originalEvent.timeStamp
             );
-
             touchstart = true;
         };
 
