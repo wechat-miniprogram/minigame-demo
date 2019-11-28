@@ -11,7 +11,7 @@ module.exports = function(PIXI, app, obj) {
                     url: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20190813/advideo.MP4',
                     success(res) {
                         wx.hideLoading();
-                        let pathArr = [`${wx.env.USER_DATA_PATH}/fileA`, ''][index],
+                        let pathArr = [`${wx.env.USER_DATA_PATH}/fileA/video.MP4`, ''][index],
                             filePath;
 
                         // 不传filePath属性，就会保存为本地缓存文件
@@ -32,7 +32,7 @@ module.exports = function(PIXI, app, obj) {
                                     return show.Modal('超过文件存储限制的最大大小50M', '发生错误');
 
                                 if (res.errMsg.includes('fail no such file or directory')) {
-                                    res.errMsg = `上级目录 ${JSON.stringify(pathArr[index])} 不存在，请去创建目录`;
+                                    res.errMsg = `上级目录 ${JSON.stringify(pathArr)} 不存在，请去创建目录`;
 
                                     show.Modal(res.errMsg, '发生错误');
                                 }

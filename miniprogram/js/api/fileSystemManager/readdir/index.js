@@ -20,7 +20,10 @@ module.exports = function(PIXI, app, obj) {
                     fail(res) {
                         if (!res.errMsg) return;
 
-                        if (res.errMsg.includes('no such file or directory')) {
+                        if (
+                            res.errMsg.includes('no such file or directory') ||
+                            res.errMsg.includes('fail not a directory')
+                        ) {
                             res.errMsg = `目录 ${JSON.stringify(dirPath)} 不存在，请去创建`;
 
                             show.Modal(res.errMsg, '发生错误');
