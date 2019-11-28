@@ -30,11 +30,15 @@ module.exports = function(PIXI, deploy = {}) {
             container.addChild(...itemArr);
         };
 
+        this.isTouchable = function(boolean) {
+            this.interactive = boolean;
+        };
+
         var mousedown = false;
         var lastPos = null;
         var lastDiff = null;
         var scrollTween = null;
-        this.interactive = true;
+        this.isTouchable(true);
         this.touchmove = function(e) {
             var clientY = e.data.global.y;
             if (mousedown) {

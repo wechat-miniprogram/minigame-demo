@@ -123,14 +123,14 @@ module.exports = function(PIXI, app, obj, callBack) {
             content: '1',
             fontSize: 30 * PIXI.ratio,
             fill: 0xffffff,
-            y: - 60 * PIXI.ratio,
+            y: -60 * PIXI.ratio,
             relative_middle: { point: transparentLine.x - box.x }
         }),
         p_text(PIXI, {
             content: '42',
             fontSize: 30 * PIXI.ratio,
             fill: 0xffffff,
-            y: - 60 * PIXI.ratio,
+            y: -60 * PIXI.ratio,
             relative_middle: { point: transparentLine.x + transparentLine.width - box.x }
         })
     );
@@ -235,13 +235,12 @@ module.exports = function(PIXI, app, obj, callBack) {
 
     app.ticker.add(delta);
 
-    setTimeout(() => {
-        window.router.getNowPage(page => {
-            page.reload = function() {
-                app.ticker.add(delta);
-            };
-        });
-    }, 0);
+    window.router.getNowPage(page => {
+        page.reload = function() {
+            app.ticker.add(delta);
+        };
+    });
+
     container.interactive = true;
     container.touchend = () => {
         circle.touchmove = null;

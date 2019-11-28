@@ -224,7 +224,58 @@ const signIn = [
             {
                 label: '数据与文件系统',
                 name: 'fileSystemManager',
-                path: 'fileSystemManager/index'
+                children: [
+                    {
+                        label: '创建/删除目录',
+                        name: 'mk-rm-dir',
+                        path: 'fileSystemManager/mk-rm-dir/index'
+                    },
+                    {
+                        label: '判断文件/目录是否存在',
+                        name: 'access',
+                        path: 'fileSystemManager/access/index'
+                    },
+                    {
+                        label: '重命名',
+                        name: 'rename',
+                        path: 'fileSystemManager/rename/index'
+                    },
+                    {
+                        label: '保存临时文件到本地',
+                        name: 'saveFile',
+                        path: 'fileSystemManager/saveFile/index'
+                    },
+                    {
+                        label: '查看目录内容',
+                        name: 'readdir',
+                        path: 'fileSystemManager/readdir/index'
+                    },
+                    {
+                        label: '操作文件',
+                        name: 'operationFile',
+                        path: 'fileSystemManager/operationFile/index'
+                    },
+                    {
+                        label: '获取文件信息',
+                        name: 'getFileInfo',
+                        path: 'fileSystemManager/getFileInfo/index'
+                    },
+                    {
+                        label: '判断文件路径是否是目录',
+                        name: 'stat',
+                        path: 'fileSystemManager/stat/index'
+                    },
+                    {
+                        label: '解压文件',
+                        name: 'unzip',
+                        path: 'fileSystemManager/unzip/index'
+                    },
+                    {
+                        label: '本地缓存文件',
+                        name: 'savedFile',
+                        path: 'fileSystemManager/savedFile/index'
+                    }
+                ]
             },
             {
                 label: '多线程',
@@ -265,6 +316,10 @@ function router(PIXI, app, parameter) {
             let lastOne = this.treeView.length - 1,
                 name = this.treeView[lastOne];
             if (name === newPage) return;
+
+            this.treeView.push(newPage);
+            treePage[newPage].reload && treePage[newPage].reload();
+
             if (!treePage[newPage].init) {
                 treePage[newPage].page = require(treePage[newPage].path)(PIXI, app, {
                     ...treePage[newPage].parameter,
@@ -272,10 +327,8 @@ function router(PIXI, app, parameter) {
                 });
                 treePage[newPage].init = true;
             }
-            this.treeView.push(newPage);
 
             treePage[name].page.visible = false;
-            treePage[newPage].reload && treePage[newPage].reload();
             treePage[newPage].page.visible = true;
         };
         this.navigateBack = function() {
