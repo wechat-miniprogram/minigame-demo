@@ -3,7 +3,6 @@ function pixiScroll(PIXI, app, property) {
     function ScrollContainer() {
         this.po = new PIXI.Container();
         this.scrollContainer = new PIXI.Container();
-        this.po.addChild(this.scrollContainer);
         this.items = [];
 
         this.mask = new PIXI.Graphics();
@@ -11,8 +10,8 @@ function pixiScroll(PIXI, app, property) {
             .beginFill(0xffffff)
             .drawRect(0, 135 * (property.height / 1334), property.width, property.height)
             .endFill();
-        this.po.addChild(this.mask);
         this.scrollContainer.mask = this.mask;
+        this.po.addChild(this.scrollContainer, this.mask);
 
         this.scroller = new Scroller(
             (...args) => {
@@ -27,9 +26,8 @@ function pixiScroll(PIXI, app, property) {
 
         this.itemHeight = 0;
 
-        let touchstart = false;
-
         this.po.touchstart = e => {
+            e.stopPropagation();
             let data = e.data;
             this.scroller.doTouchStart(
                 [
@@ -40,11 +38,10 @@ function pixiScroll(PIXI, app, property) {
                 ],
                 data.originalEvent.timeStamp
             );
-            touchstart = true;
         };
 
         this.po.touchmove = e => {
-            if (!touchstart) return;
+            e.stopPropagation();
             let data = e.data;
             this.scroller.doTouchMove(
                 [
@@ -55,14 +52,12 @@ function pixiScroll(PIXI, app, property) {
                 ],
                 data.originalEvent.timeStamp
             );
-            touchstart = true;
         };
 
         this.po.touchend = e => {
-            if (!touchstart) return;
+            e.stopPropagation();
             let data = e.data;
             this.scroller.doTouchEnd(data.originalEvent.timeStamp);
-            touchstart = false;
         };
 
         this.po.interactive = true;
