@@ -235,13 +235,12 @@ module.exports = function(PIXI, app, obj, callBack) {
 
     app.ticker.add(delta);
 
-    setTimeout(() => {
-        window.router.getNowPage(page => {
-            page.reload = function() {
-                app.ticker.add(delta);
-            };
-        });
-    }, 0);
+    window.router.getNowPage(page => {
+        page.reload = function() {
+            app.ticker.add(delta);
+        };
+    });
+
     container.interactive = true;
     container.touchend = () => {
         circle.touchmove = null;

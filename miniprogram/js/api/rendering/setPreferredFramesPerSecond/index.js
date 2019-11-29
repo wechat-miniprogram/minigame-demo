@@ -6,6 +6,7 @@ module.exports = function(PIXI, app, obj) {
             case 'setPreferredFramesPerSecond':
                 // 设置渲染帧率
                 wx.setPreferredFramesPerSecond(value);
+
                 break;
         }
     });

@@ -85,6 +85,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             angle > 360 && (angle = angle - 360);
             angle += 90 / CurveFPS;
             trilateral.rotation = (angle * Math.PI) / 180;
+            wx.reportPerformance && wx.reportPerformance(2002, CurveFPS); // 上报游戏帧率
         };
     })();
     app.ticker.add(rotatingFn);

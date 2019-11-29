@@ -32,6 +32,10 @@ module.exports = function(PIXI, deploy = {}) {
 
         this.onClickFn = function(callBack) {
             this.interactive = true;
+            this.on('pointerdown', callBack);
+
+            /*return;
+
             this.touchstart = e => {
                 maskLayer.visible = true;
                 e.recordY = e.data.global.y;
@@ -42,7 +46,7 @@ module.exports = function(PIXI, deploy = {}) {
                         callBack(e);
                     }
                 };
-            };
+            };*/
         }.bind(kind);
 
         this.offClickFn = function() {
