@@ -45,8 +45,6 @@ module.exports = function(PIXI, deploy = {}) {
             }
         );
 
-        let touchstart = false;
-
         this.touchstart = e => {
             let data = e.data;
             this.scroller.doTouchStart(
@@ -58,11 +56,9 @@ module.exports = function(PIXI, deploy = {}) {
                 ],
                 data.originalEvent.timeStamp
             );
-            touchstart = true;
         };
 
         this.touchmove = e => {
-            if (!touchstart) return;
             let data = e.data;
             this.scroller.doTouchMove(
                 [
@@ -73,14 +69,11 @@ module.exports = function(PIXI, deploy = {}) {
                 ],
                 data.originalEvent.timeStamp
             );
-            touchstart = true;
         };
 
         this.touchend = e => {
-            if (!touchstart) return;
             let data = e.data;
             this.scroller.doTouchEnd(data.originalEvent.timeStamp);
-            touchstart = false;
         };
 
         this.isTouchable(true);
