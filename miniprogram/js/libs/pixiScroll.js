@@ -3,7 +3,6 @@ function pixiScroll(PIXI, app, property) {
     function ScrollContainer() {
         this.po = new PIXI.Container();
         this.scrollContainer = new PIXI.Container();
-        this.po.addChild(this.scrollContainer);
         this.items = [];
 
         this.mask = new PIXI.Graphics();
@@ -11,8 +10,19 @@ function pixiScroll(PIXI, app, property) {
             .beginFill(0xffffff)
             .drawRect(0, 135 * (property.height / 1334), property.width, property.height)
             .endFill();
-        this.po.addChild(this.mask);
         this.scrollContainer.mask = this.mask;
+        this.po.addChild(this.scrollContainer, this.mask);
+
+        this.scroller = new Scroller(
+            (...args) => {
+                this.scrollContainer.position.y = -args[1];
+            },
+            {
+                scrollingX: false,
+                scrollingY: true,
+                bouncing: false
+            }
+        );
 
         this.scroller = new Scroller(
             (...args) => {
