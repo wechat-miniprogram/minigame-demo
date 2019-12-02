@@ -79,16 +79,14 @@ PIXI.loader
                         noNavigateToRequired = !['VoIPChat'].includes(query.pathName);
 
                     if (Object.keys(query).length && query.pathName) {
-                        noNavigateToRequired &&
-                            query.pathName === window.router.getNowPageName() &&
-                            window.router.navigateBack();
+                        noNavigateToRequired && window.router.navigateBack();
 
-                        !window.query && !no_navigateTo_required && window.router.navigateTo(query.pathName, query, res);
+                        !window.query && !noNavigateToRequired && window.router.navigateTo(query.pathName, query, res);
 
-                        no_navigateTo_required && window.router.navigateTo(query.pathName, query, res);
+                        noNavigateToRequired && window.router.navigateTo(query.pathName, query, res);
                     }
 
-                    no_navigateTo_required && (window.query = null);
+                    noNavigateToRequired && (window.query = null);
                 });
 
                 loadingFn(100);
