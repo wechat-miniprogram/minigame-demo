@@ -339,6 +339,9 @@ function router(PIXI, app, parameter) {
         };
         this.navigateBack = function() {
             if (this.treeView.length < 2) return;
+
+            if (!treePage[this.getNowPageName()].reload) return this.delPage();
+
             treePage[this.treeView.pop()].page.visible = false;
             treePage[this.getNowPageName()].page.visible = true;
         };
