@@ -105,15 +105,13 @@ module.exports = function(PIXI, app, obj, callBack) {
         on
     );
 
-    setTimeout(() => {
-        window.router.getNowPage(page => {
-            page.reload = function() {
-                logo.turnImg({ src: 'images/logo.png' });
-                off.turnImg({ src: 'images/off.png' });
-                on.turnImg({ src: 'images/on.png' });
-            };
-        });
-    }, 0);
+    window.router.getNowPage(page => {
+        page.reload = function() {
+            logo.turnImg({ src: 'images/logo.png' });
+            off.turnImg({ src: 'images/off.png' });
+            on.turnImg({ src: 'images/on.png' });
+        };
+    });
 
     container.addChild(goBack, title, api_name, underline, div, text, logo, logoName);
     container.visible = false;

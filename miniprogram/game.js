@@ -5,6 +5,10 @@ import share from './js/libs/share';
 
 wx.cloud.init({ env: 'example-69d3b' });
 
+wx.updateShareMenu({
+    withShareTicket: true,
+});
+
 const { pixelRatio, windowWidth, windowHeight } = wx.getSystemInfoSync();
 
 // 初始化canvas
@@ -65,21 +69,24 @@ PIXI.loader
 
                 share(); //全局分享
 
-                if (Object.keys(query).length && query.pathName) window.router.navigateTo(query.pathName, query);
+                let res = wx.getLaunchOptionsSync();
+                if (Object.keys(query).length && query.pathName) {
+                    window.router.navigateTo(query.pathName, query, res);
+                }
 
                 wx.onShow(res => {
                     let query = Object.assign(window.query || {}, res.query),
-                        no_navigateTo_required = !['VoIPChat'].includes(query.pathName);
+                        noNavigateToRequired = !['VoIPChat'].includes(query.pathName);
 
                     if (Object.keys(query).length && query.pathName) {
-                        no_navigateTo_required &&
-                            query.pathName === window.router.getNowPageName() &&
-                            window.router.navigateBack();
+                        noNavigateToRequired && window.router.navigateBack();
 
-                        !window.query && !no_navigateTo_required && window.router.navigateTo(query.pathName, query);
-                        no_navigateTo_required && window.router.navigateTo(query.pathName, query);
+                        !window.query && !noNavigateToRequired && window.router.navigateTo(query.pathName, query, res);
+
+                        noNavigateToRequired && window.router.navigateTo(query.pathName, query, res);
                     }
-                    no_navigateTo_required && (window.query = null);
+
+                    noNavigateToRequired && (window.query = null);
                 });
 
                 loadingFn(100);

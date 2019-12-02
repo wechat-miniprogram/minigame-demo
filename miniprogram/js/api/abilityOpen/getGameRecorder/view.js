@@ -275,15 +275,13 @@ module.exports = function(PIXI, app, obj, callBack) {
         button[funcName]();
     }
 
-    setTimeout(() => {
-        window.router.getNowPage(page => {
-            page.reload = function() {
-                app.ticker.add(rotatingFn);
-                del.visible && callBack({ status: 'show' });
-                logo.turnImg({ src: 'images/logo.png' });
-            };
-        });
-    }, 0);
+    window.router.getNowPage(page => {
+        page.reload = function() {
+            app.ticker.add(rotatingFn);
+            del.visible && callBack({ status: 'show' });
+            logo.turnImg({ src: 'images/logo.png' });
+        };
+    });
 
     container.addChild(
         goBack,
