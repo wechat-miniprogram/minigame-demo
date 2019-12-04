@@ -59,6 +59,13 @@ module.exports = function(PIXI, deploy = {}) {
                 .drawCircle(0, 0, radius)
                 .endFill();
         };
+
+        this.hideFn = function() {
+            this.visible = false;
+        };
+        this.showFn = function() {
+            this.visible = true;
+        };
     }
     Circle.prototype = new PIXI.Graphics();
     return new Circle();
