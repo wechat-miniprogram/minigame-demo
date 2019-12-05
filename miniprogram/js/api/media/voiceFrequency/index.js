@@ -31,13 +31,13 @@ module.exports = function(PIXI, app, obj) {
                 break;
 
             case 'play':
-                //开始播放
+                // 开始播放
                 innerAudioContext.play();
-                //监听音频播放进度更新事件
+                // 监听音频播放进度更新事件
                 innerAudioContext.onTimeUpdate(function() {
                     drawFn('upDate', innerAudioContext.duration, innerAudioContext.currentTime); // 更新ui
                 });
-                //监听音频自然播放至结束的事件
+                // 监听音频自然播放至结束的事件
                 innerAudioContext.onEnded(function() {
                     drawFn('ended', innerAudioContext.duration); // 更新ui
                     removeEventFn();
@@ -47,14 +47,14 @@ module.exports = function(PIXI, app, obj) {
                 break;
 
             case 'pause':
-                //暂停播放
+                // 暂停播放
                 innerAudioContext.pause();
                 removeEventFn();
 
                 break;
 
             case 'stop':
-                //终止播放
+                // 终止播放
                 innerAudioContext.stop();
                 removeEventFn();
                 break;

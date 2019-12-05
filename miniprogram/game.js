@@ -6,7 +6,7 @@ import share from './js/libs/share';
 wx.cloud.init({ env: 'example-69d3b' });
 
 wx.updateShareMenu({
-    withShareTicket: true,
+    withShareTicket: true
 });
 
 const { pixelRatio, windowWidth, windowHeight } = wx.getSystemInfoSync();
@@ -39,13 +39,10 @@ let loadingFn = pmgressBar(PIXI, app, {
 PIXI.loader
     .add([
         'images/APIicon.png',
-        'images/fileSystemManager.png',
+        'images/storage-fileSystem.png',
         'images/rendering.png',
         'images/network.png',
         'images/media.png',
-        'images/play.png',
-        'images/pause.png',
-        'images/stop.png',
         'images/worker.png',
         'images/star.png',
         'images/customerService.png',

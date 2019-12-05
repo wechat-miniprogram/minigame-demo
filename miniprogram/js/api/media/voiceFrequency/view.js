@@ -72,21 +72,18 @@ module.exports = function(PIXI, app, obj, callBack) {
         playButton = p_img(PIXI, {
             width: 150 * PIXI.ratio,
             src: 'images/play.png',
-            is_PIXI_loader: true,
             x: 300 * PIXI.ratio,
             y: box.y + box.height + 204 * PIXI.ratio
         }),
         stopButton = p_img(PIXI, {
             width: 150 * PIXI.ratio,
             src: 'images/stop.png',
-            is_PIXI_loader: true,
             x: 42 * PIXI.ratio,
             y: playButton.y
         }),
         pauseButton = p_img(PIXI, {
             width: 150 * PIXI.ratio,
             src: 'images/pause.png',
-            is_PIXI_loader: true,
             x: playButton.x,
             y: playButton.y
         }),

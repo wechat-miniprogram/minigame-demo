@@ -223,62 +223,72 @@ const signIn = [
                         label: '音频',
                         name: 'voiceFrequency',
                         path: 'media/voiceFrequency/index'
+                    },
+                    {
+                        label: '录音',
+                        name: 'voice',
+                        path: 'media/voice/index'
                     }
                 ]
             },
             {
                 label: '数据与文件系统',
-                name: 'fileSystemManager',
+                name: 'storage-fileSystem',
                 children: [
                     {
                         label: '创建/删除目录',
-                        name: 'mk-rm-dir',
-                        path: 'fileSystemManager/mk-rm-dir/index'
+                        name: 'dir',
+                        path: 'storage-fileSystem/dir/index'
                     },
                     {
                         label: '判断文件/目录是否存在',
                         name: 'access',
-                        path: 'fileSystemManager/access/index'
+                        path: 'storage-fileSystem/access/index'
                     },
                     {
                         label: '重命名',
                         name: 'rename',
-                        path: 'fileSystemManager/rename/index'
+                        path: 'storage-fileSystem/rename/index'
                     },
                     {
                         label: '保存临时文件到本地',
                         name: 'saveFile',
-                        path: 'fileSystemManager/saveFile/index'
+                        path: 'storage-fileSystem/saveFile/index'
                     },
                     {
                         label: '查看目录内容',
                         name: 'readdir',
-                        path: 'fileSystemManager/readdir/index'
+                        path: 'storage-fileSystem/readdir/index'
                     },
                     {
                         label: '操作文件',
                         name: 'operationFile',
-                        path: 'fileSystemManager/operationFile/index'
+                        path: 'storage-fileSystem/operationFile/index'
                     },
                     {
                         label: '获取文件信息',
                         name: 'getFileInfo',
-                        path: 'fileSystemManager/getFileInfo/index'
+                        path: 'storage-fileSystem/getFileInfo/index'
                     },
                     {
                         label: '判断文件路径是否是目录',
                         name: 'stat',
-                        path: 'fileSystemManager/stat/index'
+                        path: 'storage-fileSystem/stat/index'
                     },
                     {
                         label: '解压文件',
                         name: 'unzip',
-                        path: 'fileSystemManager/unzip/index'
+                        path: 'storage-fileSystem/unzip/index'
                     },
                     {
                         label: '本地缓存文件',
                         name: 'savedFile',
-                        path: 'fileSystemManager/savedFile/index'
+                        path: 'storage-fileSystem/savedFile/index'
+                    },
+                    {
+                        label: '数据缓存',
+                        name: 'storage',
+                        path: 'storage-fileSystem/storage/index'
                     }
                 ]
             },
