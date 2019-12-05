@@ -53,7 +53,9 @@ module.exports = function(PIXI, app, obj, callBack) {
 
     let clock,
         time = 0,
-        playTime = 0;
+        playTime = 0,
+        runStopRecord,
+        runStopVoice;
 
     writeTime.hideFn();
 
@@ -74,18 +76,20 @@ module.exports = function(PIXI, app, obj, callBack) {
     // 开始录音 “按钮” 结束
 
     // 结束录音 “按钮” 开始
-    stopRecordButton.onClickFn(() => {
-        callBack({
-            status: 'stopRecord',
-            drawFn(type) {
-                if (type) return stopRecordButton.hideFn();
-                clearInterval(clock);
-                writeTime.turnText(totalTime.text);
-                totalTimeFn(0);
-                isVisibleFn([writeTime, playVoiceButton, trashButton], 'showFn');
-            }
-        });
-    });
+    stopRecordButton.onClickFn(
+        (runStopRecord = () => {
+            callBack({
+                status: 'stopRecord',
+                drawFn(type) {
+                    if (type) return stopRecordButton.hideFn();
+                    clearClock();
+                    writeTime.turnText(totalTime.text);
+                    totalTimeFn(0);
+                    isVisibleFn([writeTime, playVoiceButton, trashButton], 'showFn');
+                }
+            });
+        })
+    );
     stopRecordButton.hideFn();
     // 结束录音 “按钮” 结束
 
@@ -100,7 +104,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                         clock = setInterval(() => {
                             playTime++;
                             totalTimeFn(playTime);
-                            if (playTime >= time) (playTime = 0), clearInterval(clock);
+                            if (playTime >= time) (playTime = 0), clearClock();
                         }, 1000);
                         playVoiceButton.hideFn();
                         stopVoiceButton.showFn();
@@ -120,19 +124,21 @@ module.exports = function(PIXI, app, obj, callBack) {
     // 播放音频 “按钮” 结束
 
     // 终止播放 “按钮” 开始
-    stopVoiceButton.onClickFn(() => {
-        callBack({
-            status: 'stopVoic',
-            drawFn() {
-                playTime = 0;
-                totalTimeFn(0);
-                clearInterval(clock);
-                playVoiceButton.showFn();
-                stopVoiceButton.hideFn();
-                trashButton.setPositionFn({ x: playVoiceButton.x + playVoiceButton.width + 100 * PIXI.ratio });
-            }
-        });
-    });
+    stopVoiceButton.onClickFn(
+        (runStopVoice = () => {
+            callBack({
+                status: 'stopVoic',
+                drawFn() {
+                    playTime = 0;
+                    totalTimeFn(0);
+                    clearClock();
+                    playVoiceButton.showFn();
+                    stopVoiceButton.hideFn();
+                    trashButton.setPositionFn({ x: playVoiceButton.x + playVoiceButton.width + 100 * PIXI.ratio });
+                }
+            });
+        })
+    );
     stopVoiceButton.hideFn();
     // 终止播放 “按钮” 结束
 
@@ -146,7 +152,7 @@ module.exports = function(PIXI, app, obj, callBack) {
 
                 time = playTime = 0;
                 totalTimeFn(0);
-                clearInterval(clock);
+                clearClock();
                 recordButton.showFn();
                 writeTime.hideFn();
             }
@@ -160,7 +166,15 @@ module.exports = function(PIXI, app, obj, callBack) {
         hour = (time / 3600) | 0;
         minute = ((time % 3600) / 60) | 0;
         second = (time % 3600) % 60;
-        totalTime.turnText([hour, minute, second].map(item => ('00' + item).slice((item + '').length)).join(':'));
+        try {
+            totalTime.turnText([hour, minute, second].map(item => ('00' + item).slice((item + '').length)).join(':'));
+        } catch (e) {
+            new Promise(res => {
+                res([hour, minute, second].map(item => ('00' + item).slice((item + '').length)).join(':'));
+            }).then(time => {
+                totalTime.turnText(time);
+            });
+        }
     }
 
     function isVisibleFn(arr, method) {
@@ -169,11 +183,24 @@ module.exports = function(PIXI, app, obj, callBack) {
         }
     }
 
-    goBack.callBack = ()=>{
-        callBack({status: 'stopRecord'});
-        clearInterval(clock);
-        callBack({status: 'trash'});
+    wx.onShow(runShow);
+    function runShow() {
+        stopRecordButton.visible && runStopRecord();
+        stopVoiceButton && runStopVoice();
     }
+
+    wx.onHide(clearClock);
+    function clearClock() {
+        clearInterval(clock);
+    }
+
+    goBack.callBack = () => {
+        callBack({ status: 'stopRecord' });
+        clearClock();
+        callBack({ status: 'trash' });
+        wx.offShow(runShow);
+        wx.offHide(clearClock);
+    };
 
     container.addChild(
         goBack,

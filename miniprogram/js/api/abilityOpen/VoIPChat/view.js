@@ -207,22 +207,22 @@ module.exports = function(PIXI, app, obj, callBack) {
         }
     }
 
-    setTimeout(() => {
-        callBack({
-            status: 'joinVoIPChat',
-            groupId: obj.roomName,
-            re_enter: obj.re_enter,
-            drawFn(res, name) {
-                roomName = name;
-                roomNumText.turnText(`当前房间人数：${res.openIdList.length} 人`);
+    !wx.joinVoIPChat && wx.joinVoIPChat();
 
-                !obj.pathName && isShowChildFn(true);
-            },
-            drawRoomNumFn(num) {
-                roomNumText.turnText(`当前房间人数：${num} 人`);
-            }
-        });
-    }, 0);
+    callBack({
+        status: 'joinVoIPChat',
+        groupId: obj.roomName,
+        re_enter: obj.re_enter,
+        drawFn(res, name) {
+            roomName = name;
+            roomNumText.turnText(`当前房间人数：${res.openIdList.length} 人`);
+
+            !obj.pathName && isShowChildFn(true);
+        },
+        drawRoomNumFn(num) {
+            roomNumText.turnText(`当前房间人数：${num} 人`);
+        }
+    });
 
     container.addChild(
         goBack,

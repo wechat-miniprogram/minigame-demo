@@ -14,7 +14,7 @@ module.exports = function(PIXI, app, obj) {
                 });
 
                 // 开始录音
-                recorderManager.start();
+                recorderManager.start({ duration: 600000 }); // 录音的时长，单位 ms，最大值 600000（10 分钟）
 
                 drawFn('hide'); // 更新UI
 
