@@ -18,16 +18,14 @@ module.exports = function(PIXI, app, obj) {
                     getSignature(groupId, res => {
                         wx.joinVoIPChat({
                             ...res,
-                            success(res) {
-                                wx.hideLoading();
-                                drawFn(res, groupId); // 更新UI
-                                listeningFn();
-                                console.log(res);
-                            },
-                            fail(res) {
+                            complete(res) {
                                 wx.hideLoading();
                                 console.log(res);
-                                window.router.delPage();
+                                if (res.errCode) window.router.delPage();
+                                else {
+                                    drawFn(res, groupId); // 更新UI
+                                    listeningFn();
+                                }
                             }
                         });
                     });
@@ -38,16 +36,14 @@ module.exports = function(PIXI, app, obj) {
                     getSignature(groupId, res => {
                         wx.joinVoIPChat({
                             ...res,
-                            success(res) {
-                                wx.hideLoading();
-                                drawFn(res, groupId); // 更新UI
-                                listeningFn();
-                                console.log(res);
-                            },
-                            fail(res) {
+                            complete(res) {
                                 wx.hideLoading();
                                 console.log(res);
-                                window.router.delPage();
+                                if (res.errCode) window.router.delPage();
+                                else {
+                                    drawFn(res, groupId); // 更新UI
+                                    listeningFn();
+                                }
                             }
                         });
                     });

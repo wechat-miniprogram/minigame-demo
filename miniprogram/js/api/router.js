@@ -332,20 +332,28 @@ function router(PIXI, app, parameter) {
                 name = this.treeView[lastOne];
             if (name === newPage) return;
 
-            this.treeView.push(newPage);
-            treePage[newPage].reload && treePage[newPage].reload();
+            try {
+                this.treeView.push(newPage);
+                treePage[newPage].reload && treePage[newPage].reload();
 
-            if (!treePage[newPage].init) {
-                treePage[newPage].page = require(treePage[newPage].path)(PIXI, app, {
-                    ...treePage[newPage].parameter,
-                    ...query,
-                    ...res
+                if (!treePage[newPage].init) {
+                    treePage[newPage].page = require(treePage[newPage].path)(PIXI, app, {
+                        ...treePage[newPage].parameter,
+                        ...query,
+                        ...res
+                    });
+                    treePage[newPage].init = true;
+                }
+
+                treePage[name].page.visible = false;
+                treePage[newPage].page.visible = true;
+            } catch (e) {
+                wx.showModal({
+                    content: '你的微信版本过低，无法演示该功能！',
+                    showCancel: false,
+                    confirmColor: '#02BB00'
                 });
-                treePage[newPage].init = true;
             }
-
-            treePage[name].page.visible = false;
-            treePage[newPage].page.visible = true;
         };
         this.navigateBack = function() {
             if (this.treeView.length < 2) return;
