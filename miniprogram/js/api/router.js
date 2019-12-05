@@ -296,6 +296,17 @@ const signIn = [
                 label: '多线程',
                 name: 'worker',
                 path: 'worker/index'
+            },
+            {
+                label: '广告与虚拟支付',
+                name: 'AD',
+                children: [
+                    {
+                        label: 'banner 广告',
+                        name: 'createBannerAd',
+                        path: 'AD/createBannerAd/index'
+                    }
+                ]
             }
         ]
     }
@@ -374,5 +385,6 @@ function router(PIXI, app, parameter) {
             callBack(treePage[this.treeView[this.treeView.length - 1]]);
         };
     })();
+    window.router.navigateTo('createBannerAd')
 }
 module.exports = router;

@@ -1,6 +1,4 @@
 import view from './view';
-import show from '../../../libs/show';
-
 let friendRankShow  = false;
 let openDataContext = wx.getOpenDataContext();
 let sharedCanvas    = openDataContext.canvas;
@@ -85,7 +83,7 @@ module.exports = function(PIXI, app, obj) {
     let ticker = PIXI.ticker.shared;
 
     let { container, close } = view(PIXI, app, obj, (data) => {
-        let { status, drawFn } = data;
+        let { status } = data;
         switch (status) {
             case 'shareAppMessage':
                 if ( !friendRankShow ) {

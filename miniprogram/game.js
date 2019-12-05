@@ -49,7 +49,8 @@ PIXI.loader
         'images/facility.png',
         'images/right.png',
         'images/abilityOpen.png',
-        'images/interface.png'
+        'images/interface.png',
+        'images/AD.png'
     ])
     .load(() => {
         wx.loadSubpackage({

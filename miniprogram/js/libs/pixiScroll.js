@@ -122,8 +122,14 @@ function pixiScroll(PIXI, app, property) {
                     for (let i = sc.items.indexOf(this) + 1, len = sc.items.length; i < len; i++) {
                         sc.items[i].po.y = sc.items[i].po.y - this.childHeight;
                     }
-                    let lastOne = sc.items.length - 1;
-                    sc.itemHeight = sc.items[lastOne].po.y + sc.items[lastOne].drawHeight;
+                    let lastOne = sc.items.length - 1,
+                        newHeigth;
+
+                    newHeigth = sc.items[lastOne].po.y + sc.items[lastOne].drawHeight;
+
+                    if (sc.itemHeight === newHeigth) sc.itemHeight = newHeigth - this.childHeight;
+                    else sc.itemHeight = newHeigth;
+
                     sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight);
                     return;
                 }
