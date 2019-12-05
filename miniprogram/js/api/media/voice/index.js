@@ -20,18 +20,21 @@ module.exports = function(PIXI, app, obj) {
 
                 break;
             case 'stopRecord':
-                // 监听录音结束事件
-                recorderManager &&
-                    recorderManager.onStop(res => {
-                        // 创建内部 audio 上下文 InnerAudioContext 对象。
-                        innerAudioContext = wx.createInnerAudioContext();
-                        innerAudioContext.src = res.tempFilePath;
+                if (!recorderManager) return;
 
-                        drawFn && drawFn(); // 更新UI
-                    });
+                // 监听录音结束事件
+                recorderManager.onStop(res => {
+                    if (!drawFn) return;
+
+                    // 创建内部 audio 上下文 InnerAudioContext 对象。
+                    innerAudioContext = wx.createInnerAudioContext();
+                    innerAudioContext.src = res.tempFilePath;
+
+                    drawFn(); // 更新UI
+                });
 
                 // 停止录音
-                recorderManager && recorderManager.stop();
+                recorderManager.stop();
 
                 drawFn && drawFn('hide'); // 更新UI
 
