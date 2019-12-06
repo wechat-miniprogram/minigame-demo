@@ -49,7 +49,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         status: 'createVideo',
         data: {
             x: (75 * obj.width) / (375 * 2 * obj.pixelRatio),
-            y: ((underline.y + underline.height + 83 * PIXI.ratio) * 750) / (375 * 2 * obj.pixelRatio),
+            y: (underline.y + underline.height + 83 * PIXI.ratio) / obj.pixelRatio,
             width: (300 * obj.width) / (375 * obj.pixelRatio),
             height: (225 * obj.width) / (375 * obj.pixelRatio)
         }
