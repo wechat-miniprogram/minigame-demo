@@ -298,7 +298,7 @@ const signIn = [
                 path: 'worker/index'
             },
             {
-                label: '广告与虚拟支付',
+                label: '广告组件',
                 name: 'AD',
                 children: [
                     {
@@ -319,7 +319,7 @@ const signIn = [
                 ]
             },
             {
-                label: '推举组件',
+                label: '推荐组件',
                 name: 'recommend',
                 children: [
                     {
@@ -391,7 +391,6 @@ function router(PIXI, app, parameter) {
                 treePage[name].page.visible = false;
                 treePage[newPage].page.visible = true;
             } catch (e) {
-                console.log(e)
                 this.treeView.pop();
                 wx.showModal({
                     content: '你的微信版本过低，无法演示该功能！',
