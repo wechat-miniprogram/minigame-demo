@@ -33,7 +33,6 @@ module.exports = function(PIXI, app, obj) {
                 bannerAd.onError(res => {
                     wx.hideLoading();
 
-                    console.log(res);
                     show.Modal(res.errMsg, '发生错误');
 
                     drawFn(res); // 更新UI
@@ -60,11 +59,13 @@ module.exports = function(PIXI, app, obj) {
             case 'destroy':
                 if (!bannerAd) return;
 
+                bannerAd.hide();
+
                 // 销毁 banner 广告
                 bannerAd.destroy();
                 bannerAd = null;
 
-                drawFn(); // 更新UI
+                drawFn && drawFn(); // 更新UI
 
                 break;
         }

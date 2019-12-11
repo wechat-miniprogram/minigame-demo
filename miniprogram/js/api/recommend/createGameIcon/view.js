@@ -4,20 +4,20 @@ module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
         { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
             obj,
-            title: 'banner 广告',
-            api_name: 'createBannerAd'
+            title: '小游戏推荐icon',
+            api_name: 'createGameIcon'
         }),
-        bannerAdButton = p_button(PIXI, {
+        gameIconButton = p_button(PIXI, {
             width: 580 * PIXI.ratio,
             y: underline.height + underline.y + 123 * PIXI.ratio
         }),
         tipText = p_text(PIXI, {
-            content: '提示：banner广告组件支持修改自身位置大小、\n更新频率，可在广告组件初始化时进行设置，\n当前广告每30s更新一次请留意！',
+            content: '提示：小游戏推荐icon组件支持修改自身位置大\n小、个数等，可在组件初始化时进行设置',
             fontSize: 32 * PIXI.ratio,
             fill: 0xbebebe,
             align: 'center',
             lineHeight: 45 * PIXI.ratio,
-            y: bannerAdButton.height + bannerAdButton.y + 100 * PIXI.ratio,
+            y: gameIconButton.height + gameIconButton.y + 120 * PIXI.ratio,
             relative_middle: { containerWidth: obj.width }
         }),
         hideButton = p_button(PIXI, {
@@ -25,7 +25,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             height: 90 * PIXI.ratio,
             border: { width: 2 * PIXI.ratio, color: 0xd1d1d1 },
             alpha: 0,
-            y: underline.height + underline.y + 483 * PIXI.ratio
+            y: underline.height + underline.y + 453 * PIXI.ratio
         }),
         showButton = p_button(PIXI, {
             width: 576 * PIXI.ratio,
@@ -45,25 +45,27 @@ module.exports = function(PIXI, app, obj, callBack) {
     tipText.hideFn();
 
     // 点击展示 “按钮” 开始
-    bannerAdButton.myAddChildFn(
+    gameIconButton.myAddChildFn(
         p_text(PIXI, {
             content: `点击展示`,
             fontSize: 36 * PIXI.ratio,
             fill: 0xffffff,
-            relative_middle: { containerWidth: bannerAdButton.width, containerHeight: bannerAdButton.height }
+            relative_middle: { containerWidth: gameIconButton.width, containerHeight: gameIconButton.height }
         })
     );
-    bannerAdButton.onClickFn(() => {
-        bannerAdButton.hideFn();
+    gameIconButton.onClickFn(() => {
+        gameIconButton.hideFn();
         callBack({
-            status: 'createBannerAd',
-            style: {
-                top: (underline.y + underline.height + 53 * PIXI.ratio) / obj.pixelRatio,
-                left: (15 * obj.width) / (375 * obj.pixelRatio),
-                width: (345 * obj.width) / (375 * obj.pixelRatio)
-            },
+            status: 'createGameIcon',
+            style: Array.apply(null, { length: 8 }).map((item, index) => {
+                item = {
+                    top: (underline.y + underline.height + (13 + ~~((index + 1) / 5) * 158) * PIXI.ratio) / obj.pixelRatio,
+                    left: ((obj.width / 5) * ((index % 4) + 1) - 38 * obj.pixelRatio) / obj.pixelRatio
+                };
+                return item;
+            }),
             drawFn(res) {
-                if (res) return bannerAdButton.showFn();
+                if (res) return gameIconButton.showFn();
                 tipText.showFn();
                 hideButton.showFn();
                 destroyButton.showFn();
@@ -72,10 +74,10 @@ module.exports = function(PIXI, app, obj, callBack) {
     });
     // 点击展示 “按钮” 结束
 
-    // 隐藏 banner 广告 “按钮” 开始
+    // 隐藏 小游戏推荐 icon “按钮” 开始
     hideButton.myAddChildFn(
         p_text(PIXI, {
-            content: `隐藏 banner 广告`,
+            content: `隐藏小游戏推荐icon`,
             fontSize: 36 * PIXI.ratio,
             relative_middle: { containerWidth: hideButton.width, containerHeight: hideButton.height }
         })
@@ -90,12 +92,12 @@ module.exports = function(PIXI, app, obj, callBack) {
         });
     });
     hideButton.hideFn();
-    // 隐藏 banner 广告 “按钮” 结束
+    // 隐藏 小游戏推荐 icon “按钮” 结束
 
-    // 显示 banner 广告 “按钮” 开始
+    // 显示 小游戏推荐 icon “按钮” 开始
     showButton.myAddChildFn(
         p_text(PIXI, {
-            content: `显示 banner 广告`,
+            content: `显示小游戏推荐icon`,
             fontSize: 36 * PIXI.ratio,
             relative_middle: { containerWidth: showButton.width, containerHeight: showButton.height }
         })
@@ -110,12 +112,12 @@ module.exports = function(PIXI, app, obj, callBack) {
         });
     });
     showButton.hideFn();
-    // 显示 banner 广告 “按钮” 结束
+    // 显示 小游戏推荐 icon “按钮” 结束
 
-    // 销毁 banner 广告 “按钮” 开始
+    // 销毁 小游戏推荐 icon “按钮” 开始
     destroyButton.myAddChildFn(
         p_text(PIXI, {
-            content: `销毁 banner 广告`,
+            content: `销毁小游戏推荐icon`,
             fontSize: 36 * PIXI.ratio,
             relative_middle: { containerWidth: destroyButton.width, containerHeight: destroyButton.height }
         })
@@ -128,16 +130,18 @@ module.exports = function(PIXI, app, obj, callBack) {
                 showButton.hideFn();
                 hideButton.hideFn();
                 tipText.hideFn();
-                bannerAdButton.showFn();
+                gameIconButton.showFn();
             }
         });
     });
     destroyButton.hideFn();
-    // 销毁 banner 广告 “按钮” 结束
+    // 销毁 小游戏推荐 icon “按钮” 结束
+
+    !wx.createGameIcon && wx.createGameIcon();
 
     goBack.callBack = callBack.bind(null, { status: 'destroy' });
 
-    container.addChild(goBack, title, api_name, underline, bannerAdButton, tipText, hideButton, showButton, destroyButton, logo, logoName);
+    container.addChild(goBack, title, api_name, underline, gameIconButton, tipText, hideButton, showButton, destroyButton, logo, logoName);
 
     app.stage.addChild(container);
 

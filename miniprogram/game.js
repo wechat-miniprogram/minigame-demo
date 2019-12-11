@@ -50,7 +50,8 @@ PIXI.loader
         'images/right.png',
         'images/abilityOpen.png',
         'images/interface.png',
-        'images/AD.png'
+        'images/AD.png',
+        'images/recommend.png'
     ])
     .load(() => {
         wx.loadSubpackage({

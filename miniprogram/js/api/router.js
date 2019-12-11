@@ -305,7 +305,39 @@ const signIn = [
                         label: 'banner 广告',
                         name: 'createBannerAd',
                         path: 'AD/createBannerAd/index'
+                    },
+                    {
+                        label: '激励视频广告',
+                        name: 'createRewardedVideoAd',
+                        path: 'AD/createRewardedVideoAd/index'
+                    },
+                    {
+                        label: '插屏广告',
+                        name: 'createInterstitialAd',
+                        path: 'AD/createInterstitialAd/index'
                     }
+                ]
+            },
+            {
+                label: '推举组件',
+                name: 'recommend',
+                children: [
+                    {
+                        label: '小游戏推荐banner',
+                        name: 'createGameBanner',
+                        path: 'recommend/createGameBanner/index'
+                    },
+                    {
+                        label: '小游戏推荐弹窗',
+                        name: 'createGamePortal',
+                        path: 'recommend/createGamePortal/index'
+                    },
+                    {
+                        label: '小游戏推荐icon',
+                        name: 'createGameIcon',
+                        path: 'recommend/createGameIcon/index'
+                    },
+                    
                 ]
             }
         ]
@@ -343,10 +375,10 @@ function router(PIXI, app, parameter) {
                 name = this.treeView[lastOne];
             if (name === newPage) return;
 
-            try {
-                this.treeView.push(newPage);
-                treePage[newPage].reload && treePage[newPage].reload();
+            this.treeView.push(newPage);
+            treePage[newPage].reload && treePage[newPage].reload();
 
+            try {
                 if (!treePage[newPage].init) {
                     treePage[newPage].page = require(treePage[newPage].path)(PIXI, app, {
                         ...treePage[newPage].parameter,
@@ -359,6 +391,8 @@ function router(PIXI, app, parameter) {
                 treePage[name].page.visible = false;
                 treePage[newPage].page.visible = true;
             } catch (e) {
+                console.log(e)
+                this.treeView.pop();
                 wx.showModal({
                     content: '你的微信版本过低，无法演示该功能！',
                     showCancel: false,
