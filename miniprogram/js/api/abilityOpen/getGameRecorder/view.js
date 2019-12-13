@@ -196,8 +196,8 @@ module.exports = function(PIXI, app, obj, callBack) {
             status: 'stop',
             style: {
                 left: (320 * obj.width) / (375 * obj.pixelRatio),
-                top: ~~((videoBox.y + 21 * PIXI.ratio) / obj.pixelRatio),
-                fontSize: ~~((17 * obj.width) / (375 * obj.pixelRatio))
+                top: (videoBox.y + 19 * PIXI.ratio) / obj.pixelRatio,
+                fontSize: (17 * obj.width) / (375 * obj.pixelRatio)
             },
             drawFn(res) {
                 res ? videoBox.showFn() : abortStopPublicFn(stop, abort, 'showFn', pauseVisible, resumeVisible);

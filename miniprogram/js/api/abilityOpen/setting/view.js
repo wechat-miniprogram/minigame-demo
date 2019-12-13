@@ -1,49 +1,20 @@
-import { p_button, p_scroll, p_text, p_box, p_line, p_img, p_goBackBtn } from '../../../libs/component/index';
+import { p_button, p_scroll, p_text, p_box, p_line } from '../../../libs/component/index';
+import fixedTemplate from '../../../libs/template/fixed';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, 'delPage'),
-        title = p_text(PIXI, {
-            content: '设置',
-            fontSize: 36 * PIXI.ratio,
-            fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
+        { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
+            obj,
+            title: '设置',
+            api_name: 'open/get/Setting'
         }),
-        api_name = p_text(PIXI, {
-            content: 'open/get/Setting',
-            fontSize: 32 * PIXI.ratio,
-            fill: 0xbebebe,
-            y: 45 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        underline = p_line(
-            PIXI,
-            {
-                width: PIXI.ratio | 0,
-                color: 0xd8d8d8
-            },
-            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-            [150 * PIXI.ratio, 0]
-        ),
         scroll = p_scroll(PIXI, {
             height: obj.height - 135 * (obj.height / 1334),
             y: 135 * (obj.height / 1334)
         }),
-        logo = p_img(PIXI, {
-            width: 36 * PIXI.ratio,
-            height: 36 * PIXI.ratio,
-            x: 294 * PIXI.ratio,
-            y: 1374 * PIXI.ratio,
-            src: 'images/logo.png'
-        }),
-        logoName = p_text(PIXI, {
-            content: '小游戏示例',
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: (1378 * PIXI.ratio) | 0,
-            relative_middle: { point: 404 * PIXI.ratio }
-        }),
         div;
+
+    api_name.setPositionFn({ y: 45 * PIXI.ratio });
+    underline.redrawFn([(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio], [150 * PIXI.ratio, 0]);
 
     let settingObj = {
             'scope.userInfo': '用户信息',
@@ -97,9 +68,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         settingObj[arr[i]].visible = false;
     }
 
-    divDeploy.height =
-        div_container_child_arr[div_container_child_arr.length - 1].y +
-        div_container_child_arr[div_container_child_arr.length - 1].height;
+    divDeploy.height = div_container_child_arr[div_container_child_arr.length - 1].y + div_container_child_arr[div_container_child_arr.length - 1].height;
 
     div = p_box(PIXI, divDeploy);
     div_container.addChild(...div_container_child_arr);
@@ -173,16 +142,11 @@ module.exports = function(PIXI, app, obj, callBack) {
     });
     //打开小游戏设置“按钮” 结束
 
-    scroll.myAddChildFn([
-        api_name,
-        underline,
-        div,
-        getSettingBtn,
-        openSettingBtn,
-        logo,
-        logoName,
-        p_box(PIXI, { y: 1440 * PIXI.ratio })
-    ]);
+    title.setPositionFn({ y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio });
+    logo.setPositionFn({ y: 1374 * PIXI.ratio });
+    logoName.setPositionFn({ y: (1378 * PIXI.ratio) | 0 });
+
+    scroll.myAddChildFn([api_name, underline, div, getSettingBtn, openSettingBtn, logo, logoName, p_box(PIXI, { y: 1440 * PIXI.ratio })]);
     container.addChild(title, goBack, scroll);
     app.stage.addChild(container);
 

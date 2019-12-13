@@ -1,4 +1,4 @@
-import { p_button, p_text, p_line, p_img, p_goBackBtn } from '../../../libs/component/index';
+import { p_button, p_text } from '../../../libs/component/index';
 import fixedTemplate from '../../../libs/template/fixed';
 import share from '../../../libs/share';
 module.exports = function(PIXI, app, obj, callBack) {
