@@ -12,7 +12,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             y: underline.height + underline.y + 123 * PIXI.ratio
         }),
         tipText = p_text(PIXI, {
-            content: '提示：当前小游戏推荐弹窗组件已经初始化！',
+            content: '提示：当前小游戏推荐弹窗组件已经初始化',
             fontSize: 32 * PIXI.ratio,
             fill: 0xbebebe,
             align: 'center',
@@ -31,13 +31,16 @@ module.exports = function(PIXI, app, obj, callBack) {
         })
     );
     showButton.onClickFn(() => {
-        callBack({ status: 'show' });
+        showButton.isTouchable(false);
+        callBack({ status: 'show', drawFn: showButton.isTouchable.bind(null, true) });
     });
     // 点击展示 “按钮” 结束
 
     // 初始化 小游戏推荐弹窗组件 开始
     callBack({ status: 'createGamePortal' });
     // 初始化 小游戏推荐弹窗组件 结束
+
+    !wx.createGamePortal && wx.createGamePortal();
 
     goBack.callBack = callBack.bind(null, { status: 'destroy' });
 

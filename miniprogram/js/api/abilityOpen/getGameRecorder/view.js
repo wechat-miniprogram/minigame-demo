@@ -1,33 +1,12 @@
-import { p_button, p_text, p_line, p_box, p_img, p_goBackBtn } from '../../../libs/component/index';
+import { p_button, p_text, p_box } from '../../../libs/component/index';
+import fixedTemplate from '../../../libs/template/fixed';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, 'navigateBack', () => {
-            callBack({ status: 'hide' });
-            app.ticker.remove(rotatingFn);
+        { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
+            obj,
+            title: '游戏对局回放',
+            api_name: 'getGameRecorder'
         }),
-        title = p_text(PIXI, {
-            content: '游戏对局回放',
-            fontSize: 36 * PIXI.ratio,
-            fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        api_name = p_text(PIXI, {
-            content: 'getGameRecorder',
-            fontSize: 32 * PIXI.ratio,
-            fill: 0xbebebe,
-            y: title.height + title.y + 78 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        underline = p_line(
-            PIXI,
-            {
-                width: PIXI.ratio | 0,
-                color: 0xd8d8d8
-            },
-            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-            [150 * PIXI.ratio, 0]
-        ),
         box = p_box(PIXI, {
             height: 372 * PIXI.ratio,
             y: underline.height + underline.y + 24.4 * PIXI.ratio
@@ -36,20 +15,6 @@ module.exports = function(PIXI, app, obj, callBack) {
             height: 89 * PIXI.ratio,
             border: { width: PIXI.ratio | 0, color: 0xe5e5e5 },
             y: box.height + box.y + 24.4 * PIXI.ratio
-        }),
-        logo = p_img(PIXI, {
-            width: 36 * PIXI.ratio,
-            height: 36 * PIXI.ratio,
-            x: 294 * PIXI.ratio,
-            y: obj.height - 66 * PIXI.ratio,
-            src: 'images/logo.png'
-        }),
-        logoName = p_text(PIXI, {
-            content: '小游戏示例',
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: (obj.height - 62 * PIXI.ratio) | 0,
-            relative_middle: { point: 404 * PIXI.ratio }
         });
 
     // 绘制三角形 start
@@ -114,13 +79,11 @@ module.exports = function(PIXI, app, obj, callBack) {
         callBack({
             status: 'start',
             drawFn(res) {
-                if (res) {
-                    pause.showFn();
-                    abort.showFn();
-                    stop.showFn();
-                } else {
-                    start.showFn();
-                }
+                if (!res) return start.showFn();
+
+                pause.showFn();
+                abort.showFn();
+                stop.showFn();
             }
         });
     });
@@ -201,11 +164,11 @@ module.exports = function(PIXI, app, obj, callBack) {
     abort.onClickFn(() => {
         let pauseVisible = pause.visible,
             resumeVisible = resume.visible;
-        abort_stop_publicFn(abort, stop, 'hideFn', pauseVisible, resumeVisible);
+        abortStopPublicFn(abort, stop, 'hideFn', pauseVisible, resumeVisible);
         callBack({
             status: 'abort',
             drawFn(res) {
-                res ? start.showFn() : abort_stop_publicFn(abort, stop, 'showFn', pauseVisible, resumeVisible);
+                res ? start.showFn() : abortStopPublicFn(abort, stop, 'showFn', pauseVisible, resumeVisible);
             }
         });
     });
@@ -228,7 +191,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     stop.onClickFn(() => {
         let pauseVisible = pause.visible,
             resumeVisible = resume.visible;
-        abort_stop_publicFn(stop, abort, 'hideFn', pauseVisible, resumeVisible);
+        abortStopPublicFn(stop, abort, 'hideFn', pauseVisible, resumeVisible);
         callBack({
             status: 'stop',
             style: {
@@ -237,7 +200,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                 fontSize: ~~((17 * obj.width) / (375 * obj.pixelRatio))
             },
             drawFn(res) {
-                res ? videoBox.showFn() : abort_stop_publicFn(stop, abort, 'showFn', pauseVisible, resumeVisible);
+                res ? videoBox.showFn() : abortStopPublicFn(stop, abort, 'showFn', pauseVisible, resumeVisible);
             }
         });
     });
@@ -268,7 +231,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     videoBox.addChild(del);
     // 删除录制好的视频按钮 end
 
-    function abort_stop_publicFn(target, button, funcName, pauseVisible, resumeVisible) {
+    function abortStopPublicFn(target, button, funcName, pauseVisible, resumeVisible) {
         target[funcName]();
         pauseVisible && pause[funcName]();
         resumeVisible && resume[funcName]();
@@ -283,21 +246,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         };
     });
 
-    container.addChild(
-        goBack,
-        title,
-        api_name,
-        underline,
-        box,
-        videoBox,
-        start,
-        pause,
-        resume,
-        abort,
-        stop,
-        logo,
-        logoName
-    );
+    container.addChild(goBack, title, api_name, underline, box, videoBox, start, pause, resume, abort, stop, logo, logoName);
     app.stage.addChild(container);
 
     return container;

@@ -1,21 +1,10 @@
-/*
- * Scroller
- * http://github.com/zynga/scroller
- *
- * Copyright 2011, Zynga Inc.
- * Licensed under the MIT License.
- * https://raw.github.com/zynga/scroller/master/MIT-LICENSE.txt
- *
- * Based on the work of: Unify Project (unify-project.org)
- * http://unify-project.org
- * Copyright 2011, Deutsche Telekom AG
- * License: MIT + Apache (V2)
- */
 import core from './Animate';
 
 var Scroller;
 
 (function() {
+    var NOOP = function() {};
+
     /**
      * A pure logic 'component' for 'virtual' scrolling/zooming.
      */
@@ -31,6 +20,9 @@ var Scroller;
 
             /** Enable animations for deceleration, snap back, zooming and scrolling */
             animating: true,
+
+            /** duration for animations triggered by scrollTo/zoomTo */
+            animationDuration: 250,
 
             /** Enable bouncing (content can be slowly moved outside and jumps back after releasing) */
             bouncing: true,
@@ -51,12 +43,24 @@ var Scroller;
             minZoom: 0.5,
 
             /** Maximum zoom level */
-            maxZoom: 3
+            maxZoom: 3,
+
+            /** Multiply or decrease scrolling speed **/
+            speedMultiplier: 1,
+
+            /** Callback that is fired on the later of touch end or deceleration end,
+				provided that another scrolling action has not begun. Used to know
+				when to fade out a scrollbar. */
+            scrollingComplete: NOOP,
+
+            /** This configures the amount of change applied to deceleration when reaching boundaries  **/
+            penetrationDeceleration: 0.03,
+
+            /** This configures the amount of change applied to acceleration when reaching boundaries  **/
+            penetrationAcceleration: 0.08
         };
 
-        for (var key in options) {
-            this.options[key] = options[key];
-        }
+        Object.assign(this.options, options);
     };
 
     // Easing Equations (c) 2003 Robert Penner, all rights reserved.
@@ -92,6 +96,9 @@ var Scroller;
 
         /** {Boolean} Whether a touch event sequence is in progress */
         __isTracking: false,
+
+        /** {Boolean} Whether a deceleration animation went to completion. */
+        __didDecelerationComplete: false,
 
         /**
          * {Boolean} Whether a gesture zoom/rotate event is in progress. Activates when
@@ -248,19 +255,19 @@ var Scroller;
             var self = this;
 
             // Only update values which are defined
-            if (clientWidth) {
+            if (clientWidth === +clientWidth) {
                 self.__clientWidth = clientWidth;
             }
 
-            if (clientHeight) {
+            if (clientHeight === +clientHeight) {
                 self.__clientHeight = clientHeight;
             }
 
-            if (contentWidth) {
+            if (contentWidth === +contentWidth) {
                 self.__contentWidth = contentWidth;
             }
 
-            if (contentHeight) {
+            if (contentHeight === +contentHeight) {
                 self.__contentHeight = contentHeight;
             }
 
@@ -317,6 +324,19 @@ var Scroller;
         },
 
         /**
+         * Starts pull-to-refresh manually.
+         */
+        triggerPullToRefresh: function() {
+            // Use publish instead of scrollTo to allow scrolling to out of boundary position
+            // We don't need to normalize scrollLeft, zoomLevel, etc. here because we only y-scrolling when pull-to-refresh is enabled
+            this.__publish(this.__scrollLeft, -this.__refreshHeight, this.__zoomLevel, true);
+
+            if (this.__refreshStart) {
+                this.__refreshStart();
+            }
+        },
+
+        /**
          * Signalizes that pull-to-refresh is finished.
          */
         finishPullToRefresh: function() {
@@ -367,12 +387,18 @@ var Scroller;
          * @param animate {Boolean ? false} Whether to use animation
          * @param originLeft {Number ? null} Zoom in at given left coordinate
          * @param originTop {Number ? null} Zoom in at given top coordinate
+         * @param callback {Function ? null} A callback that gets fired when the zoom is complete.
          */
-        zoomTo: function(level, animate, originLeft, originTop) {
+        zoomTo: function(level, animate, originLeft, originTop, callback) {
             var self = this;
 
             if (!self.options.zooming) {
                 throw new Error('Zooming is not enabled!');
+            }
+
+            // Add callback if exists
+            if (callback) {
+                self.__zoomComplete = callback;
             }
 
             // Stop deceleration
@@ -427,11 +453,12 @@ var Scroller;
          * @param animate {Boolean ? false} Whether to use animation
          * @param originLeft {Number ? 0} Zoom in at given left coordinate
          * @param originTop {Number ? 0} Zoom in at given top coordinate
+         * @param callback {Function ? null} A callback that gets fired when the zoom is complete.
          */
-        zoomBy: function(factor, animate, originLeft, originTop) {
+        zoomBy: function(factor, animate, originLeft, originTop, callback) {
             var self = this;
 
-            self.zoomTo(self.__zoomLevel * factor, animate, originLeft, originTop);
+            self.zoomTo(self.__zoomLevel * factor, animate, originLeft, originTop, callback);
         },
 
         /**
@@ -498,7 +525,9 @@ var Scroller;
             }
 
             // Publish new values
-            self.__publish(left, top, zoom, animate);
+            if (!self.__isTracking) {
+                self.__publish(left, top, zoom, animate);
+            }
         },
 
         /**
@@ -551,16 +580,21 @@ var Scroller;
 
             var self = this;
 
+            // Reset interruptedAnimation flag
+            self.__interruptedAnimation = true;
+
             // Stop deceleration
             if (self.__isDecelerating) {
                 core.effect.Animate.stop(self.__isDecelerating);
                 self.__isDecelerating = false;
+                self.__interruptedAnimation = true;
             }
 
             // Stop animation
             if (self.__isAnimating) {
                 core.effect.Animate.stop(self.__isAnimating);
                 self.__isAnimating = false;
+                self.__interruptedAnimation = true;
             }
 
             // Use center point when dealing with two fingers
@@ -597,6 +631,9 @@ var Scroller;
 
             // Reset tracking flag
             self.__isTracking = true;
+
+            // Reset deceleration complete flag
+            self.__didDecelerationComplete = false;
 
             // Dragging starts directly with two fingers, otherwise lazy with an offset
             self.__isDragging = !isSingleTouch;
@@ -681,13 +718,13 @@ var Scroller;
                 }
 
                 if (self.__enableScrollX) {
-                    scrollLeft -= moveX;
+                    scrollLeft -= moveX * this.options.speedMultiplier;
                     var maxScrollLeft = self.__maxScrollLeft;
 
                     if (scrollLeft > maxScrollLeft || scrollLeft < 0) {
                         // Slow down on the edges
                         if (self.options.bouncing) {
-                            scrollLeft += moveX / 2;
+                            scrollLeft += (moveX / 2) * this.options.speedMultiplier;
                         } else if (scrollLeft > maxScrollLeft) {
                             scrollLeft = maxScrollLeft;
                         } else {
@@ -698,13 +735,13 @@ var Scroller;
 
                 // Compute new vertical scroll position
                 if (self.__enableScrollY) {
-                    scrollTop -= moveY;
+                    scrollTop -= moveY * this.options.speedMultiplier;
                     var maxScrollTop = self.__maxScrollTop;
 
                     if (scrollTop > maxScrollTop || scrollTop < 0) {
                         // Slow down on the edges
                         if (self.options.bouncing) {
-                            scrollTop += moveY / 2;
+                            scrollTop += (moveY / 2) * this.options.speedMultiplier;
 
                             // Support pull-to-refresh (only when only y is scrollable)
                             if (!self.__enableScrollX && self.__refreshHeight != null) {
@@ -753,8 +790,10 @@ var Scroller;
                 positions.push(self.__scrollLeft, self.__scrollTop, timeStamp);
 
                 self.__isDragging =
-                    (self.__enableScrollX || self.__enableScrollY) &&
-                    (distanceX >= minimumTrackingForDrag || distanceY >= minimumTrackingForDrag);
+                    (self.__enableScrollX || self.__enableScrollY) && (distanceX >= minimumTrackingForDrag || distanceY >= minimumTrackingForDrag);
+                if (self.__isDragging) {
+                    self.__interruptedAnimation = false;
+                }
             }
 
             // Update last touch positions and time stamp for next event
@@ -829,8 +868,14 @@ var Scroller;
                             if (!self.__refreshActive) {
                                 self.__startDeceleration(timeStamp);
                             }
+                        } else {
+                            self.options.scrollingComplete();
                         }
+                    } else {
+                        self.options.scrollingComplete();
                     }
+                } else if (timeStamp - self.__lastTouchMove > 100) {
+                    self.options.scrollingComplete();
                 }
             }
 
@@ -849,6 +894,9 @@ var Scroller;
                         self.__refreshStart();
                     }
                 } else {
+                    if (self.__interruptedAnimation || self.__isDragging) {
+                        self.options.scrollingComplete();
+                    }
                     self.scrollTo(self.__scrollLeft, self.__scrollTop, true, self.__zoomLevel);
 
                     // Directly signalize deactivation (nothing todo on refresh?)
@@ -923,9 +971,16 @@ var Scroller;
                     if (animationId === self.__isAnimating) {
                         self.__isAnimating = false;
                     }
+                    if (self.__didDecelerationComplete || wasFinished) {
+                        self.options.scrollingComplete();
+                    }
 
                     if (self.options.zooming) {
                         self.__computeScrollMax();
+                        if (self.__zoomComplete) {
+                            self.__zoomComplete();
+                            self.__zoomComplete = null;
+                        }
                     }
                 };
 
@@ -934,7 +989,7 @@ var Scroller;
                     step,
                     verify,
                     completed,
-                    250,
+                    self.options.animationDuration,
                     wasAnimating ? easeOutCubic : easeInOutCubic
                 );
             } else {
@@ -950,6 +1005,10 @@ var Scroller;
                 // Fix max scroll ranges
                 if (self.options.zooming) {
                     self.__computeScrollMax();
+                    if (self.__zoomComplete) {
+                        self.__zoomComplete();
+                        self.__zoomComplete = null;
+                    }
                 }
             }
         },
@@ -1006,19 +1065,25 @@ var Scroller;
             };
 
             // How much velocity is required to keep the deceleration running
-            var minVelocityToKeepDecelerating = self.options.snapping ? 4 : 0.1;
+            var minVelocityToKeepDecelerating = self.options.snapping ? 4 : 0.001;
 
             // Detect whether it's still worth to continue animating steps
             // If we are already slow enough to not being user perceivable anymore, we stop the whole process here.
             var verify = function() {
-                return (
+                var shouldContinue =
                     Math.abs(self.__decelerationVelocityX) >= minVelocityToKeepDecelerating ||
-                    Math.abs(self.__decelerationVelocityY) >= minVelocityToKeepDecelerating
-                );
+                    Math.abs(self.__decelerationVelocityY) >= minVelocityToKeepDecelerating;
+                if (!shouldContinue) {
+                    self.__didDecelerationComplete = true;
+                }
+                return shouldContinue;
             };
 
             var completed = function(renderedFramesPerSecond, animationId, wasFinished) {
                 self.__isDecelerating = false;
+                if (self.__didDecelerationComplete) {
+                    self.options.scrollingComplete();
+                }
 
                 // Animate to grid when snapping is active, otherwise just fix out-of-boundary positions
                 self.scrollTo(self.__scrollLeft, self.__scrollTop, self.options.snapping);
@@ -1049,13 +1114,13 @@ var Scroller;
             //
 
             if (!self.options.bouncing) {
-                var scrollLeftFixed = Math.max(Math.min(self.__maxScrollLeft, scrollLeft), 0);
+                var scrollLeftFixed = Math.max(Math.min(self.__maxDecelerationScrollLeft, scrollLeft), self.__minDecelerationScrollLeft);
                 if (scrollLeftFixed !== scrollLeft) {
                     scrollLeft = scrollLeftFixed;
                     self.__decelerationVelocityX = 0;
                 }
 
-                var scrollTopFixed = Math.max(Math.min(self.__maxScrollTop, scrollTop), 0);
+                var scrollTopFixed = Math.max(Math.min(self.__maxDecelerationScrollTop, scrollTop), self.__minDecelerationScrollTop);
                 if (scrollTopFixed !== scrollTop) {
                     scrollTop = scrollTopFixed;
                     self.__decelerationVelocityY = 0;
@@ -1097,8 +1162,8 @@ var Scroller;
                 var scrollOutsideY = 0;
 
                 // This configures the amount of change applied to deceleration/acceleration when reaching boundaries
-                var penetrationDeceleration = 0.03;
-                var penetrationAcceleration = 0.08;
+                var penetrationDeceleration = self.options.penetrationDeceleration;
+                var penetrationAcceleration = self.options.penetrationAcceleration;
 
                 // Check limits
                 if (scrollLeft < self.__minDecelerationScrollLeft) {
@@ -1134,9 +1199,7 @@ var Scroller;
     };
 
     // Copy over members to prototype
-    for (var key in members) {
-        Scroller.prototype[key] = members[key];
-    }
+    Object.assign(Scroller.prototype, members);
 })();
 
 module.exports = Scroller;

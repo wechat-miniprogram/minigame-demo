@@ -12,7 +12,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             y: underline.height + underline.y + 123 * PIXI.ratio
         }),
         tipText = p_text(PIXI, {
-            content: '提示：当前插屏广告组件已经初始化！',
+            content: '提示：当前插屏广告组件已经初始化',
             fontSize: 32 * PIXI.ratio,
             fill: 0xbebebe,
             align: 'center',

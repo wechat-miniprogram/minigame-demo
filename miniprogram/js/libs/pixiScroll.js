@@ -21,6 +21,7 @@ function pixiScroll(PIXI, app, property) {
                 scrollingX: false,
                 scrollingY: true,
                 bouncing: false
+                // snapping: true
             }
         );
 
@@ -113,12 +114,12 @@ function pixiScroll(PIXI, app, property) {
                         sc.items[i].po.y = sc.items[i].po.y - this.childHeight;
                     }
                     let lastOne = sc.items.length - 1,
-                        newHeigth;
+                        heigth = sc.items[lastOne].childHeight < 0 ? -sc.items[lastOne].childHeight : 0;
 
-                    newHeigth = sc.items[lastOne].po.y + sc.items[lastOne].drawHeight;
+                    heigth += sc.items[lastOne].po.y + sc.items[lastOne].drawHeight;
 
-                    if (sc.itemHeight === newHeigth) sc.itemHeight = newHeigth - this.childHeight;
-                    else sc.itemHeight = newHeigth;
+                    if (sc.itemHeight === heigth) sc.itemHeight = heigth - this.childHeight;
+                    else sc.itemHeight = heigth;
 
                     sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight);
                     return;

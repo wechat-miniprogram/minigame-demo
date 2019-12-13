@@ -1,9 +1,11 @@
 import view from './view';
 import * as show from '../../../libs/show';
 module.exports = function(PIXI, app, obj) {
-    let gamePortal;
+    let gamePortal,
+        codeObj = { 1000: '内部错误', 1001: '参数错误', 1002: '无效的推荐位，请检查推荐位id是否正确', 1004: '无合适的推荐', 1008: '推荐位已关闭' };
+
     return view(PIXI, app, obj, data => {
-        let { status } = data;
+        let { status, drawFn } = data;
         switch (status) {
             case 'createGamePortal':
                 // 初始化 init
@@ -13,21 +15,36 @@ module.exports = function(PIXI, app, obj) {
 
                 // 监听小游戏推荐弹窗错误事件
                 gamePortal.onError(res => {
-                    show.Modal(res.errMsg, '发生错误');
+                    show.Modal(res.errMsg, codeObj[res.errCode]);
                 });
 
                 break;
 
             case 'show':
-                // 加载 小游戏推荐弹窗
+                // 显示 小游戏推荐弹窗
                 gamePortal
-                    .load()
-                    .then(() => {
-                        // 显示 小游戏推荐弹窗
-                        gamePortal.show();
-                    })
+                    .show()
+                    .then(drawFn) // 更新UI
                     .catch(() => {
-                        show.Modal('小游戏推荐弹窗显示失败', '发生错误');
+                        // 显示失败 再次加载弹窗
+                        gamePortal
+                            .load()
+                            .then(() => {
+                                // 显示 小游戏推荐弹窗
+                                gamePortal.show();
+
+                                drawFn(); // 更新UI
+                            })
+                            .catch(res => {
+                                if (codeObj[res.errCode]) {
+                                    show.Modal(res.errMsg, codeObj[res.errCode]);
+                                } else {
+                                    // 显示 小游戏推荐弹窗
+                                    gamePortal.show();
+                                }
+
+                                drawFn(); // 更新UI
+                            });
                     });
 
                 break;
