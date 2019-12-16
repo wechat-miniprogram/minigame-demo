@@ -109,10 +109,10 @@ module.exports = function(PIXI, app, obj) {
                     let score = Math.floor(Math.random() * 1000 + 1);
                     wx.setUserCloudStorage({
                         KVDataList: [
-                            {   key  : 'rankScore',
+                            {   key  : 'score',
                                 value: JSON.stringify({
                                     wxgame: {
-                                        rankScore  : score,
+                                        score  : score,
                                         update_time: parseInt(+new Date() / 1000)
                                     }
                                 })

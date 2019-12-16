@@ -14,7 +14,7 @@ import {
 
 let userinfo;
 let selfData;
-let key             = 'rankScore';
+let key             = 'score';
 let currentMaxScore = 0;
 let cacheRankData   = [];
 let selfIndex       = 0;
@@ -35,7 +35,7 @@ function draw(title, data = []) {
 }
 
 function renderData(data, info, title="排行榜", mock=false) {
-    data.sort( (a, b) => b.rankScore - a.rankScore);
+    data.sort( (a, b) => b.score - a.score);
     let find  = findSelf(data, info);
     selfData  = find.self;
     selfIndex = find.index + 1;
@@ -65,7 +65,7 @@ function renderData(data, info, title="排行榜", mock=false) {
         for ( let i = data.length; i < 20; i++ ) {
             data[i] = JSON.parse(JSON.stringify(selfData));
             data[i].rank = i;
-            data[i].rankScore = 0;
+            data[i].score = 0;
             data[i].nickname = 'mock__user';
         }
     }

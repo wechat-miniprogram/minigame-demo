@@ -24,7 +24,7 @@ export function getDataFromSource(item) {
      } catch(e) {
          source = {
              "wxgame":{
-                 "rankScore"      : 1,
+                 "score"      : 1,
                  "update_time": getCurrTime()
              }
          }
@@ -48,9 +48,9 @@ export function findSelf(list, selfData) {
     list.forEach( (item, index) => {
         if ( item.avatarUrl === selfData.avatarUrl ) {
             result.self       = item;
-            let { rankScore, update_time } = getDataFromSource(item);
+            let { score, update_time } = getDataFromSource(item);
 
-            result.self.rankScore       = rankScore;
+            result.self.score       = score;
             result.self.update_time = update_time;
             result.index            = index;
         }
@@ -65,10 +65,10 @@ export function findSelf(list, selfData) {
  * 所以如果拉取排行榜之前已经知道用户的分数了，可以getFriendCloudStorage然后手动插入数据
  * 可以大大提高拉取速度
  */
-export function injectSelfToList(list, userinfo, rankScore) {
+export function injectSelfToList(list, userinfo, score) {
     let item = {
         rank: 1,
-        rankScore,
+        score,
         avatarUrl: userinfo.avatarUrl,
         nickname : userinfo.nickname || userinfo.nickName,
     }
@@ -76,11 +76,11 @@ export function injectSelfToList(list, userinfo, rankScore) {
     list.push(item);
 }
 
-export function replaceSelfDataInList(list, info, rankScore) {
+export function replaceSelfDataInList(list, info, score) {
     list.forEach( (item) => {
         if (   item.avatarUrl === info.avatarUrl
-            && rankScore > item.rankScore ) {
-            item.rankScore = rankScore;
+            && score > item.score ) {
+            item.score = score;
         }
     });
 }
@@ -94,8 +94,8 @@ export function getGroupFriendData(key, shareTicket, callback = none) {
             res.data = res.data.filter( item => item.KVDataList.length );
 
             let data = res.data.map( item => {
-                let { rankScore, update_time } = getDataFromSource(item);
-                item.rankScore   = rankScore;
+                let { score, update_time } = getDataFromSource(item);
+                item.score   = score;
                 item.update_time = update_time;
 
                 return item;
@@ -117,11 +117,12 @@ export function getFriendData(key, callback = none) {
     wx.getFriendCloudStorage({
         keyList: [key],
         success: res => {
+            console.log(res);
             res.data = res.data.filter( item => item.KVDataList.length );
 
             let data = res.data.map( item => {
-                let { rankScore, update_time } = getDataFromSource(item);
-                item.rankScore   = rankScore;
+                let { score, update_time } = getDataFromSource(item);
+                item.score   = score;
                 item.update_time = update_time;
 
                 return item;
@@ -139,14 +140,14 @@ export function getFriendData(key, callback = none) {
 /**
  * 拉取用户当前的分数记录，如果当前分数大于历史最高分数，执行上报
  */
-export function setUserRecord(key, rankScore ) {
+export function setUserRecord(key, score ) {
     let time   = getCurrTime();
     wx.setUserCloudStorage({
         KVDataList: [
             {   key  : key,
                 value: JSON.stringify({
                     wxgame: {
-                        rankScore,
+                        score,
                         update_time: time,
                     }
                 })
