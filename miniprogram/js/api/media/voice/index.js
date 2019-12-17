@@ -29,8 +29,7 @@ module.exports = function(PIXI, app, obj) {
                     // 创建内部 audio 上下文 InnerAudioContext 对象。
                     innerAudioContext = wx.createInnerAudioContext();
                     innerAudioContext.src = res.tempFilePath;
-
-                    drawFn(); // 更新UI
+                    drawFn(res.duration); // 更新UI
                 });
 
                 // 停止录音
@@ -45,10 +44,26 @@ module.exports = function(PIXI, app, obj) {
                 innerAudioContext.play();
 
                 // 监听音频自然播放至结束的事件
-                innerAudioContext.onEnded(function() {
-                    innerAudioContext.offEnded();
+                innerAudioContext.onEnded(() => {
+                    drawFn('ended', innerAudioContext.duration); // 更新UI
+                });
 
-                    drawFn('ended'); // 更新UI
+                // 监听音频暂停事件
+                innerAudioContext.onPause(() => {
+                    let rebooting;
+                    new Promise(resolve => {
+                        rebooting = () => {
+                            drawFn('stop'); // 更新UI
+                            resolve();
+                        };
+                        // 监听音频中断结束事件
+                        wx.onAudioInterruptionEnd(rebooting);
+                        // 兼容安卓 Android 系统不兼容情况
+                        wx.onShow(rebooting);
+                    }).then(() => {
+                        wx.offShow(rebooting);
+                        wx.offAudioInterruptionEnd(rebooting);
+                    });
                 });
 
                 drawFn('play'); // 更新UI
@@ -59,15 +74,19 @@ module.exports = function(PIXI, app, obj) {
                 // 终止播放
                 innerAudioContext.stop();
                 innerAudioContext.offEnded();
-
-                drawFn(); // 更新UI
+                innerAudioContext.offPause();
+                drawFn && drawFn(); // 更新UI
 
                 break;
 
             case 'trash':
+                if (!innerAudioContext) return;
+
                 // 销毁当前实例
-                innerAudioContext && innerAudioContext.destroy();
+                innerAudioContext.destroy();
                 innerAudioContext = null;
+
+                wx.offAudioInterruptionEnd();
 
                 drawFn && drawFn(); // 更新UI
 

@@ -78,16 +78,19 @@ module.exports = function(PIXI, app, obj, callBack) {
     // 结束录音 “按钮” 开始
     stopRecordButton.onClickFn(
         (runStopRecord = () => {
-            callBack({
-                status: 'stopRecord',
-                drawFn(type) {
-                    if (type) return stopRecordButton.hideFn();
-                    clearClock();
-                    writeTime.turnText(totalTime.text);
-                    totalTimeFn(0);
-                    isVisibleFn([writeTime, playVoiceButton, trashButton], 'showFn');
-                }
-            });
+            stopRecordButton.visible &&
+                callBack({
+                    status: 'stopRecord',
+                    drawFn(type) {
+                        if (type === 'hide') return stopRecordButton.hideFn();
+
+                        if (type === +type) {
+                            clearClock();
+                            correctTimeFn(Math.round(type / 1000), true);
+                            isVisibleFn([writeTime, playVoiceButton, trashButton], 'showFn');
+                        }
+                    }
+                });
         })
     );
     stopRecordButton.hideFn();
@@ -98,23 +101,26 @@ module.exports = function(PIXI, app, obj, callBack) {
         totalTimeFn(0);
         callBack({
             status: 'playVoice',
-            drawFn(status) {
+            drawFn(status, duration) {
                 switch (status) {
                     case 'play':
                         clock = setInterval(() => {
                             playTime++;
                             totalTimeFn(playTime);
-                            if (playTime >= time) (playTime = 0), clearClock();
                         }, 1000);
                         playVoiceButton.hideFn();
                         stopVoiceButton.showFn();
                         trashButton.setPositionFn({ x: stopVoiceButton.x + stopVoiceButton.width + 225 * PIXI.ratio });
                         break;
                     case 'ended':
-                        totalTimeFn(time);
-                        playVoiceButton.showFn();
-                        stopVoiceButton.hideFn();
-                        trashButton.setPositionFn({ x: playVoiceButton.x + playVoiceButton.width + 100 * PIXI.ratio });
+                        clearClock();
+                        playTime = 0;
+                        correctTimeFn(Math.round(duration || time));
+                        playStopSwitchUI();
+                        callBack({ status: 'stopVoic' });
+                        break;
+                    case 'stop':
+                        runStopVoice();
                         break;
                 }
             }
@@ -132,9 +138,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                     playTime = 0;
                     totalTimeFn(0);
                     clearClock();
-                    playVoiceButton.showFn();
-                    stopVoiceButton.hideFn();
-                    trashButton.setPositionFn({ x: playVoiceButton.x + playVoiceButton.width + 100 * PIXI.ratio });
+                    playStopSwitchUI();
                 }
             });
         })
@@ -177,18 +181,26 @@ module.exports = function(PIXI, app, obj, callBack) {
         }
     }
 
+    function correctTimeFn(actualTime, reset) {
+        time = actualTime;
+        totalTimeFn(time);
+        writeTime.turnText(totalTime.text);
+        reset && totalTimeFn(0);
+    }
+
     function isVisibleFn(arr, method) {
         for (let i = 0, len = arr.length; i < len; i++) {
             arr[i][method]();
         }
     }
 
-    wx.onShow(runShow);
-    function runShow() {
-        stopRecordButton.visible && runStopRecord();
-        stopVoiceButton && runStopVoice();
+    function playStopSwitchUI() {
+        playVoiceButton.showFn();
+        stopVoiceButton.hideFn();
+        trashButton.setPositionFn({ x: playVoiceButton.x + playVoiceButton.width + 100 * PIXI.ratio });
     }
 
+    wx.onShow(runStopRecord);
     wx.onHide(clearClock);
     function clearClock() {
         clearInterval(clock);
@@ -198,7 +210,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         callBack({ status: 'stopRecord' });
         clearClock();
         callBack({ status: 'trash' });
-        wx.offShow(runShow);
+        wx.offShow(runStopRecord);
         wx.offHide(clearClock);
     };
 

@@ -7,6 +7,34 @@ module.exports = function(PIXI, app, obj) {
             innerAudioContext.offTimeUpdate();
             //取消监听音频自然播放至结束的事件
             innerAudioContext.offEnded();
+
+            innerAudioContext.isInterruption = false;
+        },
+        interruptionFn = () => {
+            // 阻止多次调用
+            if (interruptionFn.isRun) return;
+            interruptionFn.isRun = true;
+
+            let rebooting;
+            new Promise(resolve => {
+                rebooting = resolve;
+
+                // 监听音频中断结束事件
+                wx.onAudioInterruptionEnd(rebooting);
+
+                // 兼容安卓 Android 系统不兼容情况
+                wx.onShow(rebooting);
+            }).then(() => {
+                interruptionFn.isRun = false;
+
+                wx.offShow(rebooting);
+                wx.offAudioInterruptionEnd(rebooting);
+
+                if (innerAudioContext.isInterruption) {
+                    // 播放音频
+                    innerAudioContext.play();
+                }
+            });
         };
 
     return view(PIXI, app, obj, (status, drawFn) => {
@@ -28,20 +56,26 @@ module.exports = function(PIXI, app, obj) {
                         }[res.errCode]
                     );
                 });
+
+                // 监听音频暂停事件
+                innerAudioContext.onPause(interruptionFn);
+
                 break;
 
             case 'play':
                 // 开始播放
                 innerAudioContext.play();
                 // 监听音频播放进度更新事件
-                innerAudioContext.onTimeUpdate(function() {
+                innerAudioContext.onTimeUpdate(() => {
                     drawFn('upDate', innerAudioContext.duration, innerAudioContext.currentTime); // 更新ui
                 });
                 // 监听音频自然播放至结束的事件
-                innerAudioContext.onEnded(function() {
+                innerAudioContext.onEnded(() => {
                     drawFn('ended', innerAudioContext.duration); // 更新ui
                     removeEventFn();
                 });
+
+                innerAudioContext.isInterruption = true;
 
                 drawFn('play'); // 更新ui
                 break;

@@ -1,34 +1,12 @@
 import { p_text, p_line, p_img, p_box, p_circle, p_goBackBtn } from '../../../libs/component/index';
+import fixedTemplate from '../../../libs/template/fixed';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, 'navigateBack', () => {
-            callBack({
-                status: 'destroy'
-            });
+        { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
+            obj,
+            title: '音频',
+            api_name: 'Audio'
         }),
-        title = p_text(PIXI, {
-            content: '音频',
-            fontSize: 36 * PIXI.ratio,
-            fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        api_name = p_text(PIXI, {
-            content: 'Audio',
-            fontSize: 32 * PIXI.ratio,
-            fill: 0xbebebe,
-            y: title.height + title.y + 78 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        underline = p_line(
-            PIXI,
-            {
-                width: PIXI.ratio | 0,
-                color: 0xd8d8d8
-            },
-            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-            [150 * PIXI.ratio, 0]
-        ),
         box = p_box(PIXI, {
             height: 369 * PIXI.ratio,
             y: underline.y + underline.height + 92 * PIXI.ratio
@@ -86,20 +64,6 @@ module.exports = function(PIXI, app, obj, callBack) {
             src: 'images/pause.png',
             x: playButton.x,
             y: playButton.y
-        }),
-        logo = p_img(PIXI, {
-            width: 36 * PIXI.ratio,
-            height: 36 * PIXI.ratio,
-            x: 294 * PIXI.ratio,
-            y: obj.height - 66 * PIXI.ratio,
-            src: 'images/logo.png'
-        }),
-        logoName = p_text(PIXI, {
-            content: '小游戏示例',
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: (obj.height - 62 * PIXI.ratio) | 0,
-            relative_middle: { point: 404 * PIXI.ratio }
         });
 
     progressBar.green = p_box(PIXI, {
@@ -183,9 +147,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         let second = currentTime % 60 | 0,
             minute = (currentTime / 60) | 0;
 
-        timerText.turnText(
-            `00 : ${minute / 60 < 10 ? '0' + minute : minute} : ${second % 60 < 10 ? '0' + second : second}`
-        );
+        timerText.turnText(`00 : ${minute / 60 < 10 ? '0' + minute : minute} : ${second % 60 < 10 ? '0' + second : second}`);
     }
     // 更新播放时间function 结束
 
@@ -193,26 +155,18 @@ module.exports = function(PIXI, app, obj, callBack) {
     callBack('createInnerAudioContext');
     // 创建内部 audio 上下文 InnerAudioContext 对象 结束
 
+    goBack.callBack = callBack.bind(null, { status: 'destroy' });
+
     window.router.getNowPage(page => {
         page.reload = function() {
             logo.turnImg({ src: 'images/logo.png' });
+            playButton.turnImg({ src: 'images/play.png' });
+            stopButton.turnImg({ src: 'images/stop.png' });
         };
     });
 
     box.addChild(timerText, progressBar.gray, progressBar.green, progressBar.circle, startingTime, finishTime);
-    container.addChild(
-        goBack,
-        title,
-        api_name,
-        underline,
-        box,
-        hint,
-        stopButton,
-        playButton,
-        pauseButton,
-        logo,
-        logoName
-    );
+    container.addChild(goBack, title, api_name, underline, box, hint, stopButton, playButton, pauseButton, logo, logoName);
     app.stage.addChild(container);
 
     return container;
