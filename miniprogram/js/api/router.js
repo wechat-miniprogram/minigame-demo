@@ -15,6 +15,11 @@ const signIn = [
                         path: 'abilityOpen/openDataContext/index'
                     },
                     {
+                        label: '永久订阅',
+                        name: 'requestSubscribeSystemMessage',
+                        path: 'abilityOpen/requestSubscribeSystemMessage/index'
+                    },
+                    {
                         label: '微信登录',
                         name: 'login',
                         path: 'abilityOpen/login/index'
@@ -336,8 +341,7 @@ const signIn = [
                         label: '小游戏推荐icon',
                         name: 'createGameIcon',
                         path: 'recommend/createGameIcon/index'
-                    },
-                    
+                    }
                 ]
             }
         ]
