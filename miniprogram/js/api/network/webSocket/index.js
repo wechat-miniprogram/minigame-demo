@@ -4,10 +4,8 @@ module.exports = function(PIXI, app, obj) {
     return view(PIXI, app, obj, (status, func) => {
         switch (status) {
             case 'connection':
-                wx.showLoading({
-                    title: '连接中...',
-                    mask: true
-                });
+                wx.showLoading({ title: '连接中...', mask: true });
+
                 wx.onSocketOpen(() => {
                     wx.hideLoading();
                     console.log('WebSocket 已连接');
