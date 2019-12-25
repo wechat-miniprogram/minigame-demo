@@ -1,38 +1,12 @@
-import { p_text, p_line, p_button, p_box, p_img, p_goBackBtn } from '../../../libs/component/index';
+import { p_text, p_button, p_box } from '../../../libs/component/index';
+import fixedTemplate from '../../../libs/template/fixed';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, wx.offDeviceMotionChange ? 'delPage' : 'navigateBack', () => {
-            switch_button_state(
-                { button: stopListening, boolead: false, color: 0xe9e9e9 },
-                { button: startListening, boolead: true, color: 0x353535 }
-            );
-            callBack({
-                status: 'offDeviceMotionChange'
-            });
+        { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
+            obj,
+            title: '监听设备方向',
+            api_name: 'on/off/DeviceMotionChange'
         }),
-        title = p_text(PIXI, {
-            content: '监听设备方向',
-            fontSize: 36 * PIXI.ratio,
-            fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        api_name = p_text(PIXI, {
-            content: 'on/off/DeviceMotionChange',
-            fontSize: 32 * PIXI.ratio,
-            fill: 0xbebebe,
-            y: title.height + title.y + 78 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        underline = p_line(
-            PIXI,
-            {
-                width: PIXI.ratio | 0,
-                color: 0xd8d8d8
-            },
-            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-            [150 * PIXI.ratio, 0]
-        ),
         div = p_box(PIXI, {
             width: 600 * PIXI.ratio,
             height: 372 * PIXI.ratio,
@@ -46,20 +20,6 @@ module.exports = function(PIXI, app, obj, callBack) {
             y: 93 * PIXI.ratio,
             lineHeight: 72 * PIXI.ratio,
             relative_middle: { containerWidth: div.width }
-        }),
-        logo = p_img(PIXI, {
-            width: 36 * PIXI.ratio,
-            height: 36 * PIXI.ratio,
-            x: 294 * PIXI.ratio,
-            y: obj.height - 66 * PIXI.ratio,
-            src: 'images/logo.png'
-        }),
-        logoName = p_text(PIXI, {
-            content: '小游戏示例',
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: (obj.height - 62 * PIXI.ratio) | 0,
-            relative_middle: { point: 404 * PIXI.ratio }
         });
 
     div.addChild(text);
@@ -88,10 +48,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     let run;
     startListening.onClickFn(
         (run = () => {
-            switch_button_state(
-                { button: startListening, boolead: false, color: 0xe9e9e9 },
-                { button: stopListening, boolead: true, color: 0x353535 }
-            );
+            switch_button_state({ button: startListening, boolead: false, color: 0xe9e9e9 }, { button: stopListening, boolead: true, color: 0x353535 });
             callBack({
                 status: 'onDeviceMotionChange',
                 drawFn(res) {
@@ -124,10 +81,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         })
     );
     stopListening.onClickFn(() => {
-        switch_button_state(
-            { button: stopListening, boolead: false, color: 0xe9e9e9 },
-            { button: startListening, boolead: true, color: 0x353535 }
-        );
+        switch_button_state({ button: stopListening, boolead: false, color: 0xe9e9e9 }, { button: startListening, boolead: true, color: 0x353535 });
         callBack({
             status: 'offDeviceMotionChange'
         });
@@ -146,9 +100,15 @@ module.exports = function(PIXI, app, obj, callBack) {
     }
     // 切换“按钮”状态函数 结束
 
-    if (wx.offDeviceMotionChange) {
-        run();
-    } else {
+    goBack.callBack = () => {
+        switch_button_state({ button: stopListening, boolead: false, color: 0xe9e9e9 }, { button: startListening, boolead: true, color: 0x353535 });
+        callBack({
+            status: 'offDeviceMotionChange'
+        });
+    };
+
+    if (wx.offDeviceMotionChange) run();
+    else {
         run();
 
         window.router.getNowPage(page => {

@@ -1,31 +1,13 @@
-import { p_button, p_text, p_line, p_box, p_img, p_scroll, p_goBackBtn } from '../../../libs/component/index';
+import { p_button, p_text, p_box, p_scroll } from '../../../libs/component/index';
+import fixedTemplate from '../../../libs/template/fixed';
 import dateFormat from '../../../libs/dateFormat';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, 'delPage'),
-        title = p_text(PIXI, {
-            content: '本地缓存文件',
-            fontSize: 36 * PIXI.ratio,
-            fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
+        { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
+            obj,
+            title: '本地缓存文件',
+            api_name: 'get/remove/SavedFile(List?)'
         }),
-        api_name = p_text(PIXI, {
-            content: 'get/remove/SavedFile(List?)',
-            fontSize: 32 * PIXI.ratio,
-            fill: 0xbebebe,
-            y: title.height + title.y + 78 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        underline = p_line(
-            PIXI,
-            {
-                width: PIXI.ratio | 0,
-                color: 0xd8d8d8
-            },
-            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-            [150 * PIXI.ratio, 0]
-        ),
         scroll = p_scroll(PIXI, {
             height: 700 * PIXI.ratio,
             y: underline.height + underline.y + 78 * PIXI.ratio
@@ -33,20 +15,6 @@ module.exports = function(PIXI, app, obj, callBack) {
         getSavedFileListButton = p_button(PIXI, {
             width: 580 * PIXI.ratio,
             y: underline.height + underline.y + 89 * PIXI.ratio
-        }),
-        logo = p_img(PIXI, {
-            width: 36 * PIXI.ratio,
-            height: 36 * PIXI.ratio,
-            x: 294 * PIXI.ratio,
-            y: obj.height - 66 * PIXI.ratio,
-            src: 'images/logo.png'
-        }),
-        logoName = p_text(PIXI, {
-            content: '小游戏示例',
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: (obj.height - 62 * PIXI.ratio) | 0,
-            relative_middle: { point: 404 * PIXI.ratio }
         }),
         removeSavedFileButton;
 
@@ -66,7 +34,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                             fontSize: 30 * PIXI.ratio,
                             lineHeight: 40 * PIXI.ratio,
                             x: 200 * PIXI.ratio,
-                            y: arr[arr.length- 1].y
+                            y: arr[arr.length - 1].y
                         });
                         let boxWidth = 500 * PIXI.ratio,
                             textWidth = path.width;
@@ -112,7 +80,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                                 fontSize: 30 * PIXI.ratio,
                                 lineHeight: 40 * PIXI.ratio,
                                 x: 200 * PIXI.ratio,
-                                y: arr[arr.length- 1].y
+                                y: arr[arr.length - 1].y
                             })
                         );
                     }
@@ -126,7 +94,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                                 fontSize: 30 * PIXI.ratio,
                                 lineHeight: 40 * PIXI.ratio,
                                 x: 200 * PIXI.ratio,
-                                y: arr[arr.length- 1].y
+                                y: arr[arr.length - 1].y
                             })
                         );
                     }

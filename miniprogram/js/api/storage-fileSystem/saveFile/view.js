@@ -1,30 +1,12 @@
-import { p_button, p_text, p_line, p_box, p_img, p_goBackBtn } from '../../../libs/component/index';
+import { p_button, p_text, p_box, p_img } from '../../../libs/component/index';
+import fixedTemplate from '../../../libs/template/fixed';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, 'navigateBack'),
-        title = p_text(PIXI, {
-            content: '保存临时文件到本地',
-            fontSize: 36 * PIXI.ratio,
-            fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
+        { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
+            obj,
+            title: '保存临时文件到本地',
+            api_name: 'saveFile'
         }),
-        api_name = p_text(PIXI, {
-            content: 'saveFile',
-            fontSize: 32 * PIXI.ratio,
-            fill: 0xbebebe,
-            y: title.height + title.y + 78 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        underline = p_line(
-            PIXI,
-            {
-                width: PIXI.ratio | 0,
-                color: 0xd8d8d8
-            },
-            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-            [150 * PIXI.ratio, 0]
-        ),
         tipText = p_text(PIXI, {
             content: '提示：这里会保存一个mp4文件，文件来源看源码',
             fontSize: 32 * PIXI.ratio,
@@ -32,20 +14,6 @@ module.exports = function(PIXI, app, obj, callBack) {
             align: 'center',
             lineHeight: 45 * PIXI.ratio,
             relative_middle: { containerWidth: obj.width }
-        }),
-        logo = p_img(PIXI, {
-            width: 36 * PIXI.ratio,
-            height: 36 * PIXI.ratio,
-            x: 294 * PIXI.ratio,
-            y: obj.height - 66 * PIXI.ratio,
-            src: 'images/logo.png'
-        }),
-        logoName = p_text(PIXI, {
-            content: '小游戏示例',
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: (obj.height - 62 * PIXI.ratio) | 0,
-            relative_middle: { point: 404 * PIXI.ratio }
         }),
         pitch_on,
         div;
@@ -128,7 +96,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     window.router.getNowPage(page => {
         page.reload = function() {
             logo.turnImg({ src: 'images/logo.png' });
-            pitch_on.turnImg({ src: 'images/pitch_on.png'});
+            pitch_on.turnImg({ src: 'images/pitch_on.png' });
         };
     });
 

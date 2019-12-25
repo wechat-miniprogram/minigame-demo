@@ -1,38 +1,12 @@
-import { p_text, p_line, p_button, p_box, p_img, p_goBackBtn } from '../../../libs/component/index';
+import { p_text, p_button, p_box, p_img } from '../../../libs/component/index';
+import fixedTemplate from '../../../libs/template/fixed';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, wx.offCompassChange ? 'delPage' : 'navigateBack', () => {
-            switch_button_state(
-                { button: stopListening, boolead: false, color: 0xe9e9e9 },
-                { button: startListening, boolead: true, color: 0x353535 }
-            );
-            callBack({
-                status: 'offCompassChange'
-            });
+        { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
+            obj,
+            title: '监听罗盘数据',
+            api_name: 'on/off/CompassChange'
         }),
-        title = p_text(PIXI, {
-            content: '监听罗盘数据',
-            fontSize: 36 * PIXI.ratio,
-            fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        api_name = p_text(PIXI, {
-            content: 'on/off/CompassChange',
-            fontSize: 32 * PIXI.ratio,
-            fill: 0xbebebe,
-            y: title.height + title.y + 78 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        underline = p_line(
-            PIXI,
-            {
-                width: PIXI.ratio | 0,
-                color: 0xd8d8d8
-            },
-            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-            [150 * PIXI.ratio, 0]
-        ),
         prompt = p_text(PIXI, {
             content: `旋转手机即可获取方位信息`,
             fontSize: 32 * PIXI.ratio,
@@ -64,20 +38,6 @@ module.exports = function(PIXI, app, obj, callBack) {
             fill: 0x353535,
             x: text.x + text.width,
             relative_middle: { containerHeight: img.height }
-        }),
-        logo = p_img(PIXI, {
-            width: 36 * PIXI.ratio,
-            height: 36 * PIXI.ratio,
-            x: 294 * PIXI.ratio,
-            y: obj.height - 66 * PIXI.ratio,
-            src: 'images/logo.png'
-        }),
-        logoName = p_text(PIXI, {
-            content: '小游戏示例',
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: (obj.height - 62 * PIXI.ratio) | 0,
-            relative_middle: { point: 404 * PIXI.ratio }
         });
 
     img.setAnchor(0.5);
@@ -119,10 +79,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     let run;
     startListening.onClickFn(
         (run = () => {
-            switch_button_state(
-                { button: startListening, boolead: false, color: 0xe9e9e9 },
-                { button: stopListening, boolead: true, color: 0x353535 }
-            );
+            switch_button_state({ button: startListening, boolead: false, color: 0xe9e9e9 }, { button: stopListening, boolead: true, color: 0x353535 });
             callBack({
                 status: 'onCompassChange',
                 drawFn(res) {
@@ -157,10 +114,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         })
     );
     stopListening.onClickFn(() => {
-        switch_button_state(
-            { button: stopListening, boolead: false, color: 0xe9e9e9 },
-            { button: startListening, boolead: true, color: 0x353535 }
-        );
+        switch_button_state({ button: stopListening, boolead: false, color: 0xe9e9e9 }, { button: startListening, boolead: true, color: 0x353535 });
         callBack({
             status: 'offCompassChange'
         });
@@ -179,9 +133,15 @@ module.exports = function(PIXI, app, obj, callBack) {
     }
     // 切换“按钮”状态函数 结束
 
-    if (wx.offCompassChange) {
-        run();
-    } else {
+    goBack.callBack = () => {
+        switch_button_state({ button: stopListening, boolead: false, color: 0xe9e9e9 }, { button: startListening, boolead: true, color: 0x353535 });
+        callBack({
+            status: 'offCompassChange'
+        });
+    };
+
+    if (wx.offCompassChange) run();
+    else {
         run();
 
         window.router.getNowPage(page => {
@@ -192,18 +152,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         });
     }
 
-    container.addChild(
-        goBack,
-        title,
-        api_name,
-        underline,
-        prompt,
-        img_container,
-        startListening,
-        stopListening,
-        logo,
-        logoName
-    );
+    container.addChild(goBack, title, api_name, underline, prompt, img_container, startListening, stopListening, logo, logoName);
     app.stage.addChild(container);
 
     return container;

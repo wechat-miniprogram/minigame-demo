@@ -1,35 +1,12 @@
-import { p_button, p_text, p_line, p_box, p_img, p_goBackBtn } from '../../../libs/component/index';
+import { p_button, p_text, p_box } from '../../../libs/component/index';
+import fixedTemplate from '../../../libs/template/fixed';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, 'delPage', () => {
-            wx.getFileSystemManager().rmdir({
-                dirPath: `${wx.env.USER_DATA_PATH}/newTestFile`,
-                recursive: true
-            });
+        { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
+            obj,
+            title: '重命名',
+            api_name: 'rename'
         }),
-        title = p_text(PIXI, {
-            content: '重命名',
-            fontSize: 36 * PIXI.ratio,
-            fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        api_name = p_text(PIXI, {
-            content: 'rename',
-            fontSize: 32 * PIXI.ratio,
-            fill: 0xbebebe,
-            y: title.height + title.y + 78 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        underline = p_line(
-            PIXI,
-            {
-                width: PIXI.ratio | 0,
-                color: 0xd8d8d8
-            },
-            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-            [150 * PIXI.ratio, 0]
-        ),
         pathBox = p_box(PIXI, {
             height: 88 * PIXI.ratio,
             border: { width: PIXI.ratio, color: 0xe5e5e5 },
@@ -47,20 +24,6 @@ module.exports = function(PIXI, app, obj, callBack) {
         renameButton = p_button(PIXI, {
             width: 580 * PIXI.ratio,
             y: pathBox.height + pathBox.y + 187 * PIXI.ratio
-        }),
-        logo = p_img(PIXI, {
-            width: 36 * PIXI.ratio,
-            height: 36 * PIXI.ratio,
-            x: 294 * PIXI.ratio,
-            y: obj.height - 66 * PIXI.ratio,
-            src: 'images/logo.png'
-        }),
-        logoName = p_text(PIXI, {
-            content: '小游戏示例',
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: (obj.height - 62 * PIXI.ratio) | 0,
-            relative_middle: { point: 404 * PIXI.ratio }
         });
 
     let path,
@@ -100,6 +63,13 @@ module.exports = function(PIXI, app, obj, callBack) {
         });
     });
     // 重命名 “按钮” 结束
+
+    goBack.callBack = () => {
+        wx.getFileSystemManager().rmdir({
+            dirPath: `${wx.env.USER_DATA_PATH}/newTestFile`,
+            recursive: true
+        });
+    };
 
     container.addChild(goBack, title, api_name, underline, pathBox, tipText, renameButton, logo, logoName);
     app.stage.addChild(container);
