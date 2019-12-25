@@ -1,6 +1,6 @@
 import style    from 'render/style.js';
 import tplFn    from 'render/tplfn.js';
-import Layout   from './engine.js'
+import Layout   from './engine.js';
 
 import {
     getFriendData,
@@ -12,11 +12,13 @@ import {
     replaceSelfDataInList,
 } from 'data.js';
 
+import { pushMessage } from './pushMessage.js';
+
+
 let userinfo;
 let selfData;
 let key             = 'score';
 let currentMaxScore = 0;
-let cacheRankData   = [];
 let selfIndex       = 0;
 
 let sharedCanvas  = wx.getSharedCanvas();
@@ -57,20 +59,20 @@ function renderData(data, info, title="排行榜", mock=false) {
         replaceSelfDataInList(data, info, currentMaxScore);
     }
 
-    // 缓存数据，加速下次渲染
-    cacheRankData = data;
-
     // mock
-    if ( mock ) {
-        for ( let i = data.length; i < 20; i++ ) {
-            data[i] = JSON.parse(JSON.stringify(selfData));
-            data[i].rank = i;
-            data[i].score = 0;
-            data[i].nickname = 'mock__user';
-        }
-    }
+    // if ( mock ) {
+    //     for ( let i = data.length; i < 20; i++ ) {
+    //         data[i] = JSON.parse(JSON.stringify(selfData));
+    //         data[i].rank = i;
+    //         data[i].score = 0;
+    //         data[i].nickname = 'mock__user';
+    //     }
+    // }
+
 
     draw(title, data, selfData, currentMaxScore);
+
+    if ( mock ) if ( mock ) pushMessage( data, selfData );
 }
 
 function showGroupRank(shareTicket) {
@@ -113,7 +115,6 @@ function showFriendRank() {
 
 function init() {
     currentMaxScore = 0;
-    cacheRankData   = [];
 
     wx.onMessage(data => {
         if ( data.event === 'updateViewPort' ) {

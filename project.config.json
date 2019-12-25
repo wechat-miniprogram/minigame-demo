@@ -24,7 +24,7 @@
 		"bundle": true
 	},
 	"compileType": "game",
-	"libVersion": "2.8.2",
+	"libVersion": "2.9.4",
 	"appid": "wx20afc706a711eefc",
 	"projectname": "miniGameExample",
 	"miniprogramRoot": "miniprogram/",
@@ -32,6 +32,7 @@
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"cloudfunctionTemplateRoot": "cloudfunctionTemplate",
+	"jsserverRoot": "jsserver/",
 	"condition": {
 		"search": {
 			"current": -1,

@@ -83,7 +83,7 @@ module.exports = function(PIXI, app, obj) {
     let ticker = PIXI.ticker.shared;
 
     let { container, close } = view(PIXI, app, obj, (data) => {
-        let { status } = data;
+        let { status, score, sub } = data;
         switch (status) {
             case 'shareAppMessage':
                 if ( !friendRankShow ) {
@@ -106,7 +106,7 @@ module.exports = function(PIXI, app, obj) {
             // 上报随机分数
             case 'setUserRecord':
                 if ( !friendRankShow ) {
-                    let score = Math.floor(Math.random() * 1000 + 1);
+                    score = Math.floor(Math.random() * 1000 + 1);
                     wx.setUserCloudStorage({
                         KVDataList: [
                             {   key  : 'score',
@@ -143,7 +143,7 @@ module.exports = function(PIXI, app, obj) {
                 break;
             case 'close':
                 friendRankShow = false;
-                let sub = app.stage.getChildByName('shared');
+                sub = app.stage.getChildByName('shared');
                 if ( sub ) {
                     app.stage.removeChild(sub);
                 }
