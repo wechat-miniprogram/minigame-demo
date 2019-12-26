@@ -47,7 +47,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             height: 88 * PIXI.ratio,
             color: 0xffffff,
             radius: 0,
-            y: num ? div_child_arr[num - 1].height + div_child_arr[num - 1].y : 0
+            y: num && div_child_arr[num - 1].height + div_child_arr[num - 1].y
         });
 
         div_child_arr[num].myAddChildFn(

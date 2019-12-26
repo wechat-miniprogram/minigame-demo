@@ -28,12 +28,12 @@ module.exports = function(PIXI, app, obj, callBack) {
 
     for (let i = 0, arr = Object.keys(clipboard), len = arr.length; i < len; i++) {
         div_container_child_arr[i] = p_box(PIXI, {
-            height: i ? 93 * PIXI.ratio : 87 * PIXI.ratio,
+            height: Math.max(i && 90, 87) * PIXI.ratio,
             border: {
                 width: PIXI.ratio | 0,
                 color: 0xe5e5e5
             },
-            y: i ? div_container_child_arr[i - 1].height + div_container_child_arr[i - 1].y - (PIXI.ratio | 0) : 0
+            y: i && div_container_child_arr[i - 1].height + div_container_child_arr[i - 1].y - (PIXI.ratio | 0)
         });
 
         div_container_child_arr[i].addChild(

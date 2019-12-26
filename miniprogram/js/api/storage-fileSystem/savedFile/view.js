@@ -106,7 +106,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                 lineHeight = 15 * PIXI.ratio,
                 lastOne;
             for (let j = 0, arr = Object.keys(paperFile[i]), len = arr.length; j < len; j++) {
-                let index = j ? j * 2 - 1 : 0;
+                let index = j && j * 2 - 1;
                 storageTextArr.push(
                     p_text(PIXI, {
                         content: infoMapping[arr[j]].name,
@@ -124,7 +124,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                     width: PIXI.ratio | 0,
                     color: 0xe5e5e5
                 },
-                y: i ? div_child_arr[i - 1].height + div_child_arr[i - 1].y - (PIXI.ratio | 0) : 0
+                y: i && div_child_arr[i - 1].height + div_child_arr[i - 1].y - (PIXI.ratio | 0)
             });
 
             div_child_arr[i].addChild(...storageTextArr);

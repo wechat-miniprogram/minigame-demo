@@ -32,7 +32,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                 width: PIXI.ratio | 0,
                 color: 0xe5e5e5
             },
-            y: i ? div_child_arr[i - 1].height + div_child_arr[i - 1].y - (PIXI.ratio | 0) : 0
+            y: i && div_child_arr[i - 1].height + div_child_arr[i - 1].y - (PIXI.ratio | 0)
         });
 
         div_child_arr[i].addChild(
