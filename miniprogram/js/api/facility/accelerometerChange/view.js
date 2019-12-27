@@ -1,38 +1,12 @@
-import { p_text, p_line, p_button, p_circle, p_img, p_goBackBtn } from '../../../libs/component/index';
+import { p_text, p_button, p_circle } from '../../../libs/component/index';
+import fixedTemplate from '../../../libs/template/fixed';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, wx.offAccelerometerChange ? 'delPage' : 'navigateBack', () => {
-            switch_button_state(
-                { button: stopListening, boolead: false, color: 0xe9e9e9 },
-                { button: startListening, boolead: true, color: 0x353535 }
-            );
-            callBack({
-                status: 'offAccelerometerChange'
-            });
+        { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
+            obj,
+            title: '重力感应',
+            api_name: 'on/off/AccelerometerChange'
         }),
-        title = p_text(PIXI, {
-            content: '重力感应',
-            fontSize: 36 * PIXI.ratio,
-            fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        api_name = p_text(PIXI, {
-            content: 'on/off/AccelerometerChange',
-            fontSize: 32 * PIXI.ratio,
-            fill: 0xbebebe,
-            y: title.height + title.y + 78 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        underline = p_line(
-            PIXI,
-            {
-                width: PIXI.ratio | 0,
-                color: 0xd8d8d8
-            },
-            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-            [150 * PIXI.ratio, 0]
-        ),
         prompt = p_text(PIXI, {
             content: `倾斜手机即可移动下方小球`,
             fontSize: 32 * PIXI.ratio,
@@ -57,21 +31,7 @@ module.exports = function(PIXI, app, obj, callBack) {
                 y: circle.height / 2 + circle.y + 50.5 * PIXI.ratio,
                 relative_middle: { point: obj.width / 5 }
             })
-        },
-        logo = p_img(PIXI, {
-            width: 36 * PIXI.ratio,
-            height: 36 * PIXI.ratio,
-            x: 294 * PIXI.ratio,
-            y: obj.height - 66 * PIXI.ratio,
-            src: 'images/logo.png'
-        }),
-        logoName = p_text(PIXI, {
-            content: '小游戏示例',
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: (obj.height - 62 * PIXI.ratio) | 0,
-            relative_middle: { point: 404 * PIXI.ratio }
-        });
+        };
 
     circle.addChild(child_circle);
 
@@ -114,10 +74,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     let run;
     startListening.onClickFn(
         (run = () => {
-            switch_button_state(
-                { button: startListening, boolead: false, color: 0xe9e9e9 },
-                { button: stopListening, boolead: true, color: 0x353535 }
-            );
+            switch_button_state({ button: startListening, boolead: false, color: 0xe9e9e9 }, { button: stopListening, boolead: true, color: 0x353535 });
             callBack({
                 status: 'onAccelerometerChange',
                 drawFn(res) {
@@ -126,8 +83,7 @@ module.exports = function(PIXI, app, obj, callBack) {
 
                     let x = child_circle.x + res.x * 20 * PIXI.ratio,
                         y = child_circle.y - res.y * 20 * PIXI.ratio;
-                    if (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) <= (circle.width - child_circle.width) / 2)
-                        child_circle.setPositionFn({ x, y });
+                    if (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) <= (circle.width - child_circle.width) / 2) child_circle.setPositionFn({ x, y });
                 }
             });
         })
@@ -156,10 +112,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         })
     );
     stopListening.onClickFn(() => {
-        switch_button_state(
-            { button: stopListening, boolead: false, color: 0xe9e9e9 },
-            { button: startListening, boolead: true, color: 0x353535 }
-        );
+        switch_button_state({ button: stopListening, boolead: false, color: 0xe9e9e9 }, { button: startListening, boolead: true, color: 0x353535 });
         callBack({
             status: 'offAccelerometerChange'
         });
@@ -178,9 +131,15 @@ module.exports = function(PIXI, app, obj, callBack) {
     }
     // 切换“按钮”状态函数 结束
 
-    if (wx.offAccelerometerChange) {
-        run();
-    } else {
+    goBack.callBack = () => {
+        switch_button_state({ button: stopListening, boolead: false, color: 0xe9e9e9 }, { button: startListening, boolead: true, color: 0x353535 });
+        callBack({
+            status: 'offAccelerometerChange'
+        });
+    };
+
+    if (wx.offAccelerometerChange) run();
+    else {
         run();
 
         window.router.getNowPage(page => {
@@ -191,21 +150,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         });
     }
 
-    container.addChild(
-        goBack,
-        title,
-        api_name,
-        underline,
-        prompt,
-        circle,
-        text.x,
-        text.y,
-        text.z,
-        startListening,
-        stopListening,
-        logo,
-        logoName
-    );
+    container.addChild(goBack, title, api_name, underline, prompt, circle, text.x, text.y, text.z, startListening, stopListening, logo, logoName);
     app.stage.addChild(container);
 
     return container;

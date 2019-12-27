@@ -30,6 +30,11 @@ const signIn = [
                         path: 'abilityOpen/requestSubscribeSystemMessage/index'
                     },
                     {
+                        label: '订阅消息',
+                        name: 'requestSubscribeMessage',
+                        path: 'abilityOpen/requestSubscribeMessage/index'
+                    },
+                    {
                         label: '微信登录',
                         name: 'login',
                         path: 'abilityOpen/login/index'
