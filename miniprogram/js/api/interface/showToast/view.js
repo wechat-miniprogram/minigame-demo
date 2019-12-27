@@ -1,4 +1,4 @@
-import { p_button, p_text, p_goBackBtn } from '../../../libs/component/index';
+import { p_button, p_text } from '../../../libs/component/index';
 import fixedTemplate from '../../../libs/template/fixed';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),

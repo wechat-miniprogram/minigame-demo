@@ -56,7 +56,7 @@ module.exports = function(PIXI, app, obj) {
                             drawFn('stop'); // 更新UI
                             resolve();
                         };
-                        // 监听音频中断结束事件
+                        // 监听音频中断结束事件
                         wx.onAudioInterruptionEnd(rebooting);
                         // 兼容安卓 Android 系统不兼容情况
                         wx.onShow(rebooting);

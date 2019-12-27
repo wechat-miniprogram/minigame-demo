@@ -19,7 +19,7 @@ module.exports = function(PIXI, app, obj) {
             new Promise(resolve => {
                 rebooting = resolve;
 
-                // 监听音频中断结束事件
+                // 监听音频中断结束事件
                 wx.onAudioInterruptionEnd(rebooting);
 
                 // 兼容安卓 Android 系统不兼容情况
