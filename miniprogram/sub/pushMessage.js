@@ -1,5 +1,5 @@
 import Layout from './engine.js';
-export function pushMessage(data, selfData) {
+export function interactive(data, selfData) {
     const list = Layout.getElementsByClassName('listItem');
 
     list.forEach((item, index) => {
@@ -10,9 +10,22 @@ export function pushMessage(data, selfData) {
                 opNum: 1, // 需要修改的数值，目前只能为 1
                 operation: 'add', // 修改类型,目前只能是add
                 toUser: data[index].openid, // 好友的 openId
-                title: '送你 1 个金币，赶快打开游戏看看吧', // 2.9.0 支持
+                title: '送你 1 个金币，赶快打开游戏看看吧' // 2.9.0 支持
                 // success() {},
                 // fail() {}
+            });
+        });
+    });
+}
+
+export function directional(data) {
+    const list = Layout.getElementsByClassName('listItem');
+
+    list.forEach((item, index) => {
+        item.on('click', () => {
+            wx.shareMessageToFriend({
+                openId: data[index].openid,
+                title: '小游戏示例'
             });
         });
     });
