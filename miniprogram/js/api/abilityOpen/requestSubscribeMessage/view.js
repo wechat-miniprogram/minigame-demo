@@ -12,7 +12,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             y: underline.height + underline.y + 123 * PIXI.ratio
         }),
         tipText = p_text(PIXI, {
-            content: '提示：提示：用户订阅成功后，将会在「服务\n通知」中接收到相关消息。开发者可自定义\n设置推送消息的条件及时间，在该示例中\n为即时下发。',
+            content: '提示：用户订阅成功后，将会在「服务通知」中\n接收到相关消息。开发者可自定义设置推送消\n息的条件及时间，在该示例中为即时下发。',
             fontSize: 32 * PIXI.ratio,
             fill: 0xbebebe,
             align: 'center',
