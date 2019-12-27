@@ -15,7 +15,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     // 点击调起消息界面 “按钮” 开始
     button.myAddChildFn(
         p_text(PIXI, {
-            content: `订阅消息`,
+            content: `点击订阅`,
             fontSize: 36 * PIXI.ratio,
             fill: 0xffffff,
             relative_middle: { containerWidth: button.width, containerHeight: button.height }
