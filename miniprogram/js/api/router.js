@@ -25,11 +25,6 @@ const signIn = [
                         path: 'abilityOpen/getUserInfo/index'
                     },
                     {
-                        label: '订阅消息',
-                        name: 'requestSubscribeMessage',
-                        path: 'abilityOpen/requestSubscribeMessage/index'
-                    },
-                    {
                         label: '转发',
                         name: 'onShareAppMessage',
                         path: 'abilityOpen/onShareAppMessage/index'
