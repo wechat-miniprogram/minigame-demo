@@ -114,7 +114,7 @@ function pixiScroll(PIXI, app, property) {
                         sc.items[i].po.y = sc.items[i].po.y - this.childHeight;
                     }
                     let lastOne = sc.items.length - 1,
-                        heigth = sc.items[lastOne].childHeight < 0 ? -sc.items[lastOne].childHeight : 0;
+                        heigth = Math.max(-sc.items[lastOne].childHeight || 0, 0);
 
                     heigth += sc.items[lastOne].po.y + sc.items[lastOne].drawHeight;
 

@@ -1,36 +1,12 @@
-import { p_text, p_line, p_img, p_box, p_circle, p_goBackBtn } from '../../../libs/component/index';
+import { p_text, p_box, p_circle } from '../../../libs/component/index';
+import fixedTemplate from '../../../libs/template/fixed';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
-        goBack = p_goBackBtn(PIXI, 'delPage', () => {
-            app.ticker.remove(rotatingFn);
-            callBack({
-                status: 'setPreferredFramesPerSecond',
-                value: 60
-            });
+        { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
+            obj,
+            title: '渲染帧率',
+            api_name: 'setPreferredFramesPerSecond'
         }),
-        title = p_text(PIXI, {
-            content: '渲染帧率',
-            fontSize: 36 * PIXI.ratio,
-            fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        api_name = p_text(PIXI, {
-            content: 'setPreferredFramesPerSecond',
-            fontSize: 32 * PIXI.ratio,
-            fill: 0xbebebe,
-            y: title.height + title.y + 78 * PIXI.ratio,
-            relative_middle: { containerWidth: obj.width }
-        }),
-        underline = p_line(
-            PIXI,
-            {
-                width: PIXI.ratio | 0,
-                color: 0xd8d8d8
-            },
-            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-            [150 * PIXI.ratio, 0]
-        ),
         box = p_box(PIXI, {
             height: 372 * PIXI.ratio,
             y: underline.y + underline.height + 23 * PIXI.ratio
@@ -41,20 +17,6 @@ module.exports = function(PIXI, app, obj, callBack) {
             fill: 0x353535,
             y: 307 * PIXI.ratio,
             relative_middle: { containerWidth: box.width }
-        }),
-        logo = p_img(PIXI, {
-            width: 36 * PIXI.ratio,
-            height: 36 * PIXI.ratio,
-            x: 294 * PIXI.ratio,
-            y: obj.height - 66 * PIXI.ratio,
-            src: 'images/logo.png'
-        }),
-        logoName = p_text(PIXI, {
-            content: '小游戏示例',
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: (obj.height - 62 * PIXI.ratio) | 0,
-            relative_middle: { point: 404 * PIXI.ratio }
         });
 
     // 当前帧率
@@ -137,6 +99,14 @@ module.exports = function(PIXI, app, obj, callBack) {
         }
     });
     // 滑动调节FPS 结束
+
+    goBack.callBack = () => {
+        app.ticker.remove(rotatingFn);
+        callBack({
+            status: 'setPreferredFramesPerSecond',
+            value: 60
+        });
+    };
 
     container.addChild(
         p_box(PIXI, { height: obj.height, background: { alpha: 0 } }),

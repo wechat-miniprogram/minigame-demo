@@ -336,8 +336,7 @@ const signIn = [
                         label: '小游戏推荐icon',
                         name: 'createGameIcon',
                         path: 'recommend/createGameIcon/index'
-                    },
-                    
+                    }
                 ]
             }
         ]

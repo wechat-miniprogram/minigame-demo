@@ -17,7 +17,7 @@ module.exports = function(PIXI, app, obj) {
                     if (!res.error.code) {
                         gameRecorder.on('timeUpdate', res => {
                             console.log(`视频时长: ${res.currentTime}`);
-                            writeTime = res.currentTime < 60000 ? res.currentTime : 60000;
+                            writeTime = Math.min(res.currentTime, 60000);
                         });
                     }
 
@@ -104,7 +104,7 @@ module.exports = function(PIXI, app, obj) {
             case 'show':
                 // 显示分享按钮
                 gameRecorderShareButton && gameRecorderShareButton.show();
-              break;    
+                break;
         }
     });
 };
