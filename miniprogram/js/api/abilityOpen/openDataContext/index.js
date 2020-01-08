@@ -1,8 +1,6 @@
 import view from './view';
 import { ShareCanvas } from './ShareCanvas';
 
-const SC = new ShareCanvas();
-
 function showTip() {
     wx.showToast({
         title: '若分享成功，请从群里点击会话查看群排行榜',
@@ -14,6 +12,8 @@ function showTip() {
 }
 
 module.exports = function(PIXI, app, obj) {
+    const SC = new ShareCanvas();
+
     let tick = () => {
         SC.rankTiker(PIXI, app);
     }
@@ -67,6 +67,8 @@ module.exports = function(PIXI, app, obj) {
                 break;
 
             case 'showFriendRank':
+                wx.triggerGC(); // 垃圾回收
+
                 if ( !SC.friendRankShow ) {
                     SC.friendRankShow = true;
                     ticker.add(tick);
@@ -88,6 +90,9 @@ module.exports = function(PIXI, app, obj) {
                 SC.openDataContext.postMessage({
                     event: 'close',
                 });
+
+                wx.triggerGC(); // 垃圾回收
+
                 break;
         }
     });
@@ -95,6 +100,9 @@ module.exports = function(PIXI, app, obj) {
     function detectToShowGroup(options) {
         // 初次打开发现要求渲染群排行榜
         if ( options && options.shareTicket && options.query && options.query.showGroup === '1' ) {
+
+            wx.triggerGC(); // 垃圾回收
+
             SC.openDataContext.postMessage({
                 event      : 'showGroupRank',
                 shareTicket: options.shareTicket

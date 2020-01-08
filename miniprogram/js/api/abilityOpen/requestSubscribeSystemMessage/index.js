@@ -14,17 +14,17 @@ module.exports = function(PIXI, app, obj) {
             case 'requestSubscribeSystemMessage':
                 // 调起小游戏永久订阅消息界面
                 wx.requestSubscribeSystemMessage({
-                    msgTypeList: Object.keys(msgType),
+                    msgTypeList: Object.keys(msgType).slice(0,2),
                     success(res) {
                         delete res.errMsg;
                         let msgObj = {};
                         Object.keys(res).forEach(item => {
                             msgObj[msgType[item]] = msgType[res[item]];
                         });
-                        drawFn(msgObj);
+                        drawFn(msgObj); // 绘制UI
                     },
                     fail() {
-                        show.Toast('永久订阅失败', 'success', 800);
+                        show.Modal('你已拒绝消息订阅，可前往“右上角三个点-设置”中打开', '永久订阅失败');
                     }
                 });
                 break;

@@ -1,9 +1,11 @@
 import view from './view';
 import { ShareCanvas } from '../openDataContext/ShareCanvas';
 
-const SC = new ShareCanvas();
-
 module.exports = function(PIXI, app, obj) {
+    wx.triggerGC(); // 垃圾回收
+
+    const SC = new ShareCanvas(1344, 1974, 0.896);
+
     let tick = () => {
         SC.rankTiker(PIXI, app);
     };
@@ -33,6 +35,8 @@ module.exports = function(PIXI, app, obj) {
                 SC.openDataContext.postMessage({
                     event: 'close'
                 });
+
+                wx.triggerGC(); // 垃圾回收
                 break;
         }
     });

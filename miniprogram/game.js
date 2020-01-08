@@ -58,7 +58,8 @@ PIXI.loader
             name: 'api',
             success() {
                 let router = require('./js/api/game'),
-                    query = wx.getLaunchOptionsSync().query;
+                    options = wx.getLaunchOptionsSync(),
+                    query = options.query;
 
                 router(PIXI, app, {
                     width: windowWidth * pixelRatio,
@@ -68,9 +69,8 @@ PIXI.loader
 
                 share(); //全局分享
 
-                let res = wx.getLaunchOptionsSync();
                 if (Object.keys(query).length && query.pathName) {
-                    window.router.navigateTo(query.pathName, query, res);
+                    window.router.navigateTo(query.pathName, query, options);
                 }
 
                 wx.onShow(res => {

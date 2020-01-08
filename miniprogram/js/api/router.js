@@ -15,14 +15,14 @@ const signIn = [
                         path: 'abilityOpen/openDataContext/index'
                     },
                     {
-                        label: '关系链互动数据',
+                        label: '关系链互动',
                         name: 'relationalChaininteractiveData',
                         path: 'abilityOpen/relationalChaininteractiveData/index'
                     },
                     {
                         label: '定向分享',
-                        name: 'directionalShare',
-                        path: 'abilityOpen/directionalShare/index'
+                        name: 'directedSharing',
+                        path: 'abilityOpen/directedSharing/index'
                     },
                     {
                         label: '永久订阅',
@@ -30,7 +30,7 @@ const signIn = [
                         path: 'abilityOpen/requestSubscribeSystemMessage/index'
                     },
                     {
-                        label: '订阅消息',
+                        label: '一次性订阅',
                         name: 'requestSubscribeMessage',
                         path: 'abilityOpen/requestSubscribeMessage/index'
                     },
@@ -410,7 +410,6 @@ function router(PIXI, app, parameter) {
                 treePage[name].page.visible = false;
                 treePage[newPage].page.visible = true;
             } catch (e) {
-                console.log(e);
                 this.treeView.pop();
                 wx.showModal({
                     content: '你的微信版本过低，无法演示该功能！',

@@ -14,7 +14,8 @@ import {
 
 import { 
     interactive, 
-    directional 
+    directional,
+    refreshDirected
 } from './pushMessage.js';
 
 
@@ -27,13 +28,15 @@ let selfIndex       = 0;
 let sharedCanvas  = wx.getSharedCanvas();
 let sharedContext = sharedCanvas.getContext('2d');
 function draw(title, data = []) {
-    Layout.clear();
-    let template = tplFn({
-        title,
+    Layout.clearAll();
+
+    let isBillboard = typeof arguments[arguments.length -1] !== 'string',
+    template = tplFn({
+        title    : isBillboard ? title : null,
         data,
         self     : selfData,
         selfIndex,
-        hideScore: typeof arguments[arguments.length -1] !== 'string'
+        isBillboard
     });
 
     Layout.init(template, style);
@@ -64,19 +67,19 @@ function renderData(data, info, title="排行榜", mock=false, type) {
     }
 
     // mock
-    if ( mock ) {
+    // if ( mock ) {
         // for ( let i = data.length; i < 20; i++ ) {
         //     data[i] = JSON.parse(JSON.stringify(selfData));
         //     data[i].rank = i;
         //     data[i].score = 0;
         //     data[i].nickname = 'mock__user';
         // }
-    }
+    // }
 
 
     draw(title, data, selfData, currentMaxScore, type);
 
-    // 关系链互动数据
+    // 关系链互动
     type === 'interaction' && interactive( data, selfData );
 }
 
@@ -118,12 +121,18 @@ function showFriendRank(type) {
     }
 }
 
+// 显示当前用户对游戏感兴趣的未注册的好友名单
 function showPotentialFriendList(){
     wx.getPotentialFriendList({
         success( res ) {
             res.list.potential = true;
-            draw('感兴趣的好友名单', res.list, selfData, currentMaxScore, 'directional');
-            directional(res.list)
+            res.list.length > 4 && res.list.pop();
+
+            // 定向分享
+            draw('', res.list, selfData, currentMaxScore, 'directional');
+            directional(res.list);
+            
+            refreshDirected(showPotentialFriendList)
         }
     })
 }
@@ -149,7 +158,7 @@ function init() {
             case 'relationalChaininteractiveData':
                 showFriendRank('interaction');
                 break;
-            case 'directionalShare':
+            case 'directedSharing':
                 showPotentialFriendList();
                 break;
             case 'close':

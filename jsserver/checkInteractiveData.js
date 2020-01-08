@@ -27,13 +27,14 @@ exports.main = function(arg) {
                 sendCount: 0
             };
 
-            // 金币重复送给同一个人
-            const giftToSameOne = friendGift.receiveRecords.some(item => {
-                return item.fromOpenid === myOpenid;
-            });
+            // 判断金币不能重复送给同一人
+            const giftToSameOne = false;                    // 因不可坑力因素版本库2.10.0及以下，无论最终验证成功与否都会弹窗提示成功，所以为了每次都验证成功这里暂时赋值为false
+            // friendGift.receiveRecords.some(item => {
+            //     return item.fromOpenid === myOpenid;
+            // });
 
             // 判断当天是否超出赠送上限
-            const outLimit = selfGift.sendCount > 2;
+            const outLimit = selfGift.sendCount > Infinity; // 而这里暂时使用无穷大的值来进行判断
 
             // 赠送次数超过限制
             const canNotGift = giftToSameOne || outLimit;

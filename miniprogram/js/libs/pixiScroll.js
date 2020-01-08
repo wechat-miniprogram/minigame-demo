@@ -21,7 +21,6 @@ function pixiScroll(PIXI, app, property) {
                 scrollingX: false,
                 scrollingY: true,
                 bouncing: false
-                // snapping: true
             }
         );
 
@@ -90,10 +89,7 @@ function pixiScroll(PIXI, app, property) {
             this.bg.addChild(sprite);
             sprite.width = sprite.height = sprite.width * 0.32 * PIXI.ratio;
             sprite.position.set(this.width - sprite.width - 32 * PIXI.ratio, (this.drawHeight - sprite.height) / 2);
-            text1.call(this, 32, 44);
-        } else {
-            text1.call(this, 26, 26);
-            text2.call(this);
+            text.call(this, 32, 44);
         }
 
         this.drawHeight += 20 * PIXI.ratio;
@@ -131,22 +127,14 @@ function pixiScroll(PIXI, app, property) {
             }
         };
 
-        function text1(fontSize, y) {
-            let text1 = new PIXI.Text(value.label, {
+        function text(fontSize, y) {
+            let text = new PIXI.Text(value.label, {
                 fontSize: `${fontSize * PIXI.ratio}px`
             });
 
-            text1.position.set(32 * PIXI.ratio, y * PIXI.ratio);
+            text.position.set(32 * PIXI.ratio, y * PIXI.ratio);
 
-            this.bg.addChild(text1);
-        }
-
-        function text2() {
-            let text2 = new PIXI.Text(apiName, {
-                fontSize: `${32 * PIXI.ratio}px`
-            });
-            text2.position.set(32 * PIXI.ratio, 65 * PIXI.ratio);
-            this.bg.addChild(text2);
+            this.bg.addChild(text);
         }
     }
 
@@ -226,14 +214,32 @@ function pixiScroll(PIXI, app, property) {
         sprite.position.set((property.width - sprite.width) / 2, 200 * (property.height / 1334));
         div.addChild(sprite);
 
-        let text = new PIXI.Text('以下将演示小游戏接口能力，具体属性\n参数详见PC端的小游戏开发文档', {
-            fontSize: `${28 * PIXI.ratio}px`,
-            fill: 0x757575,
-            lineHeight: 38 * PIXI.ratio,
-            align: 'center'
-        });
+        let text = new PIXI.Text('以下将演示小游戏接口能力，具体属性参数\n\n复制github开源代码链接', {
+                fontSize: `${28 * PIXI.ratio}px`,
+                fill: 0x757575,
+                lineHeight: 38 * PIXI.ratio,
+                align: 'center'
+            }),
+            middleText = new PIXI.Text('详见PC端的小游戏开发文档，可', {
+                fontSize: `${28 * PIXI.ratio}px`,
+                fill: 0x757575
+            }),
+            copyText = new PIXI.Text('点击此处', {
+                fontSize: `${28 * PIXI.ratio}px`,
+                fill: 0x247be3
+            });
         text.position.set((property.width - text.width) / 2, sprite.y + sprite.height + 56 * PIXI.ratio);
-        div.addChild(text);
+        middleText.position.set((property.width - (middleText.width + copyText.width)) / 2, sprite.y + sprite.height + 94 * PIXI.ratio);
+        copyText.position.set(middleText.x + middleText.width, middleText.y);
+
+        copyText.interactive = true;
+        copyText.on('pointerup', () => {
+            wx.setClipboardData({
+                data: 'https://github.com/wechat-miniprogram/minigame-demo'
+            });
+        });
+
+        div.addChild(text, middleText, copyText);
         this.drawHeight = text.y + text.height + 90 * PIXI.ratio;
         this.po = div;
         sc.scrollContainer.addChild(this.po);

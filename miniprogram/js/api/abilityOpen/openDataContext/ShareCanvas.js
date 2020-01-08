@@ -1,5 +1,5 @@
 export class ShareCanvas {
-    constructor() {
+    constructor( width, height, times ) {
         this.friendRankShow  = false;
         this.openDataContext = wx.getOpenDataContext();
         this.sharedCanvas    = this.openDataContext.canvas;
@@ -7,20 +7,20 @@ export class ShareCanvas {
         this.GAME_WIDTH    = this.info.windowWidth * this.info.pixelRatio;
         this.GAME_HEIGHT   = this.info.windowHeight * this.info.pixelRatio;
         
-        this.sharedWidth  = 960;
-        this.sharedHeight = 1410;
+        this.sharedWidth  = ( width  ||  960 );
+        this.sharedHeight = ( height ||  1410 );
 
-        this.init();
+        this.init(times);
     }
 
-    init() {
+    init(times) {
         // 中间挖了个坑用填充排行榜
         this.sharedCanvas.width  = this.sharedWidth;
         this.sharedCanvas.height = this.sharedHeight;
     
         // 屏幕适配
         let temp = this.sharedHeight / this.sharedWidth;
-        this.sharedWidth  = this.GAME_WIDTH * 0.85;
+        this.sharedWidth  = this.GAME_WIDTH * ( times || 0.85 );
         this.sharedHeight = temp * this.sharedWidth;
     
         this.updateSubViewPort(this.sharedWidth, this.sharedHeight);
@@ -30,7 +30,7 @@ export class ShareCanvas {
         // 计算排行榜占据的物理尺寸
         const realWidth  = width / this.GAME_WIDTH * this.info.windowWidth;
         const realHeight = height / this.GAME_HEIGHT * this.info.windowHeight;
-    
+
         this.openDataContext.postMessage({
             event: 'updateViewPort',
             box       : {

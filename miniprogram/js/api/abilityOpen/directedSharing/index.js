@@ -1,9 +1,11 @@
 import view from './view';
 import { ShareCanvas } from '../openDataContext/ShareCanvas';
 
-const SC = new ShareCanvas();
-
 module.exports = function(PIXI, app, obj) {
+    wx.triggerGC(); // 垃圾回收
+
+    const SC = new ShareCanvas(1344, 1974, 0.896);
+
     let tick = () => {
         SC.rankTiker(PIXI, app);
     };
@@ -12,14 +14,14 @@ module.exports = function(PIXI, app, obj) {
     return view(PIXI, app, obj, data => {
         let { status } = data;
         switch (status) {
-            case 'directionalShare':
+            case 'directedSharing':
                 // 初始化
                 if (!SC.friendRankShow) {
                     SC.friendRankShow = true;
                     ticker.add(tick);
 
                     SC.openDataContext.postMessage({
-                        event: 'directionalShare'
+                        event: 'directedSharing'
                     });
                 }
                 break;
@@ -33,6 +35,8 @@ module.exports = function(PIXI, app, obj) {
                 SC.openDataContext.postMessage({
                     event: 'close'
                 });
+
+                wx.triggerGC(); // 垃圾回收
                 break;
         }
     });
