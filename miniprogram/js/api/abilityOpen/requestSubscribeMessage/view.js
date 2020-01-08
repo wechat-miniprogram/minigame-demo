@@ -19,7 +19,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             y: box.height + box.y + 60 * PIXI.ratio
         }),
         tipText = p_text(PIXI, {
-            content: '提示：用户订阅成功后，将会在「服务通知」中\n接收到相关消息。开发者可自定义设置推送消\n息的条件及时间，在该示例中为即时下发。',
+            content: '提示：订阅成功后，可通过「服务通知」给用户\n推送相关消息，单次订阅下发单条。开发者可\n自定义设置推送消息的条件及时间，在该\n示例中为即时下发',
             fontSize: 32 * PIXI.ratio,
             fill: 0xbebebe,
             align: 'center',
@@ -40,7 +40,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     // 触发订阅消息 “按钮” 开始
     button.myAddChildFn(
         p_text(PIXI, {
-            content: `触发订阅消息`,
+            content: `订阅消息`,
             fontSize: 36 * PIXI.ratio,
             fill: 0xffffff,
             relative_middle: { containerWidth: button.width, containerHeight: button.height }

@@ -7,10 +7,36 @@ module.exports = function(PIXI, app, obj, callBack) {
             title: '永久订阅',
             api_name: 'requestSubscribeSystemMessage'
         }),
+        box = p_box(PIXI, {
+            width: 670 * PIXI.ratio,
+            height: 340.5 * PIXI.ratio,
+            background: { color: '0xededed' },
+            y: underline.height + underline.y + 48 * PIXI.ratio,
+            relative_middle: { containerWidth: obj.width }
+        }),
         button = p_button(PIXI, {
             width: 580 * PIXI.ratio,
-            y: underline.height + underline.y + 123 * PIXI.ratio
+            y: box.height + box.y + 53 * PIXI.ratio
+        }),
+        tipText = p_text(PIXI, {
+            content:
+                '提示：用户当前可针对排行榜好友超越、好友\n互动两个场景进行永久订阅，单次订阅永久有\n效，开发者可通过「服务通知」给订阅用户\n推送相关消息',
+            fontSize: 32 * PIXI.ratio,
+            fill: 0xbebebe,
+            align: 'center',
+            lineHeight: 45 * PIXI.ratio,
+            y: button.height + button.y + 73 * PIXI.ratio,
+            relative_middle: { containerWidth: obj.width }
         });
+
+    box.addChild(
+        p_text(PIXI, {
+            content: '排行榜好友超越或好友互动',
+            fill: 0xa4a4a4,
+            fontSize: 32 * PIXI.ratio,
+            relative_middle: { containerWidth: box.width, containerHeight: box.height }
+        })
+    );
 
     // 点击调起消息界面 “按钮” 开始
     button.myAddChildFn(
@@ -111,7 +137,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     modalBox.hideFn();
     // 模态对话框 结束
 
-    container.addChild(goBack, title, api_name, underline, button, logo, logoName, modalBox);
+    container.addChild(goBack, title, api_name, underline, box, button, tipText, logo, logoName, modalBox);
 
     app.stage.addChild(container);
 

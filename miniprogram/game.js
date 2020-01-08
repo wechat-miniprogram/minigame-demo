@@ -38,6 +38,7 @@ let loadingFn = pmgressBar(PIXI, app, {
 
 PIXI.loader
     .add([
+        'images/official.png',
         'images/APIicon.png',
         'images/storage-fileSystem.png',
         'images/rendering.png',

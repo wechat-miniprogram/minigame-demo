@@ -2,7 +2,7 @@ import view from './view';
 import { ShareCanvas } from '../openDataContext/ShareCanvas';
 
 module.exports = function(PIXI, app, obj) {
-    const SC = new ShareCanvas(1344, 1974, 0.896);
+    const SC = new ShareCanvas(1344, 1974, 0.896, 315 * PIXI.ratio);
 
     let tick = () => {
         SC.rankTiker(PIXI, app);

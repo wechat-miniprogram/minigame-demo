@@ -40,7 +40,6 @@ export default {
     rankOtherList:{
         width           : 1344,
         height          : 1236,
-        marginTop       : 280,
         borderRadius    : 30,
         borderWidth     : 2,
         borderColor     : '#e5e5e5',
@@ -48,7 +47,6 @@ export default {
 
     ranklistDirected:{
         height          : 1498,
-        marginTop       : 212,
     },
 
     AD:{

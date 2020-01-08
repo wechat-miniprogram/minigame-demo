@@ -25,14 +25,24 @@ const signIn = [
                         path: 'abilityOpen/directedSharing/index'
                     },
                     {
+                        label: '一次性订阅',
+                        name: 'requestSubscribeMessage',
+                        path: 'abilityOpen/requestSubscribeMessage/index'
+                    },
+                    {
                         label: '永久订阅',
                         name: 'requestSubscribeSystemMessage',
                         path: 'abilityOpen/requestSubscribeSystemMessage/index'
                     },
                     {
-                        label: '一次性订阅',
-                        name: 'requestSubscribeMessage',
-                        path: 'abilityOpen/requestSubscribeMessage/index'
+                        label: '游戏对局回放',
+                        name: 'getGameRecorder',
+                        path: 'abilityOpen/getGameRecorder/index'
+                    },
+                    {
+                        label: '实时语音',
+                        name: 'VoIPChat',
+                        path: 'abilityOpen/VoIPChat/index'
                     },
                     {
                         label: '微信登录',
@@ -68,16 +78,6 @@ const signIn = [
                         label: '客服服务',
                         name: 'customerService',
                         path: 'abilityOpen/customerService/index'
-                    },
-                    {
-                        label: '实时语音',
-                        name: 'VoIPChat',
-                        path: 'abilityOpen/VoIPChat/index'
-                    },
-                    {
-                        label: '游戏对局回放',
-                        name: 'getGameRecorder',
-                        path: 'abilityOpen/getGameRecorder/index'
                     },
                     {
                         label: '设置',

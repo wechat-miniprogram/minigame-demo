@@ -1,9 +1,10 @@
 export class ShareCanvas {
-    constructor( width, height, times ) {
+    constructor( width, height, times, imgY ) {
         this.friendRankShow  = false;
         this.openDataContext = wx.getOpenDataContext();
         this.sharedCanvas    = this.openDataContext.canvas;
         this.info            = wx.getSystemInfoSync();
+        this.imgY          = imgY;
         this.GAME_WIDTH    = this.info.windowWidth * this.info.pixelRatio;
         this.GAME_HEIGHT   = this.info.windowHeight * this.info.pixelRatio;
         
@@ -52,7 +53,7 @@ export class ShareCanvas {
         shared.height = this.sharedHeight;
     
         shared.x = this.GAME_WIDTH / 2 - shared.width / 2;
-        shared.y = this.GAME_HEIGHT / 2 - shared.height / 2;
+        shared.y = this.imgY ||  this.GAME_HEIGHT / 2 - shared.height / 2;
     
         app.stage.addChild(shared);
     }

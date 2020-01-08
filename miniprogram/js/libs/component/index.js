@@ -6,6 +6,7 @@ import line from './line';
 import scroll from './scroll';
 import text from './text';
 import circle from './circle';
+import linearGradientBox from './linearGradientBox';
 
 module.exports = {
     p_box: box,
@@ -15,5 +16,6 @@ module.exports = {
     p_line: line,
     p_scroll: scroll,
     p_text: text,
-    p_circle: circle
+    p_circle: circle,
+    p_linearGradientBox: linearGradientBox
 };

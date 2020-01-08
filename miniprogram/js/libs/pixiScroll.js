@@ -1,9 +1,21 @@
 import Scroller from './Scroller/index';
+import { p_linearGradientBox } from './component/index';
 function pixiScroll(PIXI, app, property) {
     function ScrollContainer() {
         this.po = new PIXI.Container();
         this.scrollContainer = new PIXI.Container();
         this.items = [];
+
+        let gradient = p_linearGradientBox(PIXI, {
+                height: property.height,
+                colorFrom: 0xf8f8f8,
+                colorTo: 0xeef0f3
+            }),
+            official = new PIXI.Sprite(PIXI.loader.resources['images/official.png'].texture);
+
+        official.width = official.width * PIXI.ratio;
+        official.height = official.height * PIXI.ratio;
+        official.position.set(0, 170 * (property.height / 1334));
 
         this.mask = new PIXI.Graphics();
         this.mask
@@ -11,7 +23,10 @@ function pixiScroll(PIXI, app, property) {
             .drawRect(0, 135 * (property.height / 1334), property.width, property.height)
             .endFill();
         this.scrollContainer.mask = this.mask;
-        this.po.addChild(this.scrollContainer, this.mask);
+
+        this.scrollContainer.addChild(official);
+
+        this.po.addChild(gradient, this.scrollContainer, this.mask);
 
         this.scroller = new Scroller(
             (...args) => {
@@ -254,26 +269,7 @@ function pixiScroll(PIXI, app, property) {
         this.po = div;
         sc.scrollContainer.addChild(this.po);
     }
-    function GoBack() {
-        this.button = new PIXI.Graphics();
-        this.arrow = new PIXI.Graphics();
-        this.button.position.set(0, 52 * Math.ceil(PIXI.ratio));
-        this.button
-            .beginFill(0xffffff, 0)
-            .drawRect(0, 0, 80 * PIXI.ratio, 80 * PIXI.ratio)
-            .endFill();
-        this.arrow
-            .lineStyle(5 * PIXI.ratio, 0x333333)
-            .moveTo(50 * PIXI.ratio, 20 * PIXI.ratio)
-            .lineTo(30 * PIXI.ratio, 40 * PIXI.ratio)
-            .lineTo(50 * PIXI.ratio, 60 * PIXI.ratio);
-        this.button.interactive = true;
-        this.button.touchend = () => {
-            window.router.navigateBack();
-        };
 
-        this.button.addChild(this.arrow);
-    }
     function Title() {
         this.box = new PIXI.Graphics();
         this.box
@@ -304,7 +300,7 @@ function pixiScroll(PIXI, app, property) {
 
     drawItemsFn(property.methods);
 
-    property.isTabBar ? sc.po.addChild(new Title().box) : sc.po.addChild(new GoBack().button);
+    property.isTabBar && sc.po.addChild(new Title().box);
 
     sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight);
 
