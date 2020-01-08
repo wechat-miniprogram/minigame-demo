@@ -9,7 +9,7 @@ export class ShareCanvas {
         
         this.sharedWidth  = ( width  ||  960 );
         this.sharedHeight = ( height ||  1410 );
-
+        
         this.init(times);
     }
 
@@ -43,9 +43,9 @@ export class ShareCanvas {
     }
 
     renderFriendRank(PIXI, app) {
-        let texture = PIXI.Texture.fromCanvas(sharedCanvas);
-        texture.update();
-        let shared = new PIXI.Sprite(texture);
+        !this.texture && (this.texture = PIXI.Texture.fromCanvas(this.sharedCanvas));
+        this.texture.update();
+        let shared = new PIXI.Sprite(this.texture);
         shared.name = 'shared';
     
         shared.width = this.sharedWidth;

@@ -130,9 +130,9 @@ function showPotentialFriendList(){
 
             // 定向分享
             draw('', res.list, selfData, currentMaxScore, 'directional');
-            directional(res.list);
             
-            refreshDirected(showPotentialFriendList)
+            directional(res.list);
+            refreshDirected(showPotentialFriendList);
         }
     })
 }

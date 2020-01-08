@@ -67,7 +67,6 @@ module.exports = function(PIXI, app, obj) {
                 break;
 
             case 'showFriendRank':
-                wx.triggerGC(); // 垃圾回收
 
                 if ( !SC.friendRankShow ) {
                     SC.friendRankShow = true;
@@ -77,7 +76,6 @@ module.exports = function(PIXI, app, obj) {
                         event: 'showFriendRank',
                     });
                 }
-
 
                 break;
             case 'close':
@@ -100,8 +98,6 @@ module.exports = function(PIXI, app, obj) {
     function detectToShowGroup(options) {
         // 初次打开发现要求渲染群排行榜
         if ( options && options.shareTicket && options.query && options.query.showGroup === '1' ) {
-
-            wx.triggerGC(); // 垃圾回收
 
             SC.openDataContext.postMessage({
                 event      : 'showGroupRank',
