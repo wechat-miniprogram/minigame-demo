@@ -241,10 +241,15 @@ module.exports = function(PIXI, app, obj, callBack) {
     window.router.getNowPage(page => {
         page.reload = function() {
             app.ticker.add(rotatingFn);
-            del.visible && callBack({ status: 'show' });
+            videoBox.visible && callBack({ status: 'show' });
             logo.turnImg({ src: 'images/logo.png' });
         };
     });
+
+    goBack.callBack = () => {
+        app.ticker.remove(rotatingFn);
+        callBack({ status: 'hide' });
+    };
 
     container.addChild(goBack, title, api_name, underline, box, videoBox, start, pause, resume, abort, stop, logo, logoName);
     app.stage.addChild(container);
