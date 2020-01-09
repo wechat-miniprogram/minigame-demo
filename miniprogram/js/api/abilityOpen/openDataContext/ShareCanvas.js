@@ -4,7 +4,7 @@ export class ShareCanvas {
         this.openDataContext = wx.getOpenDataContext();
         this.sharedCanvas    = this.openDataContext.canvas;
         this.info            = wx.getSystemInfoSync();
-        this.imgY          = imgY;
+        this.imgY          = imgY || 0;
         this.GAME_WIDTH    = this.info.windowWidth * this.info.pixelRatio;
         this.GAME_HEIGHT   = this.info.windowHeight * this.info.pixelRatio;
         
@@ -38,7 +38,7 @@ export class ShareCanvas {
                 width  : realWidth,
                 height : realHeight,
                 x      : ( this.info.windowWidth - realWidth ) / 2,
-                y      : ( this.info.windowHeight - realHeight ) / 2,
+                y      : (this.imgY / this.info.pixelRatio) || ( this.info.windowHeight - realHeight ) / 2,
             }
         });
     }
