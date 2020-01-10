@@ -24,7 +24,7 @@ export function getDataFromSource(item) {
      } catch(e) {
          source = {
              "wxgame":{
-                 "score"      : 1,
+                 "score"      : 0,
                  "update_time": getCurrTime()
              }
          }
@@ -117,7 +117,6 @@ export function getFriendData(key, callback = none) {
     wx.getFriendCloudStorage({
         keyList: [key],
         success: res => {
-            console.log(res);
             res.data = res.data.filter( item => item.KVDataList.length );
 
             let data = res.data.map( item => {

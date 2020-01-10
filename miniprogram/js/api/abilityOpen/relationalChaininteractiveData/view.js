@@ -21,9 +21,24 @@ module.exports = function(PIXI, app, obj, callBack) {
         callBack({ status: 'close' });
     };
 
+    // 默认上报分数
+    wx.setUserCloudStorage({
+        KVDataList: [
+            {
+                key: 'score',
+                value: JSON.stringify({
+                    wxgame: {
+                        score: 0,
+                        update_time: (Date.now() / 1000) | 0
+                    }
+                })
+            }
+        ]
+    });
+
     callBack({ status: 'relationalChaininteractiveData' });
 
-    container.addChild(goBack, title, api_name, underline, tipText,logo, logoName);
+    container.addChild(goBack, title, api_name, underline, tipText, logo, logoName);
 
     app.stage.addChild(container);
 
