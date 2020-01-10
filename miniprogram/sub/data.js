@@ -117,7 +117,6 @@ export function getFriendData(key, callback = none) {
     wx.getFriendCloudStorage({
         keyList: [key],
         success: res => {
-            console.log(res);
             res.data = res.data.filter( item => item.KVDataList.length );
 
             let data = res.data.map( item => {
