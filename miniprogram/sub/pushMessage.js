@@ -11,6 +11,7 @@ export function interactive(data, selfData) {
                 operation: 'add',                       // 修改类型,目前只能是add
                 toUser: data[index].openid,             // 好友的 openId
                 title: '送你 1 个金币，赶快打开游戏看看吧',// 2.9.0 支持
+                imageUrl: 'images/miniGame.png'
             });
         });
     });
@@ -23,7 +24,8 @@ export function directional(data) {
         item.on('click', () => {
             wx.shareMessageToFriend({
                 openId: data[index].openid,
-                title: '小游戏示例'
+                title: '小游戏示例',
+                imageUrl: 'images/miniGame.png'
             });
         });
     });
@@ -35,5 +37,4 @@ export function refreshDirected(fn) {
     button.on('click', () => {
         fn && fn()
     })
-
 }

@@ -24,7 +24,7 @@ export function getDataFromSource(item) {
      } catch(e) {
          source = {
              "wxgame":{
-                 "score"      : 1,
+                 "score"      : 0,
                  "update_time": getCurrTime()
              }
          }
