@@ -46,7 +46,7 @@ module.exports = function(PIXI, app, obj) {
                     score = Math.floor(Math.random() * 1000 + 1);
                     wx.setUserCloudStorage({
                         KVDataList: [
-                            {   key  : 'score',
+                            {   key  : 'rankid',
                                 value: JSON.stringify({
                                     wxgame: {
                                         score  : score,
@@ -84,7 +84,7 @@ module.exports = function(PIXI, app, obj) {
                 ticker.remove(tick);
 
                 SC.rankTiker(PIXI, app);
-                
+
                 SC.openDataContext.postMessage({
                     event: 'close',
                 });
