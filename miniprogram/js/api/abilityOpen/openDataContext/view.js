@@ -1,6 +1,5 @@
 import { p_button, p_text } from '../../../libs/component/index';
 import fixedTemplate from '../../../libs/template/fixed';
-import share from '../../../libs/share';
 module.exports = function(PIXI, app, obj, callBack) {
     let container = new PIXI.Container(),
         { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
@@ -112,7 +111,6 @@ module.exports = function(PIXI, app, obj, callBack) {
 
     goBack.callBack = () => {
         callBack({ status: 'close' });
-        share();
     };
 
     container.addChild(goBack, title, api_name, underline, report, button, gButton, logo, logoName);

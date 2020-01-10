@@ -30,7 +30,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             relative_middle: { containerWidth: obj.width }
         });
 
-    //微信登录“按钮” 开始
+    // 微信登录“按钮” 开始
     let wxLogin = p_button(PIXI, {
         width: prompt.width,
         height: 80 * PIXI.ratio,
@@ -54,7 +54,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             }
         });
     });
-    //微信登录“按钮” 结束
+    // 微信登录“按钮” 结束
 
     window.router.getNowPage(page => {
         page.reload = function() {

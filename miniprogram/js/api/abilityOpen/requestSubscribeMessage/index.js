@@ -7,7 +7,7 @@ module.exports = function(PIXI, app, obj) {
             case 'requestSubscribeMessage':
                 // 调起小游戏订阅消息界面，返回用户订阅消息的操作结果
                 wx.requestSubscribeMessage({
-                    // tmplIds的值是：模板ID的数组
+                    // tmplIds的值是：具有模板ID的数组
                     tmplIds: ['wAniOv_NUi6TXiQWX74_1LD5E4_6EfqvaeSxUxhqllg'],
                     success(res) {
                         // 用户允许订阅
@@ -27,7 +27,10 @@ module.exports = function(PIXI, app, obj) {
                             });
 
                         // 用户拒绝订阅
-                        if (res['wAniOv_NUi6TXiQWX74_1LD5E4_6EfqvaeSxUxhqllg'] === 'reject') return show.Modal('用户主动拒绝', '订阅失败');
+                        if (res['wAniOv_NUi6TXiQWX74_1LD5E4_6EfqvaeSxUxhqllg'] === 'reject') return show.Modal('你已拒绝消息订阅，可前往“右上角三个点-设置”中打开', '订阅失败');
+                    },
+                    fail(){
+                        show.Modal('你已拒绝消息订阅，可前往“右上角三个点-设置”中打开', '订阅失败');
                     }
                 });
                 break;

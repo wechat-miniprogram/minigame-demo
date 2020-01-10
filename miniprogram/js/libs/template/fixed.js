@@ -1,6 +1,6 @@
 import { p_goBackBtn, p_line, p_text, p_img } from '../component/index';
-module.exports = function(PIXI, { obj, title, api_name }) {
-    let goBack, underline, logo, logoName;
+module.exports = function(PIXI, { obj, title, api_name, underline = true }) {
+    let goBack, logo, logoName;
 
     goBack = p_goBackBtn(PIXI, 'navigateBack');
 
@@ -22,15 +22,16 @@ module.exports = function(PIXI, { obj, title, api_name }) {
             relative_middle: { containerWidth: obj.width }
         }));
 
-    underline = p_line(
-        PIXI,
-        {
-            width: PIXI.ratio | 0,
-            color: 0xd8d8d8
-        },
-        [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
-        [150 * PIXI.ratio, 0]
-    );
+    underline &&
+        (underline = p_line(
+            PIXI,
+            {
+                width: PIXI.ratio | 0,
+                color: 0xd8d8d8
+            },
+            [(obj.width - 150 * PIXI.ratio) / 2, api_name.y + api_name.height + 23 * PIXI.ratio],
+            [150 * PIXI.ratio, 0]
+        ));
 
     logo = p_img(PIXI, {
         width: 36 * PIXI.ratio,

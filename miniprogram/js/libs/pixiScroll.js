@@ -1,9 +1,21 @@
 import Scroller from './Scroller/index';
+import { p_linearGradientBox } from './component/index';
 function pixiScroll(PIXI, app, property) {
     function ScrollContainer() {
         this.po = new PIXI.Container();
         this.scrollContainer = new PIXI.Container();
         this.items = [];
+
+        let gradient = p_linearGradientBox(PIXI, {
+                height: property.height,
+                colorFrom: 0xf8f8f8,
+                colorTo: 0xeef0f3
+            }),
+            official = new PIXI.Sprite(PIXI.loader.resources['images/official.png'].texture);
+
+        official.width = official.width * PIXI.ratio;
+        official.height = official.height * PIXI.ratio;
+        official.position.set(0, 170 * (property.height / 1334));
 
         this.mask = new PIXI.Graphics();
         this.mask
@@ -11,7 +23,10 @@ function pixiScroll(PIXI, app, property) {
             .drawRect(0, 135 * (property.height / 1334), property.width, property.height)
             .endFill();
         this.scrollContainer.mask = this.mask;
-        this.po.addChild(this.scrollContainer, this.mask);
+
+        this.scrollContainer.addChild(official);
+
+        this.po.addChild(gradient, this.scrollContainer, this.mask);
 
         this.scroller = new Scroller(
             (...args) => {
@@ -21,7 +36,6 @@ function pixiScroll(PIXI, app, property) {
                 scrollingX: false,
                 scrollingY: true,
                 bouncing: false
-                // snapping: true
             }
         );
 
@@ -90,10 +104,7 @@ function pixiScroll(PIXI, app, property) {
             this.bg.addChild(sprite);
             sprite.width = sprite.height = sprite.width * 0.32 * PIXI.ratio;
             sprite.position.set(this.width - sprite.width - 32 * PIXI.ratio, (this.drawHeight - sprite.height) / 2);
-            text1.call(this, 32, 44);
-        } else {
-            text1.call(this, 26, 26);
-            text2.call(this);
+            text.call(this, 32, 44);
         }
 
         this.drawHeight += 20 * PIXI.ratio;
@@ -131,22 +142,14 @@ function pixiScroll(PIXI, app, property) {
             }
         };
 
-        function text1(fontSize, y) {
-            let text1 = new PIXI.Text(value.label, {
+        function text(fontSize, y) {
+            let text = new PIXI.Text(value.label, {
                 fontSize: `${fontSize * PIXI.ratio}px`
             });
 
-            text1.position.set(32 * PIXI.ratio, y * PIXI.ratio);
+            text.position.set(32 * PIXI.ratio, y * PIXI.ratio);
 
-            this.bg.addChild(text1);
-        }
-
-        function text2() {
-            let text2 = new PIXI.Text(apiName, {
-                fontSize: `${32 * PIXI.ratio}px`
-            });
-            text2.position.set(32 * PIXI.ratio, 65 * PIXI.ratio);
-            this.bg.addChild(text2);
+            this.bg.addChild(text);
         }
     }
 
@@ -226,14 +229,32 @@ function pixiScroll(PIXI, app, property) {
         sprite.position.set((property.width - sprite.width) / 2, 200 * (property.height / 1334));
         div.addChild(sprite);
 
-        let text = new PIXI.Text('以下将演示小游戏接口能力，具体属性\n参数详见PC端的小游戏开发文档', {
-            fontSize: `${28 * PIXI.ratio}px`,
-            fill: 0x757575,
-            lineHeight: 38 * PIXI.ratio,
-            align: 'center'
-        });
+        let text = new PIXI.Text('以下将演示小游戏接口能力，具体属性参数\n\n复制github开源代码链接', {
+                fontSize: `${28 * PIXI.ratio}px`,
+                fill: 0x757575,
+                lineHeight: 38 * PIXI.ratio,
+                align: 'center'
+            }),
+            middleText = new PIXI.Text('详见PC端的小游戏开发文档，可', {
+                fontSize: `${28 * PIXI.ratio}px`,
+                fill: 0x757575
+            }),
+            copyText = new PIXI.Text('点击此处', {
+                fontSize: `${28 * PIXI.ratio}px`,
+                fill: 0x247be3
+            });
         text.position.set((property.width - text.width) / 2, sprite.y + sprite.height + 56 * PIXI.ratio);
-        div.addChild(text);
+        middleText.position.set((property.width - (middleText.width + copyText.width)) / 2, sprite.y + sprite.height + 94 * PIXI.ratio);
+        copyText.position.set(middleText.x + middleText.width, middleText.y);
+
+        copyText.interactive = true;
+        copyText.on('pointerup', () => {
+            wx.setClipboardData({
+                data: 'https://github.com/wechat-miniprogram/minigame-demo'
+            });
+        });
+
+        div.addChild(text, middleText, copyText);
         this.drawHeight = text.y + text.height + 90 * PIXI.ratio;
         this.po = div;
         sc.scrollContainer.addChild(this.po);
@@ -248,26 +269,7 @@ function pixiScroll(PIXI, app, property) {
         this.po = div;
         sc.scrollContainer.addChild(this.po);
     }
-    function GoBack() {
-        this.button = new PIXI.Graphics();
-        this.arrow = new PIXI.Graphics();
-        this.button.position.set(0, 52 * Math.ceil(PIXI.ratio));
-        this.button
-            .beginFill(0xffffff, 0)
-            .drawRect(0, 0, 80 * PIXI.ratio, 80 * PIXI.ratio)
-            .endFill();
-        this.arrow
-            .lineStyle(5 * PIXI.ratio, 0x333333)
-            .moveTo(50 * PIXI.ratio, 20 * PIXI.ratio)
-            .lineTo(30 * PIXI.ratio, 40 * PIXI.ratio)
-            .lineTo(50 * PIXI.ratio, 60 * PIXI.ratio);
-        this.button.interactive = true;
-        this.button.touchend = () => {
-            window.router.navigateBack();
-        };
 
-        this.button.addChild(this.arrow);
-    }
     function Title() {
         this.box = new PIXI.Graphics();
         this.box
@@ -298,7 +300,7 @@ function pixiScroll(PIXI, app, property) {
 
     drawItemsFn(property.methods);
 
-    property.isTabBar ? sc.po.addChild(new Title().box) : sc.po.addChild(new GoBack().button);
+    property.isTabBar && sc.po.addChild(new Title().box);
 
     sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight);
 

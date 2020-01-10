@@ -24,20 +24,22 @@ git clone https://github.com/wechat-miniprogram/minigame-demo.git
 ## 目录结构
 ```
 .
-├── cloudfunction                   // 云函数目录      
-├── miniprogram                     // 运行示例dome目录
+├── cloudfunction                   // 云函数目录
+├── jsserver                        // 数据安全性校验（关系链互动）
+├── miniprogram                     // 运行小游戏示例目录
 │   ├── images                      // icon目录
 │   ├── js             
 │   │   ├── api                     // API示例目录 
 │   │   │   ├── abilityOpen         // 开放能力
-│   │   │   ├── AD                  // 广告组件
-│   │   │   ├── facility            // 设备
 │   │   │   ├── interface           // 界面
-│   │   │   ├── media               // 媒体
-│   │   │   ├── network             // 网络
-│   │   │   ├── recommend           // 推荐组件
 │   │   │   ├── rendering           // 渲染
-│   │   │   └── storage-fileSystem  // 数据与文件系统
+│   │   │   ├── facility            // 设备
+│   │   │   ├── network             // 网络
+│   │   │   ├── media               // 媒体
+│   │   │   ├── storage-fileSystem  // 数据与文件系统
+│   │   │   ├── worker              // 多线程
+│   │   │   ├── AD                  // 广告组件
+│   │   │   └── recommend           // 推荐组件
 │   │   ├── errMsg                  // 错误提示目录
 │   │   └── libs                    // PIXI.js
 │   ├── workers                     // 多线程文件目录

@@ -1,6 +1,6 @@
 import style    from 'render/style.js';
 import tplFn    from 'render/tplfn.js';
-import Layout   from './engine.js'
+import Layout   from './engine.js';
 
 import {
     getFriendData,
@@ -12,29 +12,38 @@ import {
     replaceSelfDataInList,
 } from 'data.js';
 
+import { 
+    interactive, 
+    directional,
+    refreshDirected
+} from './pushMessage.js';
+
+
 let userinfo;
 let selfData;
 let key             = 'score';
 let currentMaxScore = 0;
-let cacheRankData   = [];
 let selfIndex       = 0;
 
 let sharedCanvas  = wx.getSharedCanvas();
 let sharedContext = sharedCanvas.getContext('2d');
 function draw(title, data = []) {
-    Layout.clear();
-    let template = tplFn({
-        title,
+    Layout.clearAll();
+
+    let isBillboard = typeof arguments[arguments.length -1] !== 'string',
+    template = tplFn({
+        title    : isBillboard ? title : null,
         data,
         self     : selfData,
         selfIndex,
+        isBillboard
     });
 
     Layout.init(template, style);
     Layout.layout(sharedContext);
 }
 
-function renderData(data, info, title="排行榜", mock=false) {
+function renderData(data, info, title="排行榜", mock=false, type) {
     data.sort( (a, b) => b.score - a.score);
     let find  = findSelf(data, info);
     selfData  = find.self;
@@ -57,20 +66,21 @@ function renderData(data, info, title="排行榜", mock=false) {
         replaceSelfDataInList(data, info, currentMaxScore);
     }
 
-    // 缓存数据，加速下次渲染
-    cacheRankData = data;
-
     // mock
-    if ( mock ) {
-        for ( let i = data.length; i < 20; i++ ) {
-            data[i] = JSON.parse(JSON.stringify(selfData));
-            data[i].rank = i;
-            data[i].score = 0;
-            data[i].nickname = 'mock__user';
-        }
-    }
+    // if ( mock ) {
+        // for ( let i = data.length; i < 20; i++ ) {
+        //     data[i] = JSON.parse(JSON.stringify(selfData));
+        //     data[i].rank = i;
+        //     data[i].score = 0;
+        //     data[i].nickname = 'mock__user';
+        // }
+    // }
 
-    draw(title, data, selfData, currentMaxScore);
+
+    draw(title, data, selfData, currentMaxScore, type);
+
+    // 关系链互动
+    type === 'interaction' && interactive( data, selfData );
 }
 
 function showGroupRank(shareTicket) {
@@ -92,7 +102,7 @@ function showGroupRank(shareTicket) {
     }
 }
 
-function showFriendRank() {
+function showFriendRank(type) {
     /**
      * 用户信息会在子域初始化的时候去拉取
      * 但是存在用户信息还没有拉取完成就要求渲染排行榜的情况，这时候再次发起用信息请求再拉取排行榜
@@ -101,32 +111,61 @@ function showFriendRank() {
         getUserInfo((info) => {
             userinfo = info;
             getFriendData(key, (data) => {
-                renderData(data, info, "排行榜", true);
+                renderData(data, info, "排行榜", true, type);
             });
         });
     } else {
         getFriendData(key, (data) => {
-            renderData(data, userinfo, "排行榜", true);
+            renderData(data, userinfo, "排行榜", true, type);
         });
     }
 }
 
+// 显示当前用户对游戏感兴趣的未注册的好友名单
+function showPotentialFriendList(){
+    wx.getPotentialFriendList({
+        success( res ) {
+            res.list.potential = true;
+            res.list.length > 4 && res.list.pop();
+
+            // 定向分享
+            draw('', res.list, selfData, currentMaxScore, 'directional');
+            
+            directional(res.list);
+            refreshDirected(showPotentialFriendList);
+        }
+    })
+}
+
 function init() {
     currentMaxScore = 0;
-    cacheRankData   = [];
 
     wx.onMessage(data => {
-        if ( data.event === 'updateViewPort' ) {
-            Layout.updateViewPort(data.box);
-        } else if ( data.event === 'showFriendRank' ) {
-            showFriendRank();
-        } else if ( data.event === 'showGroupRank' ) {
-            showGroupRank(data.shareTicket);
-        } else if ( data.event === 'setUserRecord' ) {
-            setUserRecord(key, data.value);
-        } else if ( data.event === 'close' ) {
-            Layout.clearAll();
+
+        switch ( data.event ) {
+            case 'updateViewPort':
+                Layout.updateViewPort(data.box);
+                break;
+            case 'showFriendRank':
+                showFriendRank();
+                break;
+            case 'showGroupRank':
+                showGroupRank(data.shareTicket);
+                break;
+            case 'setUserRecord':
+                setUserRecord(key, data.value);
+                break;
+            case 'relationalChaininteractiveData':
+                showFriendRank('interaction');
+                break;
+            case 'directedSharing':
+                showPotentialFriendList();
+                break;
+            case 'close':
+                Layout.clearAll();
+                break;
         }
+
     });
 }
 

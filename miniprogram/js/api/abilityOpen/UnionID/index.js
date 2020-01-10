@@ -12,8 +12,8 @@ module.exports = function(PIXI, app, obj) {
                     name: 'getUnionID',
                     success(res) {
                         wx.hideLoading();
-                        drawFn(res.result.unionid) //更新 UI
-                        console.log(res.result.unionid);
+                        drawFn(res.result.unionid || res.result.openid) //更新 UI
+                        console.log(res.result);
                     },
                     fail(res) {
                         wx.hideLoading();

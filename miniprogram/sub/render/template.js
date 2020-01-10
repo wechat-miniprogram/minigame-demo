@@ -15,8 +15,10 @@ const template = `
                     <text class="listItemNum" value="{{= index + 1}}"></text>
                     <image class="listHeadImg" src="{{= item.avatarUrl }}"></image>
                   <text class="listItemName" value="{{= item.nickname}}"></text>
+                  {{? it.hideScore}}
                   <text class="listItemScore" value="{{= item.rankScore}}"></text>
                   <text class="listScoreUnit" value="分"></text>
+                  {{?}}
                 </view>
             {{~}}
         </scrollview>

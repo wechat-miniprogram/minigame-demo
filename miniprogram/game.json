@@ -14,5 +14,14 @@
 			"root": "js/api/"
 		}
 	],
-    "openDataContext": "sub"
+	"openDataContext": "sub",
+	"modifyFriendInteractiveStorageTemplates": [
+		{
+		  "key": "1",
+		  "action": "赠与",
+		  "object": "金币",
+		  "ratio": 1
+		}
+	],
+	"modifyFriendInteractiveStorageConfirmWording": "赠与${nickname}金币 x 1？"
 }
