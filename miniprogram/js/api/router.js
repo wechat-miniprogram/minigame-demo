@@ -75,6 +75,11 @@ const signIn = [
                         path: 'abilityOpen/UnionID/index'
                     },
                     {
+                        label: '游戏圈',
+                        name: 'createGameClubButton',
+                        path: 'abilityOpen/createGameClubButton/index'
+                    },
+                    {
                         label: '客服服务',
                         name: 'customerService',
                         path: 'abilityOpen/customerService/index'
