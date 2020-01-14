@@ -12,7 +12,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             y: underline.height + underline.y + 123 * PIXI.ratio
         }),
         tipText = p_text(PIXI, {
-            content: '提示：一但使用了开放数据域，只能在离屏画布\n调用toDataURL才会返回base64',
+            content: '提示：一旦使用了开放数据域，只能在离屏画布\n调用toDataURL才会返回base64',
             fontSize: 32 * PIXI.ratio,
             fill: 0xbebebe,
             align: 'center',
