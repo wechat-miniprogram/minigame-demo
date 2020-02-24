@@ -1,5 +1,5 @@
 import view from './view';
-import * as errMsgObj from '../../../errMsg/index';
+import { errMsgGlobal } from '../../../errMsg/index';
 import show from '../../../libs/show';
 module.exports = function(PIXI, app, obj) {
     let video;
@@ -20,9 +20,9 @@ module.exports = function(PIXI, app, obj) {
                     src: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20190812/video.mp4'
                 });
                 video.onError(res => {
-                    for (var i = 0, errMsglist = Object.keys(errMsgObj); i < errMsglist.length; i++) {
+                    for (var i = 0, errMsglist = Object.keys(errMsgGlobal); i < errMsglist.length; i++) {
                         if (res.errMsg.includes(errMsglist[i])) {
-                            errMsgObj[errMsglist[i]]({
+                            errMsgGlobal[errMsglist[i]]({
                                 callback(res) {
                                     show.Modal(res, '发生错误');
                                 }
