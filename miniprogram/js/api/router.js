@@ -148,6 +148,11 @@ const signIn = [
                 name: 'facility',
                 children: [
                     {
+                        label: '更新',
+                        name: 'getUpdateManager',
+                        path: 'facility/getUpdateManager/index'
+                    },
+                    {
                         label: '振动',
                         name: 'vibrate',
                         path: 'facility/vibrate/index'
@@ -156,6 +161,11 @@ const signIn = [
                         label: '剪贴板',
                         name: 'clipboardData',
                         path: 'facility/clipboardData/index'
+                    },
+                    {
+                        label: '获取当前位置',
+                        name: 'getLocation',
+                        path: 'facility/getLocation/index'
                     },
                     {
                         label: '获取手机网络状态',
@@ -253,6 +263,10 @@ const signIn = [
                         label: '录音',
                         name: 'voice',
                         path: 'media/voice/index'
+                    },{
+                        label: '相机',
+                        name: 'camera',
+                        path: 'media/camera/index'
                     }
                 ]
             },

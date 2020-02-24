@@ -41,32 +41,22 @@ function pixiScroll(PIXI, app, property) {
 
         this.itemHeight = 0;
 
+        let doTouchFn = function(e, name) {
+            let data = e.data,
+                touches = data.originalEvent.touches || data.originalEvent.targetTouches || data.originalEvent.changedTouches;
+            touches[0].pageX = data.global.x;
+            touches[0].pageY = data.global.y;
+            this.scroller[name](touches, data.originalEvent.timeStamp);
+        }.bind(this);
+
         this.po.touchstart = e => {
             e.stopPropagation();
-            let data = e.data;
-            this.scroller.doTouchStart(
-                [
-                    {
-                        pageX: data.global.x,
-                        pageY: data.global.y
-                    }
-                ],
-                data.originalEvent.timeStamp
-            );
+            doTouchFn(e, 'doTouchStart');
         };
 
         this.po.touchmove = e => {
             e.stopPropagation();
-            let data = e.data;
-            this.scroller.doTouchMove(
-                [
-                    {
-                        pageX: data.global.x,
-                        pageY: data.global.y
-                    }
-                ],
-                data.originalEvent.timeStamp
-            );
+            doTouchFn(e, 'doTouchMove');
         };
 
         this.po.touchend = e => {
@@ -260,16 +250,6 @@ function pixiScroll(PIXI, app, property) {
         sc.scrollContainer.addChild(this.po);
     }
 
-    function PlaceholderDiv() {
-        let div = new PIXI.Graphics();
-        div.beginFill(0xffffff, 0)
-            .drawRect(0, 0, 0, 135 * (property.height / 1334))
-            .endFill();
-        this.drawHeight = div.height;
-        this.po = div;
-        sc.scrollContainer.addChild(this.po);
-    }
-
     function Title() {
         this.box = new PIXI.Graphics();
         this.box
@@ -285,7 +265,7 @@ function pixiScroll(PIXI, app, property) {
     }
 
     var sc = new ScrollContainer();
-    sc.items.push(property.isTabBar ? new Headline() : new PlaceholderDiv());
+    property.isTabBar && sc.items.push(new Headline());
     sc.itemHeight += sc.items[0].drawHeight;
 
     function drawItemsFn(methods) {

@@ -7,7 +7,7 @@ module.exports = function(PIXI, app, obj) {
         let { status, data } = res;
         switch (status) {
             case 'createVideo':
-                //调起视频控件
+                // 调起视频控件
                 video = wx.createVideo({
                     x: data.x,
                     y: data.y,
