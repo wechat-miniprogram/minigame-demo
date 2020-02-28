@@ -122,7 +122,7 @@ function pixiScroll(PIXI, app, property) {
                     if (sc.itemHeight === heigth) sc.itemHeight = heigth - this.childHeight;
                     else sc.itemHeight = heigth;
 
-                    sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight);
+                    sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight + 40 * PIXI.ratio );
                     return;
                 }
                 let methods = property.methods,
@@ -281,6 +281,8 @@ function pixiScroll(PIXI, app, property) {
     drawItemsFn(property.methods);
 
     property.isTabBar && sc.po.addChild(new Title().box);
+
+    sc.itemHeight += 40 * PIXI.ratio;
 
     sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight);
 
