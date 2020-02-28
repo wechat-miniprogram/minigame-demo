@@ -282,9 +282,7 @@ function pixiScroll(PIXI, app, property) {
 
     property.isTabBar && sc.po.addChild(new Title().box);
 
-    sc.itemHeight += 40 * PIXI.ratio;
-
-    sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight);
+    sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight + 40 * PIXI.ratio);
 
     app.stage.addChild(sc.po);
     return sc.po;
