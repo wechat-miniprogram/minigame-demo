@@ -19,8 +19,11 @@ module.exports = function(PIXI, deploy = {}) {
         height && (kind.height = height);
 
         this.turnImg = function(data) {
+            let { width, height } = kind;
             !kind.texture.frame && kind.texture.destroy(true);
             kind.texture = data.is_PIXI_loader ? PIXI.loader.resources[data.src].texture : PIXI.Texture.from(data.src);
+            kind.width = width;
+            kind.height = height;
         };
 
         this.setPositionFn = function(deploy = {}) {
