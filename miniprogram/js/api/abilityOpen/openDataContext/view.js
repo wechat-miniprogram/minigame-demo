@@ -47,13 +47,14 @@ module.exports = function(PIXI, app, obj, callBack) {
 
     let close = p_button(PIXI, {
         width: 300 * PIXI.ratio,
-        y: (obj.height - 200 * PIXI.ratio) | 0
+        y: (obj.height - 200 * PIXI.ratio) | 0,
+        x: 700,
     });
 
     close.myAddChildFn(
         p_text(PIXI, {
             content: `关闭排行`,
-            fontSize: 36 * PIXI.ratio,
+            fontSize: 32 * PIXI.ratio,
             fill: 0xffffff,
             relative_middle: { containerWidth: button.width, containerHeight: button.height }
         })
@@ -61,13 +62,36 @@ module.exports = function(PIXI, app, obj, callBack) {
 
     close.onClickFn(() => {
         container.removeChild(close);
+        container.removeChild(subscribe);
         callBack({
             status: 'close'
         });
     });
 
+    let subscribe = p_button(PIXI, {
+        width: 300 * PIXI.ratio,
+        y: (obj.height - 200 * PIXI.ratio) | 0,
+        x: 50,
+    });
+
+    subscribe.myAddChildFn(
+        p_text(PIXI, {
+            content: `订阅消息`,
+            fontSize: 32 * PIXI.ratio,
+            fill    : 0xffffff,
+            relative_middle: { containerWidth: button.width, containerHeight: button.height }
+        })
+    );
+
+    subscribe.onClickFn(() => {
+        callBack({
+            status: 'subscribe'
+        });
+    });
+
     button.onClickFn(() => {
         container.addChild(close);
+        container.addChild(subscribe);
         callBack({
             status: 'showFriendRank'
         });

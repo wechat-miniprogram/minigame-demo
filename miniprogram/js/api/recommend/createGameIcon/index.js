@@ -1,5 +1,6 @@
 import view from './view';
 import * as show from '../../../libs/show';
+import { gameAdError } from '../../../errMsg/index';
 module.exports = function(PIXI, app, obj) {
     let gameIcon;
     return view(PIXI, app, obj, data => {
@@ -35,7 +36,7 @@ module.exports = function(PIXI, app, obj) {
                 gameIcon.onError(res => {
                     wx.hideLoading();
 
-                    show.Modal(res.errMsg, '发生错误');
+                    show.Modal(gameAdError[res.errCode], '发生错误');
 
                     drawFn(res); // 更新UI
                 });

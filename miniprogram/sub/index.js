@@ -12,8 +12,8 @@ import {
     replaceSelfDataInList,
 } from 'data.js';
 
-import { 
-    interactive, 
+import {
+    interactive,
     directional,
     refreshDirected
 } from './pushMessage.js';
@@ -21,7 +21,7 @@ import {
 
 let userinfo;
 let selfData;
-let key             = 'score';
+let key             = 'rankid';
 let currentMaxScore = 0;
 let selfIndex       = 0;
 
@@ -130,7 +130,7 @@ function showPotentialFriendList(){
 
             // 定向分享
             draw('', res.list, selfData, currentMaxScore, 'directional');
-            
+
             directional(res.list);
             refreshDirected(showPotentialFriendList);
         }

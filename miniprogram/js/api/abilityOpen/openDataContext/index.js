@@ -46,7 +46,7 @@ module.exports = function(PIXI, app, obj) {
                     score = Math.floor(Math.random() * 1000 + 1);
                     wx.setUserCloudStorage({
                         KVDataList: [
-                            {   key  : 'score',
+                            {   key  : 'rankid',
                                 value: JSON.stringify({
                                     wxgame: {
                                         score  : score,
@@ -84,13 +84,46 @@ module.exports = function(PIXI, app, obj) {
                 ticker.remove(tick);
 
                 SC.rankTiker(PIXI, app);
-                
+
                 SC.openDataContext.postMessage({
                     event: 'close',
                 });
 
                 wx.triggerGC(); // 垃圾回收
 
+                break;
+            case 'subscribe':
+                wx.requestSubscribeSystemMessage({
+                    msgTypeList: ['SYS_MSG_TYPE_INTERACTIVE', 'SYS_MSG_TYPE_RANK'],
+                    success(res) {
+                        console.log(res);
+                        if ( res.errMsg === 'requestSubscribeSystemMessage:ok' ) {
+                            let tips = '成功订阅';
+                            if ( res.SYS_MSG_TYPE_INTERACTIVE === 'accept' ) {
+                                tips += '好友互动提醒';
+                            }
+                            if ( res.SYS_MSG_TYPE_RANK === 'accept' ) {
+                                if ( tips !== '成功订阅' ) {
+                                    tips += '和';
+                                }
+                                tips += '排行榜好友超越提醒';
+                            }
+                            wx.showToast({
+                                title: tips,
+                                icon: 'none',
+                                duration: 2000
+                            });
+                        }
+                    },
+                    fail(res) {
+                        console.log(res)
+                        wx.showToast({
+                            title: res.errMsg,
+                            icon: 'none',
+                            duration: 2000
+                        });
+                    }
+                })
                 break;
         }
     });
