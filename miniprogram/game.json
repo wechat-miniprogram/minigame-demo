@@ -23,5 +23,12 @@
 		  "ratio": 1
 		}
 	],
-	"modifyFriendInteractiveStorageConfirmWording": "赠与${nickname}金币 x 1？"
+	"modifyFriendInteractiveStorageConfirmWording": "赠与${nickname}金币 x 1？",
+	"plugins": {
+		"engine": {
+			"version": "9.0.0",
+			"provider": "wx1efc461f079bd910",
+			"contexts":[{"type":"openDataContext"}]
+		}
+	}
 }

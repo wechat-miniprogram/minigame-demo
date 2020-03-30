@@ -1,4 +1,5 @@
-import Layout from './engine.js';
+const Layout = requirePlugin('engine')
+
 export function interactive(data, selfData) {
     const buttonList = Layout.getElementsByClassName('itemButton');
 
