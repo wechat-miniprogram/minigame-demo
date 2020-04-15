@@ -28,5 +28,6 @@
             "ratio": 1
         }
     ],
-    "modifyFriendInteractiveStorageConfirmWording": "赠与${nickname}金币 x 1？"
+    "modifyFriendInteractiveStorageConfirmWording": "赠与${nickname}金币 x 1？",
+    "navigateToMiniProgramAppIdList": ["wx4f4a4549a1069d03"]
 }

@@ -23,7 +23,6 @@ let app = new PIXI.Application({
 });
 
 // 因为在微信小游戏里canvas肯定是全屏的，所以映射起来就很简单暴力
-
 PIXI.interaction.InteractionManager.prototype.mapPositionToPoint = (point, x, y) => {
     point.x = x * pixelRatio;
     point.y = y * pixelRatio;

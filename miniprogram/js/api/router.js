@@ -35,6 +35,18 @@ const signIn = [
                         path: 'abilityOpen/requestSubscribeSystemMessage/index'
                     },
                     {
+                        label: '游戏更新提醒',
+                        name: 'gameUpdateReminder',
+                        path: 'abilityOpen/gameUpdateReminder/index'
+                    },
+                    {
+                        label: '好友对战（帧同步）',
+                        name: 'getGameServerManager',
+                        path() {
+                            wx.navigateToMiniProgram({ appId: 'wx4f4a4549a1069d03' });
+                        }
+                    },
+                    {
                         label: '游戏对局回放',
                         name: 'getGameRecorder',
                         path: 'abilityOpen/getGameRecorder/index'
@@ -263,7 +275,8 @@ const signIn = [
                         label: '录音',
                         name: 'voice',
                         path: 'media/voice/index'
-                    },{
+                    },
+                    {
                         label: '相机',
                         name: 'camera',
                         path: 'media/camera/index'
@@ -412,6 +425,8 @@ function router(PIXI, app, parameter) {
             let lastOne = this.treeView.length - 1,
                 name = this.treeView[lastOne];
             if (name === newPage) return;
+
+            if (typeof treePage[newPage].path === 'function') return treePage[newPage].path();
 
             this.treeView.push(newPage);
             treePage[newPage].reload && treePage[newPage].reload();
