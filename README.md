@@ -66,4 +66,4 @@ git clone https://github.com/wechat-miniprogram/minigame-demo.git
 
 ## 截图
 
-<img src="./readmeImages/15657502368839.png" />
+<img src="./readmeImages/samplePlate.png" />
