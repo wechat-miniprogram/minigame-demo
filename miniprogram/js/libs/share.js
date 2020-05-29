@@ -1,9 +1,10 @@
-module.exports = function() {
+module.exports = function () {
     wx.showShareMenu({
-        withShareTicket: true
+        withShareTicket: true,
+        menus: ['shareAppMessage', 'shareTimeLine'],
     });
     // 监听被动调起分享
-    wx.onShareAppMessage(function() {
+    wx.onShareAppMessage(function () {
         let query = window.router.getNowPageName() !== 'APIentry' && `pathName=${window.router.getNowPageName()}`;
         (window.query || {}).roomName && (query = query + `&roomName=${window.query.roomName}`);
         return {
@@ -12,9 +13,9 @@ module.exports = function() {
                 x: 0,
                 y: 0,
                 width: canvas.width,
-                height: (canvas.width * 4) / 5
+                height: (canvas.width * 4) / 5,
             }),
-            query
+            query,
         };
     });
 };
