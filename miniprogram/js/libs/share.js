@@ -3,8 +3,8 @@ module.exports = function () {
         withShareTicket: true,
         menus: ['shareAppMessage', 'shareTimeLine'],
     });
-    // 监听被动调起分享
-    wx.onShareAppMessage(function () {
+
+    const callBack = () => {
         let query = window.router.getNowPageName() !== 'APIentry' && `pathName=${window.router.getNowPageName()}`;
         (window.query || {}).roomName && (query = query + `&roomName=${window.query.roomName}`);
         return {
@@ -17,5 +17,11 @@ module.exports = function () {
             }),
             query,
         };
-    });
+    };
+
+    // 监听被动调起分享
+    wx.onShareAppMessage(callBack);
+
+    // 监听被动调起分享到朋友圈
+    wx.onShareTimeLine && wx.onShareTimeLine(callBack);
 };
