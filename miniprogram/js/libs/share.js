@@ -1,7 +1,7 @@
 module.exports = function () {
     wx.showShareMenu({
         withShareTicket: true,
-        menus: ['shareAppMessage', 'shareTimeLine'],
+        menus: ['shareAppMessage', 'shareTimeline'],
     });
 
     const callBack = () => {
