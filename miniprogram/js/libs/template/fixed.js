@@ -35,7 +35,7 @@ module.exports = function(PIXI, { obj, title, api_name, underline = true }) {
 
     logo = p_img(PIXI, {
         width: 36 * PIXI.ratio,
-        x: 294 * PIXI.ratio,
+        x: 288 * PIXI.ratio,
         y: obj.height - 66 * PIXI.ratio,
         src: 'images/logo.png'
     });
@@ -45,7 +45,7 @@ module.exports = function(PIXI, { obj, title, api_name, underline = true }) {
         fontSize: 26 * PIXI.ratio,
         fill: 0x576b95,
         y: (obj.height - 62 * PIXI.ratio) | 0,
-        relative_middle: { point: 404 * PIXI.ratio }
+        relative_middle: { point: 401 * PIXI.ratio }
     });
 
     return {

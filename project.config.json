@@ -11,20 +11,24 @@
 		"nodeModules": false,
 		"autoAudits": false,
 		"showShadowRootInWxmlPanel": false,
-		"scopeDataCheck": true,
+		"scopeDataCheck": false,
 		"uglifyFileName": false,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
+		"compileHotReLoad": false,
 		"babelSetting": {
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
 		},
-		"bundle": true
+		"bundle": true,
+		"useIsolateContext": true,
+		"useCompilerModule": false,
+		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"compileType": "game",
-	"libVersion": "2.11.0",
+	"libVersion": "2.11.3",
 	"appid": "wx20afc706a711eefc",
 	"projectname": "miniGameExample",
 	"miniprogramRoot": "miniprogram/",
