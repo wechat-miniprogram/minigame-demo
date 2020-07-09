@@ -23,5 +23,5 @@ module.exports = function () {
     wx.onShareAppMessage(callBack);
 
     // 监听被动调起分享到朋友圈
-    wx.onShareTimeLine && wx.onShareTimeLine(callBack);
+    wx.onShareTimeline && wx.onShareTimeline(callBack);
 };
