@@ -70,10 +70,10 @@ exports.main = function(arg) {
 
         if (ok) {
             // 验证通过
-            return JSON.stringify({ ret: true });
+            return { ret: true };
         } else {
             // 验证不通过
-            return JSON.stringify({ ret: false });
+            return { ret: false };
         }
     } catch (err) {
         console.error(err.message);

@@ -56,7 +56,6 @@ module.exports = function(PIXI, app, obj) {
                         }[res.errCode]
                     );
                 });
-
                 // 监听音频暂停事件
                 innerAudioContext.onPause(interruptionFn);
 
@@ -64,7 +63,9 @@ module.exports = function(PIXI, app, obj) {
 
             case 'play':
                 // 开始播放
+
                 innerAudioContext.play();
+
                 // 监听音频播放进度更新事件
                 innerAudioContext.onTimeUpdate(() => {
                     drawFn('upDate', innerAudioContext.duration, innerAudioContext.currentTime); // 更新ui

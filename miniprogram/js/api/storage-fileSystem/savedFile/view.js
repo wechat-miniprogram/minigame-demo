@@ -134,7 +134,7 @@ module.exports = function(PIXI, app, obj, callBack) {
 
         div = p_box(PIXI, divDeploy);
         div.addChild(...div_child_arr);
-        scroll.myAddChildFn([div]);
+        scroll.myAddChildFn(div);
         let whoHigh = div.height > scroll.height;
         scroll.isTouchable(whoHigh);
 

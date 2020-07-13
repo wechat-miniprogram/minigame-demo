@@ -1,4 +1,4 @@
-const Layout = requirePlugin('engine')
+const Layout = requirePlugin('Layout').default;
 
 export function interactive(data, selfData) {
     const buttonList = Layout.getElementsByClassName('itemButton');

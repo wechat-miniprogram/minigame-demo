@@ -1,6 +1,6 @@
 import Scroller from '../Scroller/index';
 module.exports = function(PIXI, deploy = {}) {
-    let { width = canvas.width, height = 0, x = (canvas.width - width) / 2, y = 0 } = deploy;
+    let { width = canvas.width, height = 0, x = (canvas.width - width) / 2, y = 0, monitor } = deploy;
 
     function Scroll() {
         let container = new PIXI.Container(),
@@ -14,17 +14,9 @@ module.exports = function(PIXI, deploy = {}) {
 
         this.totalHeight = 0;
 
-        this.myAddChildFn = function(itemArr, css = {}) {
-            let { prevDist = 0, left = 0, top = 0 } = css,
-                prevSpace = 0,
-                len = container.children.length;
-            if (prevDist && len) {
-                prevSpace = container.children[len - 1].y + container.children[len - 1].height;
-            }
+        this.myAddChildFn = function(...itemArr) {
             for (let i = 0, len = itemArr.length; i < len; i++) {
-                itemArr[i].position.set(left + itemArr[i].x, top + prevSpace + prevDist + itemArr[i].y);
-                this.totalHeight = prevSpace + prevDist + itemArr[i].y + itemArr[i].height;
-                prevSpace && (prevSpace = itemArr[i].y + itemArr[i].height);
+                this.totalHeight = Math.max(this.totalHeight, itemArr[i].y + itemArr[i].height);
             }
             container.addChild(...itemArr);
             this.scroller.setDimensions(width, height, width, this.totalHeight);
@@ -36,6 +28,7 @@ module.exports = function(PIXI, deploy = {}) {
 
         this.scroller = new Scroller(
             (...args) => {
+                this.monitor && this.monitor(-args[1]);
                 container.position.y = -args[1];
             },
             {
@@ -45,30 +38,20 @@ module.exports = function(PIXI, deploy = {}) {
             }
         );
 
+        let doTouchFn = function(e, name) {
+            let data = e.data,
+                touches = data.originalEvent.touches || data.originalEvent.targetTouches || data.originalEvent.changedTouches;
+            touches[0].pageX = data.global.x;
+            touches[0].pageY = data.global.y;
+            this.scroller[name](touches, data.originalEvent.timeStamp);
+        }.bind(this);
+
         this.touchstart = e => {
-            let data = e.data;
-            this.scroller.doTouchStart(
-                [
-                    {
-                        pageX: data.global.x,
-                        pageY: data.global.y
-                    }
-                ],
-                data.originalEvent.timeStamp
-            );
+            doTouchFn(e, 'doTouchStart');
         };
 
         this.touchmove = e => {
-            let data = e.data;
-            this.scroller.doTouchMove(
-                [
-                    {
-                        pageX: data.global.x,
-                        pageY: data.global.y
-                    }
-                ],
-                data.originalEvent.timeStamp
-            );
+            doTouchFn(e, 'doTouchMove');
         };
 
         this.touchend = e => {

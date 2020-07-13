@@ -146,7 +146,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     logo.setPositionFn({ y: 1374 * PIXI.ratio });
     logoName.setPositionFn({ y: (1378 * PIXI.ratio) | 0 });
 
-    scroll.myAddChildFn([api_name, underline, div, getSettingBtn, openSettingBtn, logo, logoName, p_box(PIXI, { y: 1440 * PIXI.ratio })]);
+    scroll.myAddChildFn(api_name, underline, div, getSettingBtn, openSettingBtn, logo, logoName, p_box(PIXI, { y: 1440 * PIXI.ratio }));
     container.addChild(title, goBack, scroll);
     app.stage.addChild(container);
 
