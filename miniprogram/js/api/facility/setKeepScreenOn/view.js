@@ -75,7 +75,7 @@ module.exports = function(PIXI, app, obj, callBack) {
 
     window.router.getNowPage(page => {
         page.reload = function() {
-            logo.turnImg({ src: 'images/logo.png' });
+            logo.reloadImg({ src: 'images/logo.png' });
             off.turnImg({ src: 'images/off.png' });
             on.turnImg({ src: 'images/on.png' });
         };

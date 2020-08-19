@@ -61,7 +61,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         page.reload = function() {
             button.showFn();
             tipText.setPositionFn({ y: button.height + button.y + 50 * PIXI.ratio });
-            logo.turnImg({ src: 'images/logo.png' });
+            logo.reloadImg({ src: 'images/logo.png' });
         };
     });
 

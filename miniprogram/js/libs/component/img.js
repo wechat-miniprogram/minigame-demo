@@ -1,4 +1,4 @@
-module.exports = function(PIXI, deploy = {}) {
+module.exports = function (PIXI, deploy = {}) {
     let {
         width,
         height = width,
@@ -9,8 +9,8 @@ module.exports = function(PIXI, deploy = {}) {
         y = 0,
         relative_middle = {
             containerWidth: null,
-            containerHeight: null
-        }
+            containerHeight: null,
+        },
     } = deploy;
 
     function Img() {
@@ -18,15 +18,21 @@ module.exports = function(PIXI, deploy = {}) {
         width && (kind.width = width);
         height && (kind.height = height);
 
-        this.turnImg = function(data) {
+        this.turnImg = function (data) {
             let { width, height } = kind;
             !kind.texture.frame && kind.texture.destroy(true);
             kind.texture = data.is_PIXI_loader ? PIXI.loader.resources[data.src].texture : PIXI.Texture.from(data.src);
             kind.width = width;
             kind.height = height;
         };
+        
+        this.reloadImg = function (data) {
+            kind.texture = data.is_PIXI_loader ? PIXI.loader.resources[data.src].texture : PIXI.Texture.from(data.src);
+            width && (kind.width = width);
+            height && (kind.height = height);
+        };
 
-        this.setPositionFn = function(deploy = {}) {
+        this.setPositionFn = function (deploy = {}) {
             let { x: new_x, y: new_y, relative_middle: new_relative_middle } = deploy,
                 { containerWidth, containerHeight } = new_relative_middle || relative_middle;
             this.position.set(
@@ -35,10 +41,10 @@ module.exports = function(PIXI, deploy = {}) {
             );
         };
 
-        this.onClickFn = function(callBack) {
+        this.onClickFn = function (callBack) {
             this.interactive = true;
-            this.touchstart = e => {
-                e.currentTarget.touchend = e => {
+            this.touchstart = (e) => {
+                e.currentTarget.touchend = (e) => {
                     e.target.touchend = null;
                     if (Math.abs(e.recordY - e.data.global.y) < 5) {
                         callBack(e);
@@ -48,19 +54,19 @@ module.exports = function(PIXI, deploy = {}) {
             };
         }.bind(kind);
 
-        this.setAnchor = function(...arr) {
+        this.setAnchor = function (...arr) {
             this.anchor.set(...arr);
         }.bind(kind);
 
-        this.setRotation = function(angle) {
+        this.setRotation = function (angle) {
             this.rotation = angle;
         }.bind(kind);
 
-        this.hideFn = function() {
+        this.hideFn = function () {
             this.visible = false;
         };
 
-        this.showFn = function() {
+        this.showFn = function () {
             this.visible = true;
         };
 
@@ -70,11 +76,7 @@ module.exports = function(PIXI, deploy = {}) {
                 case 'circle':
                     shape
                         .beginFill(0xffffff)
-                        .drawCircle(
-                            kind.width / 2,
-                            kind.height / 2,
-                            kind.width > kind.height ? kind.height / 2 : kind.width / 2
-                        )
+                        .drawCircle(kind.width / 2, kind.height / 2, kind.width > kind.height ? kind.height / 2 : kind.width / 2)
                         .endFill();
                     break;
             }

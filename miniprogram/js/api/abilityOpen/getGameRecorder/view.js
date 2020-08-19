@@ -242,7 +242,7 @@ module.exports = function(PIXI, app, obj, callBack) {
         page.reload = function() {
             app.ticker.add(rotatingFn);
             videoBox.visible && callBack({ status: 'show' });
-            logo.turnImg({ src: 'images/logo.png' });
+            logo.reloadImg({ src: 'images/logo.png' });
         };
     });
 
