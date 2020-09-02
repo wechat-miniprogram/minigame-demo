@@ -82,6 +82,11 @@ const signIn = [
                         name: 'shareAppMessage',
                         path: 'abilityOpen/shareAppMessage/index',
                     },
+                    {
+                        label: 'PC接力',
+                        name: 'startHandoff',
+                        path: 'abilityOpen/startHandoff/index',
+                    },
                     // {
                     //     label: '转发到朋友圈',
                     //     name: 'shareTimeLine',
