@@ -6,6 +6,12 @@ module.exports = function (PIXI, app, obj) {
             case 'startHandoff':
                 wx.startHandoff({
                     path: 'just a test',
+                    success(res) {
+                        console.log('success', res);
+                    },
+                    fail(res) {
+                        console.log('fail', res);
+                    },
                 });
                 break;
         }
