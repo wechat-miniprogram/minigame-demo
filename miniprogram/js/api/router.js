@@ -370,6 +370,11 @@ const signIn = [
                         path: 'AD/createBannerAd/index',
                     },
                     {
+                        label: 'grid 广告',
+                        name: 'createGridAd',
+                        path: 'AD/createGridAd/index',
+                    },
+                    {
                         label: '激励视频广告',
                         name: 'createRewardedVideoAd',
                         path: 'AD/createRewardedVideoAd/index',

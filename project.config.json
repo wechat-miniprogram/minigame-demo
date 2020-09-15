@@ -24,11 +24,11 @@
 		},
 		"bundle": true,
 		"useIsolateContext": true,
-		"useCompilerModule": false,
-		"userConfirmedUseCompilerModuleSwitch": false
+		"useCompilerModule": true,
+		"userConfirmedUseCompilerModuleSwitch": true
 	},
 	"compileType": "game",
-	"libVersion": "2.11.3",
+	"libVersion": "2.12.2",
 	"appid": "wx20afc706a711eefc",
 	"projectname": "miniGameExample",
 	"miniprogramRoot": "miniprogram/",
