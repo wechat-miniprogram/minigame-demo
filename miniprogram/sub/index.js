@@ -137,6 +137,10 @@ function showPotentialFriendList(){
     })
 }
 
+function showStartHandoffButton() {
+    draw('', { button: true });
+}
+
 function init() {
     currentMaxScore = 0;
 
@@ -160,6 +164,9 @@ function init() {
                 break;
             case 'directedSharing':
                 showPotentialFriendList();
+                break;
+            case 'startHandoff':
+                showStartHandoffButton();
                 break;
             case 'close':
                 Layout.clearAll();
