@@ -18,6 +18,7 @@ import {
     refreshDirected
 } from './pushMessage.js';
 
+import { bindCheckHandoffEnabled, bindStartHandoff } from './PCHandoff.js';
 
 let userinfo;
 let selfData;
@@ -137,8 +138,24 @@ function showPotentialFriendList(){
     })
 }
 
-function showStartHandoffButton() {
-    draw('', { button: true });
+// PC 接力
+function runPCHandoff() {
+    draw('', { button: true, isEnabled: true, className: 'queryLoginStatus', content: '查询是否支持接力' });
+    bindCheckHandoffEnabled({
+        className: 'queryLoginStatus',
+        success(res) {
+            if (!res.isEnabled) return draw('', { button: true, isEnabled: false, content: '不支持：电脑端微信未响应' });
+
+            draw('', { button: true, isEnabled: false, className: 'startHandoff', content: '在电脑上打开' });
+            bindStartHandoff({className: 'startHandoff'})
+        },
+        fail(res) {
+            let { errMsg } = res;
+            if (errMsg) errMsg = errMsg.replace('checkHandoffEnabled:fail:','');
+            
+            draw('', { button: true, isEnabled: false, content: `不支持：${errMsg || '微信版本过低'}` });
+        },
+    });
 }
 
 function init() {
@@ -165,8 +182,8 @@ function init() {
             case 'directedSharing':
                 showPotentialFriendList();
                 break;
-            case 'startHandoff':
-                showStartHandoffButton();
+            case 'PCHandoff':
+                runPCHandoff();
                 break;
             case 'close':
                 Layout.clearAll();

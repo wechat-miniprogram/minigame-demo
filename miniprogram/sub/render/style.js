@@ -242,6 +242,39 @@ export default {
         borderRadius: 10,
         /*borderWidth: 1,
         borderColor: 'rgba(0, 0, 0, 0.3)',*/
-    }
+    },
+
+    handoffBtn: {
+        width           : 790,
+        height          : 120,
+        marginLeft      : 85,
+        alignItems      : 'center',
+        backgroundColor : '#1aad19',
+        borderRadius    : 10,
+    },
+
+    failHandoffBtn: {
+        width           : 790,
+        height          : 120,
+        marginLeft      : 85,
+        alignItems      : 'center',
+        backgroundColor : '#e7e7e7',
+        borderRadius    : 10,
+    },
+
+    handoffBtnText: {
+        color           : '#ffffff',
+        fontSize        : 48,
+        lineHeight      : 130,
+        textAlign       : 'center'
+    },
+
+    failHandoffBtnText: {
+        color           : 'rgba(0, 0, 0, 0.18)',
+        fontSize        : 48,
+        lineHeight      : 130,
+        textAlign       : 'center'
+    },
+    
 }
 
