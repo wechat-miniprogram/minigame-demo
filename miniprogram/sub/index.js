@@ -144,15 +144,15 @@ function runPCHandoff() {
     bindCheckHandoffEnabled({
         className: 'queryLoginStatus',
         success(res) {
-            if (!res.isEnabled) return draw('', { button: true, isEnabled: false, content: '不支持：电脑端微信未响应' });
+            if (!res.isEnabled) return draw('', { button: true, isEnabled: res.isEnabled, content: '不支持：电脑端微信未响应' });
 
-            draw('', { button: true, isEnabled: false, className: 'startHandoff', content: '在电脑上打开' });
+            draw('', { button: true, isEnabled: res.isEnabled, className: 'startHandoff', content: '在电脑上打开' });
             bindStartHandoff({className: 'startHandoff'})
         },
         fail(res) {
             let { errMsg } = res;
             if (errMsg) errMsg = errMsg.replace('checkHandoffEnabled:fail:','');
-            
+
             draw('', { button: true, isEnabled: false, content: `不支持：${errMsg || '微信版本过低'}` });
         },
     });
