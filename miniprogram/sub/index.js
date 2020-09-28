@@ -140,20 +140,27 @@ function showPotentialFriendList(){
 
 // PC 接力
 function runPCHandoff() {
+    // 绘制“查询是否支持接力按钮”
     draw('', { button: true, isEnabled: true, className: 'queryLoginStatus', content: '查询是否支持接力' });
+
+    // 绑定“查询是否支持接力按钮”的点击事件
     bindCheckHandoffEnabled({
         className: 'queryLoginStatus',
         success(res) {
             if (!res.isEnabled) return draw('', { button: true, isEnabled: res.isEnabled, content: '不支持：电脑端微信未响应' });
 
+            // 绘制“在电脑上打开按钮”
             draw('', { button: true, isEnabled: res.isEnabled, className: 'startHandoff', content: '在电脑上打开' });
+
+            // 绑定“在电脑上打开按钮”的点击事件
             bindStartHandoff({className: 'startHandoff'})
         },
         fail(res) {
-            let { errMsg } = res;
-            if (errMsg) errMsg = errMsg.replace('checkHandoffEnabled:fail:','');
+            // 错误处理
+            let { errCode } = res;
+            if (typeof errCode === 'number') errCode = { 0: '未知错误', 1: '用户取消', 2: '电脑微信未登录', 3: '电脑微信版本过低' }[errCode]
 
-            draw('', { button: true, isEnabled: false, content: `不支持：${errMsg || '微信版本过低'}` });
+            draw('', { button: true, isEnabled: false, content: `不支持：${errCode || '微信版本过低'}` });
         },
     });
 }
