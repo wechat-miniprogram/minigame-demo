@@ -147,7 +147,7 @@ function runPCHandoff() {
     bindCheckHandoffEnabled({
         className: 'queryLoginStatus',
         success(res) {
-            if (!res.isEnabled) return draw('', { button: true, isEnabled: res.isEnabled, content: '不支持：电脑端微信未响应' });
+            if (!res.isEnabled) return draw('', { button: true, isEnabled: res.isEnabled, content: '请下载/登录最新版windows电脑端微信' });
 
             // 绘制“在电脑上打开按钮”
             draw('', { button: true, isEnabled: res.isEnabled, className: 'startHandoff', content: '在电脑上打开' });

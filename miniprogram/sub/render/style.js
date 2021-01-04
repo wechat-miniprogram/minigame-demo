@@ -264,14 +264,14 @@ export default {
 
     handoffBtnText: {
         color           : '#ffffff',
-        fontSize        : 48,
+        fontSize        : 42,
         lineHeight      : 130,
         textAlign       : 'center'
     },
 
     failHandoffBtnText: {
         color           : 'rgba(0, 0, 0, 0.18)',
-        fontSize        : 48,
+        fontSize        : 42,
         lineHeight      : 130,
         textAlign       : 'center'
     },
