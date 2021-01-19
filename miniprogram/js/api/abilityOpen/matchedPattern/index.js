@@ -5,7 +5,7 @@ module.exports = function (PIXI, app, obj) {
             '1v1': 'npvL4nYFZCEJuKT6jQwiWGO2FKMB6gIYN9svnB6C8PI',
             '3v3': 'rgisvVgmGZz0p3C61zIUexIgDibx0DNzbNTn4QcHZEc',
         };
-    let recordFunc;
+    let recordFunc, isOncelogin;
 
     return view(PIXI, app, obj, (data) => {
         let { status, pattern, drawFn } = data;
@@ -41,9 +41,10 @@ module.exports = function (PIXI, app, obj) {
 
             case 'login':
                 // 登录游戏服务
-                if (!recordFunc) {
+                if (!isOncelogin) {
                     gameServer.login();
                     gameServer.onLogout(gameServer.login);
+                    isOncelogin = true;
                 }
                 break;
 
@@ -52,6 +53,7 @@ module.exports = function (PIXI, app, obj) {
                 if (!recordFunc) {
                     gameServer.offLogout(gameServer.login);
                     gameServer.logout();
+                    isOncelogin = false;
                 }
                 break;
         }
