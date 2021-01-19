@@ -1,28 +1,26 @@
 import Scroller from '../Scroller/index';
-module.exports = function(PIXI, deploy = {}) {
+module.exports = function (PIXI, deploy = {}) {
     let { width = canvas.width, height = 0, x = (canvas.width - width) / 2, y = 0, monitor } = deploy;
 
     function Scroll() {
         let container = new PIXI.Container(),
             mask = new PIXI.Graphics();
 
-        mask.beginFill(0xffffff)
-            .drawRect(0, 0, width, height)
-            .endFill();
+        mask.beginFill(0xffffff).drawRect(0, 0, width, height).endFill();
 
         container.mask = mask;
 
-        this.totalHeight = 0;
-
-        this.myAddChildFn = function(...itemArr) {
-            for (let i = 0, len = itemArr.length; i < len; i++) {
-                this.totalHeight = Math.max(this.totalHeight, itemArr[i].y + itemArr[i].height);
-            }
+        this.myAddChildFn = function (...itemArr) {
             container.addChild(...itemArr);
-            this.scroller.setDimensions(width, height, width, this.totalHeight);
+            this.scroller.setDimensions(width, height, width, container.height);
         };
 
-        this.isTouchable = function(boolean) {
+        this.myRemoveChildrenFn = function (beginIndex, endIndex) {
+            container.removeChildren(beginIndex, endIndex);
+            this.scroller.setDimensions(width, height, width, container.height);
+        };
+
+        this.isTouchable = function (boolean) {
             this.interactive = boolean;
         };
 
@@ -34,11 +32,11 @@ module.exports = function(PIXI, deploy = {}) {
             {
                 scrollingX: false,
                 scrollingY: true,
-                bouncing: false
+                bouncing: false,
             }
         );
 
-        let doTouchFn = function(e, name) {
+        let doTouchFn = function (e, name) {
             let data = e.data,
                 touches = data.originalEvent.touches || data.originalEvent.targetTouches || data.originalEvent.changedTouches;
             touches[0].pageX = data.global.x;
@@ -46,15 +44,15 @@ module.exports = function(PIXI, deploy = {}) {
             this.scroller[name](touches, data.originalEvent.timeStamp);
         }.bind(this);
 
-        this.touchstart = e => {
+        this.touchstart = (e) => {
             doTouchFn(e, 'doTouchStart');
         };
 
-        this.touchmove = e => {
+        this.touchmove = (e) => {
             doTouchFn(e, 'doTouchMove');
         };
 
-        this.touchend = e => {
+        this.touchend = (e) => {
             let data = e.data;
             this.scroller.doTouchEnd(data.originalEvent.timeStamp);
         };
@@ -65,7 +63,7 @@ module.exports = function(PIXI, deploy = {}) {
             Object.defineProperty(this, arr[i], {
                 get() {
                     return mask[arr[i]];
-                }
+                },
             });
         }
 

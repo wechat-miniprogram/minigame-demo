@@ -53,6 +53,11 @@ const signIn = [
                         },
                     },
                     {
+                        label: '对局匹配',
+                        name: 'matchedPattern',
+                        path: 'abilityOpen/matchedPattern/index',
+                    },
+                    {
                         label: '游戏对局回放',
                         name: 'getGameRecorder',
                         path: 'abilityOpen/getGameRecorder/index',
