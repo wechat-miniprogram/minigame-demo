@@ -41,8 +41,10 @@ module.exports = function (PIXI, app, obj) {
 
             case 'login':
                 // 登录游戏服务
-                gameServer.login();
-                gameServer.onLogout(gameServer.login);
+                if (!recordFunc) {
+                    gameServer.login();
+                    gameServer.onLogout(gameServer.login);
+                }
                 break;
 
             case 'logout':
