@@ -160,7 +160,7 @@ function runPCHandoff() {
             let { errCode } = res;
             if (typeof errCode === 'number') errCode = { 0: '未知错误', 1: '用户取消', 2: '电脑微信未登录', 3: '电脑微信版本过低' }[errCode]
 
-            draw('', { button: true, isEnabled: false, content: `不支持：${errCode || '微信版本过低'}` });
+            draw('', { button: true, isEnabled: false, content: `不支持：${errCode || '权限没有开通'}` });
         },
     });
 }
