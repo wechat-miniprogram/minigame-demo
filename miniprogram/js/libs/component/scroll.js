@@ -1,6 +1,6 @@
 import Scroller from '../Scroller/index';
 module.exports = function (PIXI, deploy = {}) {
-    let { width = canvas.width, height = 0, x = (canvas.width - width) / 2, y = 0, monitor } = deploy;
+    let { width = canvas.width, height = 0, x = (canvas.width - width) / 2, y = 0 } = deploy;
 
     function Scroll() {
         let container = new PIXI.Container(),
@@ -12,49 +12,37 @@ module.exports = function (PIXI, deploy = {}) {
 
         this.myAddChildFn = function (...itemArr) {
             container.addChild(...itemArr);
-            this.scroller.setDimensions(width, height, width, container.height);
+            this.scroller.contentSize(width, height, width, container.height);
         };
 
         this.myRemoveChildrenFn = function (beginIndex, endIndex) {
             container.removeChildren(beginIndex, endIndex);
-            this.scroller.setDimensions(width, height, width, container.height);
+            this.scroller.contentSize(width, height, width, container.height);
         };
 
         this.isTouchable = function (boolean) {
             this.interactive = boolean;
         };
 
-        this.scroller = new Scroller(
-            (...args) => {
-                this.monitor && this.monitor(-args[1]);
-                container.position.y = -args[1];
-            },
-            {
-                scrollingX: false,
-                scrollingY: true,
-                bouncing: false,
-            }
-        );
+        this.scroller = new Scroller((...args) => {
+            this.monitor && this.monitor(-args[1]);
+            container.position.y = -args[1];
+        });
 
-        let doTouchFn = function (e, name) {
-            let data = e.data,
-                touches = data.originalEvent.touches || data.originalEvent.targetTouches || data.originalEvent.changedTouches;
-            touches[0].pageX = data.global.x;
-            touches[0].pageY = data.global.y;
-            this.scroller[name](touches, data.originalEvent.timeStamp);
-        }.bind(this);
 
         this.touchstart = (e) => {
-            doTouchFn(e, 'doTouchStart');
+            e.stopPropagation();
+            this.scroller.doTouchStart(e);
         };
 
         this.touchmove = (e) => {
-            doTouchFn(e, 'doTouchMove');
+            e.stopPropagation();
+            this.scroller.doTouchMove(e);
         };
 
         this.touchend = (e) => {
-            let data = e.data;
-            this.scroller.doTouchEnd(data.originalEvent.timeStamp);
+            e.stopPropagation();
+            this.scroller.doTouchEnd(e);
         };
 
         this.isTouchable(true);

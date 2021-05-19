@@ -9,7 +9,7 @@ function pixiScroll(PIXI, app, property) {
         let gradient = p_linearGradientBox(PIXI, {
                 height: property.height,
                 colorFrom: 0xf8f8f8,
-                colorTo: 0xeef0f3
+                colorTo: 0xeef0f3,
             }),
             official = new PIXI.Sprite(PIXI.loader.resources['images/official.png'].texture);
 
@@ -28,41 +28,25 @@ function pixiScroll(PIXI, app, property) {
 
         this.po.addChild(gradient, this.scrollContainer, this.mask);
 
-        this.scroller = new Scroller(
-            (...args) => {
-                this.scrollContainer.position.y = -args[1];
-            },
-            {
-                scrollingX: false,
-                scrollingY: true,
-                bouncing: false
-            }
-        );
+        this.scroller = new Scroller((...args) => {
+            this.scrollContainer.position.y = -args[1];
+        });
 
         this.itemHeight = 0;
 
-        let doTouchFn = function(e, name) {
-            let data = e.data,
-                touches = data.originalEvent.touches || data.originalEvent.targetTouches || data.originalEvent.changedTouches;
-            touches[0].pageX = data.global.x;
-            touches[0].pageY = data.global.y;
-            this.scroller[name](touches, data.originalEvent.timeStamp);
-        }.bind(this);
-
-        this.po.touchstart = e => {
+        this.po.touchstart = (e) => {
             e.stopPropagation();
-            doTouchFn(e, 'doTouchStart');
+            this.scroller.doTouchStart(e);
         };
 
-        this.po.touchmove = e => {
+        this.po.touchmove = (e) => {
             e.stopPropagation();
-            doTouchFn(e, 'doTouchMove');
+            this.scroller.doTouchMove(e);
         };
 
-        this.po.touchend = e => {
+        this.po.touchend = (e) => {
             e.stopPropagation();
-            let data = e.data;
-            this.scroller.doTouchEnd(data.originalEvent.timeStamp);
+            this.scroller.doTouchEnd(e);
         };
 
         this.po.interactive = true;
@@ -83,10 +67,7 @@ function pixiScroll(PIXI, app, property) {
             this.po.addChild(this.child.po);
         }
 
-        this.bg
-            .beginFill(0xffffff)
-            .drawRoundedRect(0, 0, this.width, this.drawHeight, this.cornerRadius)
-            .endFill();
+        this.bg.beginFill(0xffffff).drawRoundedRect(0, 0, this.width, this.drawHeight, this.cornerRadius).endFill();
         this.po.x = 30 * PIXI.ratio;
 
         if (property.isTabBar) {
@@ -101,10 +82,10 @@ function pixiScroll(PIXI, app, property) {
 
         this.bg.interactive = true;
         this.bg.apiName = apiName;
-        this.bg.touchstart = e => {
+        this.bg.touchstart = (e) => {
             e.target.recordY = e.data.global.y;
         };
-        this.bg.touchend = e => {
+        this.bg.touchend = (e) => {
             if (Math.abs(e.target.recordY - e.data.global.y) < 5) {
                 if (this.child) {
                     this.child.po.visible = !this.child.po.visible;
@@ -122,7 +103,8 @@ function pixiScroll(PIXI, app, property) {
                     if (sc.itemHeight === heigth) sc.itemHeight = heigth - this.childHeight;
                     else sc.itemHeight = heigth;
 
-                    sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight + 40 * PIXI.ratio );
+                    sc.scroller.contentSize(property.width, property.height, property.height, sc.itemHeight + 40 * PIXI.ratio);
+
                     return;
                 }
                 let methods = property.methods,
@@ -134,7 +116,7 @@ function pixiScroll(PIXI, app, property) {
 
         function text(fontSize, y) {
             let text = new PIXI.Text(value.label, {
-                fontSize: `${fontSize * PIXI.ratio}px`
+                fontSize: `${fontSize * PIXI.ratio}px`,
             });
 
             text.position.set(32 * PIXI.ratio, y * PIXI.ratio);
@@ -162,7 +144,7 @@ function pixiScroll(PIXI, app, property) {
             }
 
             text = new PIXI.Text(itemList[i].label, {
-                fontSize: `${32 * PIXI.ratio}px`
+                fontSize: `${32 * PIXI.ratio}px`,
             });
             text.position.set(30 * PIXI.ratio, (item.height - text.height) / 2);
 
@@ -173,15 +155,15 @@ function pixiScroll(PIXI, app, property) {
             item.y = i * item.height + parent.cornerRadius;
 
             item.interactive = true;
-            item.touchstart = e => {
+            item.touchstart = (e) => {
                 if (!e.switchColorFn) e.switchColorFn = switchColorFn;
-                e.currentTarget.touchmove = e => {
+                e.currentTarget.touchmove = (e) => {
                     if (Math.abs(e.recordY - e.data.global.y) > 4) {
                         e.currentTarget.touchmove = e.currentTarget.touchend = null;
                         e.switchColorFn.call(item, 0xffffff);
                     }
                 };
-                e.currentTarget.touchend = e => {
+                e.currentTarget.touchend = (e) => {
                     e.target.touchmove = e.target.touchend = null;
                     if (Math.abs(e.recordY - e.data.global.y) < 5) {
                         let callback = itemList[i].callback;
@@ -204,9 +186,7 @@ function pixiScroll(PIXI, app, property) {
                 .endFill();
         }
 
-        po.beginFill(0xffffff)
-            .drawRoundedRect(0, 0, parent.width, this.totalHeight, parent.cornerRadius)
-            .endFill();
+        po.beginFill(0xffffff).drawRoundedRect(0, 0, parent.width, this.totalHeight, parent.cornerRadius).endFill();
 
         po.visible = false;
         this.po = po;
@@ -223,15 +203,15 @@ function pixiScroll(PIXI, app, property) {
                 fontSize: `${28 * PIXI.ratio}px`,
                 fill: 0x757575,
                 lineHeight: 38 * PIXI.ratio,
-                align: 'center'
+                align: 'center',
             }),
             middleText = new PIXI.Text('详见PC端的小游戏开发文档，可', {
                 fontSize: `${28 * PIXI.ratio}px`,
-                fill: 0x757575
+                fill: 0x757575,
             }),
             copyText = new PIXI.Text('点击此处', {
                 fontSize: `${28 * PIXI.ratio}px`,
-                fill: 0x247be3
+                fill: 0x247be3,
             });
         text.position.set((property.width - text.width) / 2, sprite.y + sprite.height + 56 * PIXI.ratio);
         middleText.position.set((property.width - (middleText.width + copyText.width)) / 2, sprite.y + sprite.height + 94 * PIXI.ratio);
@@ -240,7 +220,7 @@ function pixiScroll(PIXI, app, property) {
         copyText.interactive = true;
         copyText.on('pointerup', () => {
             wx.setClipboardData({
-                data: 'https://github.com/wechat-miniprogram/minigame-demo'
+                data: 'https://github.com/wechat-miniprogram/minigame-demo',
             });
         });
 
@@ -258,7 +238,7 @@ function pixiScroll(PIXI, app, property) {
             .endFill();
         this.text = new PIXI.Text('小游戏示例', {
             fontSize: `${36 * PIXI.ratio}px`,
-            fill: 0x353535
+            fill: 0x353535,
         });
         this.text.position.set((property.width - this.text.width) / 2, 52 * Math.ceil(PIXI.ratio) + 15 * PIXI.ratio);
         this.box.addChild(this.text);
@@ -282,7 +262,7 @@ function pixiScroll(PIXI, app, property) {
 
     property.isTabBar && sc.po.addChild(new Title().box);
 
-    sc.scroller.setDimensions(property.width, property.height, property.width, sc.itemHeight + 40 * PIXI.ratio);
+    sc.scroller.contentSize(property.width, property.height, property.height, sc.itemHeight + 40 * PIXI.ratio);
 
     app.stage.addChild(sc.po);
     return sc.po;

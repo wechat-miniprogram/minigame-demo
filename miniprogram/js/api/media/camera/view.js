@@ -164,7 +164,7 @@ module.exports = function(PIXI, app, obj, callBack) {
             logo.setPositionFn({ y: y - 4 * PIXI.ratio });
             logoName.setPositionFn({ y });
             scroll.totalHeight = logoName.y + logoName.height + 31 * PIXI.ratio;
-            scroll.scroller.setDimensions(scroll.width, scroll.height, scroll.width, scroll.totalHeight);
+            scroll.scroller.contentSize(scroll.width, scroll.height, scroll.width, scroll.totalHeight);
         }
     }
 
