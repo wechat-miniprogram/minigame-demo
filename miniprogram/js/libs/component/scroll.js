@@ -32,17 +32,17 @@ module.exports = function (PIXI, deploy = {}) {
 
         this.touchstart = (e) => {
             e.stopPropagation();
-            this.scroller.doTouchStart(e);
+            this.scroller.doTouchStart(e.data.global.x, e.data.global.y);
         };
 
         this.touchmove = (e) => {
             e.stopPropagation();
-            this.scroller.doTouchMove(e);
+            this.scroller.doTouchMove(e.data.global.x, e.data.global.y, e.data.originalEvent.timeStamp);
         };
 
         this.touchend = (e) => {
             e.stopPropagation();
-            this.scroller.doTouchEnd(e);
+            this.scroller.doTouchEnd(e.data.originalEvent.timeStamp);
         };
 
         this.isTouchable(true);

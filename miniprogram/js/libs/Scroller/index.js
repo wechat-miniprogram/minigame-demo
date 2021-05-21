@@ -12,32 +12,32 @@ module.exports = class Scroller {
         this.coordinatePoint = [0, 0];
     }
 
-    doTouchStart(e) {
+    doTouchStart(x, y) {
         this.tickerStop = true;
         this.positions = [];
-        this.recordPoint(e.data.global.x, e.data.global.y);
+        this.recordPoint(x, y);
     }
 
-    doTouchMove(e) {
-        this.rangeMovement.left -= e.data.global.x - this.coordinatePoint[0];
-        this.rangeMovement.top -= e.data.global.y - this.coordinatePoint[1];
+    doTouchMove(x, y, timeStamp) {
+        this.rangeMovement.left -= x - this.coordinatePoint[0];
+        this.rangeMovement.top -= y - this.coordinatePoint[1];
 
         this.limitBoundary(true);
 
-        this.positions.push(this.rangeMovement.left, this.rangeMovement.top, e.data.originalEvent.timeStamp);
+        this.positions.push(this.rangeMovement.left, this.rangeMovement.top, timeStamp);
 
         if (this.positions.length > 60) this.positions.splice(0, 30);
 
-        this.recordPoint(e.data.global.x, e.data.global.y);
+        this.recordPoint(x, y);
     }
 
-    doTouchEnd(e) {
+    doTouchEnd(timeStamp) {
         if (!this.positions.length) return;
         let scrollLeft, scrollTop, deltaT;
-        for (let i = this.positions.length - 1; i > 0 && this.positions[i] > e.data.originalEvent.timeStamp - 100; i -= 3) {
+        for (let i = this.positions.length - 1; i > 0 && this.positions[i] > timeStamp - 100; i -= 3) {
             scrollLeft = this.positions[i - 2];
             scrollTop = this.positions[i - 1];
-            deltaT = e.data.originalEvent.timeStamp - this.positions[i];
+            deltaT = timeStamp - this.positions[i];
         }
 
         this.speedX = ((scrollLeft - this.rangeMovement.left) / deltaT) * (1000 / 60);
@@ -58,9 +58,7 @@ module.exports = class Scroller {
         if (this.rangeMovement.left > this.rangeMovement.right) this.rangeMovement.left = this.rangeMovement.right;
         if (this.rangeMovement.top > this.rangeMovement.bottom) this.rangeMovement.top = this.rangeMovement.bottom;
 
-        if (isSetSite) {
-            this.callBack(this.rangeMovement.left, this.rangeMovement.top);
-        }
+        isSetSite && this.callBack(this.rangeMovement.left, this.rangeMovement.top);
     }
 
     accelerateMotion() {
