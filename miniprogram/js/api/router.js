@@ -43,6 +43,11 @@ const signIn = [
                         },
                     },
                     {
+                        label: '对局匹配',
+                        name: 'matchedPattern',
+                        path: 'abilityOpen/matchedPattern/index',
+                    },
+                    {
                         label: '游戏对局回放',
                         name: 'getGameRecorder',
                         path: 'abilityOpen/getGameRecorder/index',
@@ -72,6 +77,16 @@ const signIn = [
                         name: 'shareAppMessage',
                         path: 'abilityOpen/shareAppMessage/index',
                     },
+                    {
+                        label: 'PC接力',
+                        name: 'startHandoff',
+                        path: 'abilityOpen/startHandoff/index',
+                    },
+                    // {
+                    //     label: '转发到朋友圈',
+                    //     name: 'shareTimeLine',
+                    //     path: 'abilityOpen/shareTimeLine/index',
+                    // },
                     {
                         label: '二维码',
                         name: 'appletCode',

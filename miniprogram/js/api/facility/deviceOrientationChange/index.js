@@ -16,7 +16,7 @@ module.exports = function(PIXI, app, obj) {
                 break;
             case 'offDeviceOrientationChange':
                 // 取消监听横竖屏切换事件
-                wx.onDeviceOrientationChange();
+                wx.offDeviceOrientationChange();
                 break;
         }
     });
