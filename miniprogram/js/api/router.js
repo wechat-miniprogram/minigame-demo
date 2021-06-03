@@ -82,11 +82,6 @@ const signIn = [
                         name: 'startHandoff',
                         path: 'abilityOpen/startHandoff/index',
                     },
-                    // {
-                    //     label: '转发到朋友圈',
-                    //     name: 'shareTimeLine',
-                    //     path: 'abilityOpen/shareTimeLine/index',
-                    // },
                     {
                         label: '二维码',
                         name: 'appletCode',
@@ -368,6 +363,11 @@ const signIn = [
                         label: 'banner 广告',
                         name: 'createBannerAd',
                         path: 'AD/createBannerAd/index',
+                    },
+                    {
+                        label: 'grid 广告',
+                        name: 'createGridAd',
+                        path: 'AD/createGridAd/index',
                     },
                     {
                         label: '激励视频广告',
