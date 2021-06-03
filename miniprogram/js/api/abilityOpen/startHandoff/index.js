@@ -1,23 +1,5 @@
 import view from './view';
 import { ShareCanvas } from '../openDataContext/ShareCanvas';
-// module.exports = function (PIXI, app, obj) {
-//     return view(PIXI, app, obj, (res) => {
-//         let { status } = res;
-//         switch (status) {
-//             case 'startHandoff':
-//                 wx.startHandoff({
-//                     path: 'just a test',
-//                     success(res) {
-//                         console.log('success', res);
-//                     },
-//                     fail(res) {
-//                         console.log('fail', res);
-//                     },
-//                 });
-//                 break;
-//         }
-//     });
-// };
 
 module.exports = function (PIXI, app, obj) {
     const SC = new ShareCanvas(void 0, void 0, 1, 300 * PIXI.ratio);
