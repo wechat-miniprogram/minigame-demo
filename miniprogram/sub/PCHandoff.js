@@ -1,4 +1,4 @@
-import Layout from './engine.js';
+const Layout = requirePlugin('Layout').default;
 
 export function bindCheckHandoffEnabled(type) {
     const button = Layout.getElementsByClassName(type.className)[0];
