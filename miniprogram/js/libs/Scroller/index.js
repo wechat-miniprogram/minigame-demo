@@ -22,7 +22,7 @@ module.exports = class Scroller {
         this.rangeMovement.left -= x - this.coordinatePoint[0];
         this.rangeMovement.top -= y - this.coordinatePoint[1];
 
-        this.limitBoundary(true);
+        this.limitBoundary(this.callBack);
 
         this.positions.push(this.rangeMovement.left, this.rangeMovement.top, timeStamp);
 
@@ -51,14 +51,14 @@ module.exports = class Scroller {
         this.coordinatePoint[1] = y;
     }
 
-    limitBoundary(isSetSite) {
+    limitBoundary(callBack) {
         if (this.rangeMovement.left < 0) this.rangeMovement.left = 0;
         if (this.rangeMovement.top < 0) this.rangeMovement.top = 0;
 
         if (this.rangeMovement.left > this.rangeMovement.right) this.rangeMovement.left = this.rangeMovement.right;
         if (this.rangeMovement.top > this.rangeMovement.bottom) this.rangeMovement.top = this.rangeMovement.bottom;
 
-        isSetSite && this.callBack(this.rangeMovement.left, this.rangeMovement.top);
+        callBack && callBack(this.rangeMovement.left, this.rangeMovement.top);
     }
 
     accelerateMotion() {
@@ -70,7 +70,7 @@ module.exports = class Scroller {
                     scrollTop = this.rangeMovement.top;
                     this.rangeMovement.left -= this.speedX;
                     this.rangeMovement.top -= this.speedY;
-                    this.limitBoundary(true);
+                    this.limitBoundary(this.callBack);
                     if (scrollLeft === this.rangeMovement.left && scrollTop === this.rangeMovement.top) return (this.tickerStop = true);
                     this.speedX *= 0.95;
                     this.speedY *= 0.95;

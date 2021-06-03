@@ -49,6 +49,14 @@ function pixiScroll(PIXI, app, property) {
             this.scroller.doTouchEnd(e.data.originalEvent.timeStamp);
         };
 
+        // 加入鼠标滚轮事件
+        wx.onWheel((res)=>{
+            this.scroller.tickerStop = true;
+            this.scroller.rangeMovement.left += res.deltaX
+            this.scroller.rangeMovement.top += res.deltaY
+            this.scroller.limitBoundary(this.scroller.callBack);
+        })
+
         this.po.interactive = true;
     }
 
