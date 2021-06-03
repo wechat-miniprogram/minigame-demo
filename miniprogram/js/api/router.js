@@ -19,11 +19,6 @@ const signIn = [
                         name: 'relationalChaininteractiveData',
                         path: 'abilityOpen/relationalChaininteractiveData/index',
                     },
-                    // {
-                    //     label: '发送小程序消息',
-                    //     name: 'sendSmallProgramMessage',
-                    //     path: 'abilityOpen/sendSmallProgramMessage/index',
-                    // },
                     {
                         label: '定向分享',
                         name: 'directedSharing',
@@ -39,11 +34,6 @@ const signIn = [
                         name: 'requestSubscribeSystemMessage',
                         path: 'abilityOpen/requestSubscribeSystemMessage/index',
                     },
-                    // {
-                    //     label: '游戏更新提醒',
-                    //     name: 'gameUpdateReminder',
-                    //     path: 'abilityOpen/gameUpdateReminder/index',
-                    // },
                     {
                         label: '好友对战（帧同步）',
                         name: 'getGameServerManager',
@@ -51,6 +41,11 @@ const signIn = [
                             // gitHub地址 https://github.com/wechat-miniprogram/minigame-lockstep-demo
                             wx.navigateToMiniProgram({ appId: 'wx4f4a4549a1069d03' });
                         },
+                    },
+                    {
+                        label: '对局匹配',
+                        name: 'matchedPattern',
+                        path: 'abilityOpen/matchedPattern/index',
                     },
                     {
                         label: '游戏对局回放',
@@ -82,11 +77,11 @@ const signIn = [
                         name: 'shareAppMessage',
                         path: 'abilityOpen/shareAppMessage/index',
                     },
-                    // {
-                    //     label: '转发到朋友圈',
-                    //     name: 'shareTimeLine',
-                    //     path: 'abilityOpen/shareTimeLine/index',
-                    // },
+                    {
+                        label: 'PC接力',
+                        name: 'startHandoff',
+                        path: 'abilityOpen/startHandoff/index',
+                    },
                     {
                         label: '二维码',
                         name: 'appletCode',

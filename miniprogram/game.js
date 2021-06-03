@@ -6,7 +6,7 @@ import share from './js/libs/share';
 wx.cloud.init({ env: 'example-69d3b' });
 
 wx.updateShareMenu({
-    withShareTicket: true
+    withShareTicket: true,
 });
 
 const { pixelRatio, windowWidth, windowHeight } = wx.getSystemInfoSync();
@@ -19,7 +19,7 @@ let app = new PIXI.Application({
     backgroundColor: 0xf6f6f6,
     preserveDrawingBuffer: true,
     antialias: true,
-    resolution: 1
+    resolution: 1,
 });
 
 // 因为在微信小游戏里canvas肯定是全屏的，所以映射起来就很简单暴力
@@ -32,7 +32,7 @@ PIXI.ratio = (windowWidth * pixelRatio) / 750;
 
 let loadingFn = pmgressBar(PIXI, app, {
     width: windowWidth * pixelRatio,
-    height: windowHeight * pixelRatio
+    height: windowHeight * pixelRatio,
 });
 
 PIXI.loader
@@ -51,7 +51,7 @@ PIXI.loader
         'images/abilityOpen.png',
         'images/interface.png',
         'images/AD.png',
-        'images/recommend.png'
+        'images/recommend.png',
     ])
     .load(() => {
         wx.loadSubpackage({
@@ -64,7 +64,7 @@ PIXI.loader
                 router(PIXI, app, {
                     width: windowWidth * pixelRatio,
                     height: windowHeight * pixelRatio,
-                    pixelRatio
+                    pixelRatio,
                 });
 
                 share(); //全局分享
@@ -73,7 +73,7 @@ PIXI.loader
                     window.router.navigateTo(query.pathName, query, options);
                 }
 
-                wx.onShow(res => {
+                wx.onShow((res) => {
                     let query = Object.assign(window.query || {}, res.query),
                         noNavigateToRequired = !['VoIPChat'].includes(query.pathName);
 
@@ -89,8 +89,8 @@ PIXI.loader
                 });
 
                 loadingFn(100);
-            }
-        }).onProgressUpdate(res => {
+            },
+        }).onProgressUpdate((res) => {
             loadingFn(res.progress);
         });
     });

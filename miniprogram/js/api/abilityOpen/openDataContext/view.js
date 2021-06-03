@@ -48,7 +48,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     let close = p_button(PIXI, {
         width: 300 * PIXI.ratio,
         y: (obj.height - 200 * PIXI.ratio) | 0,
-        x: 700,
+        x: obj.width - 350 * PIXI.ratio,
     });
 
     close.myAddChildFn(
@@ -71,7 +71,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     let subscribe = p_button(PIXI, {
         width: 300 * PIXI.ratio,
         y: (obj.height - 200 * PIXI.ratio) | 0,
-        x: 50,
+        x: 50 * PIXI.ratio,
     });
 
     subscribe.myAddChildFn(
