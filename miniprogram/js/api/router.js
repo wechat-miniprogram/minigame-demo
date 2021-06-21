@@ -10,20 +10,6 @@ const signIn = [
                 name: 'abilityOpen',
                 children: [
                     {
-                        label: '开始直播',
-                        name: 'startGameLive',
-                        path() {
-                            wx.startGameLive && wx.startGameLive({
-                                success(res) {
-                                  console.log('startGameLive success', res)
-                                },
-                                fail(res) {
-                                  console.error('startGameLive fail', res)
-                                }
-                              })
-                        },
-                    },
-                    {
                         label: '开放数据域',
                         name: 'openDataContext',
                         path: 'abilityOpen/openDataContext/index',
