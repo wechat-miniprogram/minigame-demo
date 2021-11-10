@@ -19,7 +19,7 @@ module.exports = function(PIXI, app, obj) {
     }
     let ticker = PIXI.ticker.shared;
 
-    let { container, close } = view(PIXI, app, obj, (data) => {
+    let { container, close, box } = view(PIXI, app, obj, (data) => {
         let { status, score } = data;
         switch (status) {
             case 'shareAppMessage':
@@ -78,6 +78,20 @@ module.exports = function(PIXI, app, obj) {
                 }
 
                 break;
+
+            case 'showFriendsOnlineStatus':
+
+                if ( !SC.friendRankShow ) {
+                    SC.friendRankShow = true;
+                    ticker.add(tick);
+
+                    SC.openDataContext.postMessage({
+                        event: 'showFriendsOnlineStatus',
+                    });
+                }
+    
+                break;
+
             case 'close':
                 SC.friendRankShow = false;
 
@@ -125,6 +139,9 @@ module.exports = function(PIXI, app, obj) {
                     }
                 })
                 break;
+            case 'restart':
+                SC.init();
+                break;
         }
     });
 
@@ -137,11 +154,11 @@ module.exports = function(PIXI, app, obj) {
                 shareTicket: options.shareTicket
             });
 
-            container.addChild(close);
-
             if ( !SC.friendRankShow ) {
                 SC.friendRankShow = true;
                 ticker.add(tick);
+                box.hideFn();
+                container.addChild(close);
             }
         }
     }

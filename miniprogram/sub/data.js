@@ -13,7 +13,7 @@ export function getUserInfo(callback = none) {
         success   : userRes => {
             callback(userRes.data[0] || {});
         },
-        fail: callback
+        fail      : console.log 
     });
 }
 
@@ -118,7 +118,7 @@ export function getFriendData(key, callback = none) {
         keyList: [key],
         success: res => {
             res.data = res.data.filter( item => item.KVDataList.length );
-
+            
             let data = res.data.map( item => {
                 let { score, update_time } = getDataFromSource(item);
                 item.score   = score;
@@ -151,7 +151,8 @@ export function setUserRecord(key, score ) {
                     }
                 })
             },
-        ],
+        ]
     });
 }
 
+export const gameServer = wx.getGameServerManager()
