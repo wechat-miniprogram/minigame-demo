@@ -81,9 +81,7 @@ module.exports = function (PIXI, app, obj, callBack) {
 	);
 
 	close.onClickFn(() => {
-		container.removeChild(close);
-		container.removeChild(subscribe);
-		box.showFn();
+		buttonState('showFn','removeChild');
 		callBack({
 			status: "close",
 		});
