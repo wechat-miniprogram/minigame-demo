@@ -11,6 +11,7 @@ import {
     findSelf,
     injectSelfToList,
     replaceSelfDataInList,
+    gameServer
 } from 'data.js';
 
 import {
@@ -69,17 +70,17 @@ function renderData(data, info, title="排行榜", mock=false, type) {
     }
 
     // mock
-    // if ( mock ) {
-        // for ( let i = data.length; i < 20; i++ ) {
-        //     data[i] = JSON.parse(JSON.stringify(selfData));
-        //     data[i].rank = i;
-        //     data[i].score = 0;
-        //     data[i].nickname = 'mock__user';
-        // }
-    // }
+    if ( mock ) {
+        for ( let i = data.length; i < 20; i++ ) {
+            data[i] = JSON.parse(JSON.stringify(selfData));
+            data[i].rank = i;
+            data[i].score = 0;
+            data[i].nickname = 'mock__user';
+        }
+    }
 
 
-    draw(title, data, selfData, currentMaxScore, type);
+     draw(title, data, selfData, currentMaxScore, type);
 
     // 关系链互动
     type === 'interaction' && interactive( data, selfData );
@@ -113,12 +114,12 @@ function showFriendRank(type) {
         getUserInfo((info) => {
             userinfo = info;
             getFriendData(key, (data) => {
-                renderData(data, info, "排行榜", true, type);
+                renderData(data, info, "排行榜", false, type);
             });
         });
     } else {
         getFriendData(key, (data) => {
-            renderData(data, userinfo, "排行榜", true, type);
+            renderData(data, userinfo, "排行榜", false, type);
         });
     }
 }
@@ -136,6 +137,17 @@ function showPotentialFriendList(){
             directional(res.list);
             refreshDirected(showPotentialFriendList);
         }
+    })
+}
+
+// 显示当前用户所有好友的在线状态
+function showFriendsOnlineStatus (){
+    gameServer.getFriendsStateData({
+            success(res){
+                res.list = res.list.slice(0,20);
+                res.list.onLine = true;
+                draw('我的好友', res.list);
+            }
     })
 }
 
@@ -192,6 +204,9 @@ function init() {
                 break;
             case 'PCHandoff':
                 runPCHandoff();
+                break;
+            case 'showFriendsOnlineStatus':
+                showFriendsOnlineStatus();
                 break;
             case 'close':
                 Layout.clearAll();
