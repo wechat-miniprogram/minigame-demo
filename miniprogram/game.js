@@ -1,5 +1,6 @@
 import './js/libs/weapp-adapter';
-import * as PIXI from './js/libs/pixi.min';
+// import * as PIXI from './js/libs/pixi.min';
+import * as PIXI from './js/libs/pixi';
 import pmgressBar from './js/libs/pmgressBar';
 import share from './js/libs/share';
 
@@ -52,6 +53,7 @@ PIXI.loader
         'images/interface.png',
         'images/AD.png',
         'images/recommend.png',
+        'images/visionkit-ability.png',
     ])
     .load(() => {
         wx.loadSubpackage({
