@@ -183,6 +183,14 @@ export default {
         textAlign: 'right',
     },
 
+    listItemStateGreen:{
+        color: '#09f175',
+    },
+
+    listItemStateGray:{
+        color: '#adadad',
+    },
+
     listItemName:{
         fontSize: 36,
         height: 150,

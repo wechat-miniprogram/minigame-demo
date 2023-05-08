@@ -1,41 +1,45 @@
-import view from './view';
-import { ShareCanvas } from '../openDataContext/ShareCanvas';
+import view from "./view";
+import { ShareCanvas } from "../openDataContext/ShareCanvas";
 
-module.exports = function(PIXI, app, obj) {
-    const SC = new ShareCanvas(1344, 1974, 0.896, 270 * PIXI.ratio);
+module.exports = function (PIXI, app, obj) {
+	let { container, Yaxis, callBack } = view(PIXI, app, obj, (data) => {
+		let { status } = data;
+		switch (status) {
+			case "directedSharing":
+				// 初始化
+				if (!SC.friendRankShow) {
+					SC.friendRankShow = true;
+					ticker.add(tick);
 
-    let tick = () => {
-        SC.rankTiker(PIXI, app);
-    };
-    let ticker = PIXI.ticker.shared;
+					SC.openDataContext.postMessage({
+						event: "directedSharing",
+					});
+				}
+				break;
+			case "close":
+				SC.friendRankShow = false;
 
-    return view(PIXI, app, obj, data => {
-        let { status } = data;
-        switch (status) {
-            case 'directedSharing':
-                // 初始化
-                if (!SC.friendRankShow) {
-                    SC.friendRankShow = true;
-                    ticker.add(tick);
+				ticker.remove(tick);
 
-                    SC.openDataContext.postMessage({
-                        event: 'directedSharing'
-                    });
-                }
-                break;
-            case 'close':
-                SC.friendRankShow = false;
+				SC.rankTiker(PIXI, app);
 
-                ticker.remove(tick);
+				SC.openDataContext.postMessage({
+					event: "close",
+				});
 
-                SC.rankTiker(PIXI, app);
+				wx.triggerGC(); // 垃圾回收
+				break;
+		}
+	});
 
-                SC.openDataContext.postMessage({
-                    event: 'close'
-                });
+	const SC = new ShareCanvas(1344, 1974, 0.896, Yaxis);
 
-                wx.triggerGC(); // 垃圾回收
-                break;
-        }
-    });
+	let tick = () => {
+		SC.rankTiker(PIXI, app);
+	};
+	let ticker = PIXI.ticker.shared;
+
+    callBack({ status: "directedSharing" });
+
+	return container;
 };

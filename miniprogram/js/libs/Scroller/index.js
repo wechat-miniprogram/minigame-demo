@@ -24,6 +24,7 @@ module.exports = class Scroller {
 
         this.limitBoundary(this.callBack);
 
+        this.positions = this.positions || [];
         this.positions.push(this.rangeMovement.left, this.rangeMovement.top, timeStamp);
 
         if (this.positions.length > 60) this.positions.splice(0, 30);

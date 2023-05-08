@@ -33,7 +33,7 @@
     "navigateToMiniProgramAppIdList": ["wx4f4a4549a1069d03"],
     "plugins":{
         "Layout": {
-          "version": "0.0.3",
+          "version": "0.0.13",
           "provider": "wx7a727ff7d940bb3f",
           "contexts":[{"type":"openDataContext"}]
         }

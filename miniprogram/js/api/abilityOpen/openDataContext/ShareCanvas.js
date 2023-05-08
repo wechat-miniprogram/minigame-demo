@@ -8,19 +8,19 @@ export class ShareCanvas {
         this.GAME_WIDTH    = this.info.windowWidth * this.info.pixelRatio;
         this.GAME_HEIGHT   = this.info.windowHeight * this.info.pixelRatio;
 
-        this.sharedWidth  = ( width  ||  960 );
-        this.sharedHeight = ( height ||  1410 );
+        this.initSharedWidth  = this.sharedWidth  = ( width  ||  960 );
+        this.initSharedHeight = this.sharedHeight = ( height ||  1410 );
 
         this.init(times);
     }
 
     init(times) {
         // 中间挖了个坑用填充排行榜
-        this.sharedCanvas.width  = this.sharedWidth;
-        this.sharedCanvas.height = this.sharedHeight;
+        this.sharedCanvas.width  = this.initSharedWidth;
+        this.sharedCanvas.height = this.initSharedHeight;
 
         // 屏幕适配
-        let temp = this.sharedHeight / this.sharedWidth;
+        let temp = this.initSharedHeight / this.initSharedWidth;
         this.sharedWidth  = this.GAME_WIDTH * ( times || 0.85 );
         this.sharedHeight = temp * this.sharedWidth;
 

@@ -96,7 +96,7 @@ module.exports = function(PIXI, app, obj, callBack) {
     window.router.getNowPage(page => {
         page.reload = function() {
             logo.reloadImg({ src: 'images/logo.png' });
-            pitch_on.turnImg({ src: 'images/pitch_on.png' });
+            pitch_on.reloadImg({ src: 'images/pitch_on.png' });
         };
     });
 
