@@ -1,5 +1,6 @@
 {
     "deviceOrientation": "portrait",
+    "iOSHighPerformance": true,
     "showStatusBar": false,
     "networkTimeout": {
         "request": 5000,
@@ -33,7 +34,7 @@
     "navigateToMiniProgramAppIdList": ["wx4f4a4549a1069d03"],
     "plugins":{
         "Layout": {
-          "version": "0.0.13",
+          "version": "1.0.5",
           "provider": "wx7a727ff7d940bb3f",
           "contexts":[{"type":"openDataContext"}]
         }
