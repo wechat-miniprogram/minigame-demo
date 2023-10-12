@@ -440,7 +440,8 @@ function router(PIXI, app, parameter) {
             let page = circularArr.shift();
             parameter = { ...parameter, name: page.name, isTabBar: !!page.tabBar };
             page.path &&
-                (treePage[page.name] = {
+                (
+                  treePage[page.name] = {
                     label: page.label,
                     path: page.path,
                     parameter,

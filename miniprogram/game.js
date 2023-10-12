@@ -1,5 +1,6 @@
 import './js/libs/weapp-adapter';
 import * as PIXI from './js/libs/pixi.min';
+//import * as PIXI from './js/libs/pixi';
 import pmgressBar from './js/libs/pmgressBar';
 import share from './js/libs/share';
 
