@@ -402,6 +402,32 @@ const signIn = [
                     },
                 ],
             },
+            {
+                label: 'VisionKit视觉能力',
+                name: 'visionkit-ability',
+                children: [
+                    {
+                        label: 'VisionKit基础',
+                        name: 'visionkit-basic',
+                        path: 'AR/visionkit-basic/index',
+                    },
+                    {
+                        label: 'VisionKit基础-v2',
+                        name: 'visionkit-basic-v2',
+                        path: 'AR/visionkit-basic-v2/index',
+                    },
+                    {
+                        label: '水平面AR',
+                        name: 'plane-ar',
+                        path: 'AR/plane-ar/index',
+                    },
+                    {
+                        label: '人脸识别',
+                        name: 'face-detect',
+                        path: 'AR/face-detect/index',
+                    }
+                ],
+            },
         ],
     },
 ];
@@ -448,13 +474,14 @@ function router(PIXI, app, parameter) {
                         ...treePage[newPage].parameter,
                         ...query,
                         ...res,
-                    });
+                });
                     treePage[newPage].init = true;
                 }
 
                 treePage[name].page.visible = false;
                 treePage[newPage].page.visible = true;
             } catch (e) {
+                console.log('功能错误:', e)
                 this.treeView.pop();
                 wx.showModal({
                     content: '你的微信版本过低，无法演示该功能！',
