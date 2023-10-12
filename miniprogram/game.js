@@ -1,5 +1,6 @@
 import './js/libs/weapp-adapter';
 import * as PIXI from './js/libs/pixi.min';
+//import * as PIXI from './js/libs/pixi';
 import pmgressBar from './js/libs/pmgressBar';
 import share from './js/libs/share';
 
@@ -20,6 +21,7 @@ let app = new PIXI.Application({
     preserveDrawingBuffer: true,
     antialias: true,
     resolution: 1,
+    forceCanvas: true,
 });
 
 // 因为在微信小游戏里canvas肯定是全屏的，所以映射起来就很简单暴力
@@ -52,6 +54,7 @@ PIXI.loader
         'images/interface.png',
         'images/AD.png',
         'images/recommend.png',
+        'images/visionkit-ability.png',
     ])
     .load(() => {
         wx.loadSubpackage({

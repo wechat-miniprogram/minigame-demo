@@ -1,6 +1,6 @@
 import { p_goBackBtn, p_line, p_text, p_img } from '../component/index';
 module.exports = function(PIXI, { obj, title, api_name, underline = true }) {
-    let goBack, logo, logoName;
+    let goBack, logo, logoName, desc;
 
     goBack = p_goBackBtn(PIXI, 'navigateBack');
 
@@ -54,6 +54,6 @@ module.exports = function(PIXI, { obj, title, api_name, underline = true }) {
         api_name,
         underline,
         logo,
-        logoName
+        logoName,
     };
 };

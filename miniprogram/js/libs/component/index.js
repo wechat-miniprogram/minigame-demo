@@ -7,6 +7,7 @@ import scroll from './scroll';
 import text from './text';
 import circle from './circle';
 import linearGradientBox from './linearGradientBox';
+import texture from './texture';
 
 module.exports = {
     p_box: box,
@@ -17,5 +18,6 @@ module.exports = {
     p_scroll: scroll,
     p_text: text,
     p_circle: circle,
-    p_linearGradientBox: linearGradientBox
+    p_linearGradientBox: linearGradientBox,
+    p_texture: texture,
 };
