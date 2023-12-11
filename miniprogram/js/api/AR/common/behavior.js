@@ -144,11 +144,11 @@ export default function getBehavior() {
 
                         if (frame) {
                             this.renderGL(frame)
-                            canvas2dContext.drawImage(offScreenCanvas, 0, 0, this.data.width, this.data.height, 0, this.data.screenTop, this.data.width, this.data.height)
                             if (this.mode == 'planeAR') {
                                 this.renderReticle()
                             }
                             this.render(frame)
+                            canvas2dContext.drawImage(offScreenCanvas, 0, 0, this.data.width, this.data.height, 0, this.data.screenTop, this.data.width, this.data.height)
                         }
 
                         session.requestAnimationFrame(onFrame)
