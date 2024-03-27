@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "minigame-api-typings": "^3.8.4",
+    "typescript": "^5.4.2"
+  }
+}
