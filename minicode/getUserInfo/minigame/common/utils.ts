@@ -6,7 +6,10 @@ let cacheSafeArea: WechatMinigame.SafeArea | null = null;
 /**
  * 获取小游戏真实的安全绘制坐标
  */
-export function getSafeArea(systemInfo: WechatMinigame.SystemInfo, useCache = false): WechatMinigame.SafeArea {
+export function getSafeArea(
+  systemInfo: WechatMinigame.SystemInfo,
+  useCache = false,
+): WechatMinigame.SafeArea {
   if (useCache && cacheSafeArea) {
     return cacheSafeArea;
   }

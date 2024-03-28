@@ -1,3 +1,12 @@
+var AuthKey;
+(function (AuthKey) {
+    AuthKey["userInfo"] = "userInfo";
+    AuthKey["userFuzzyLocation"] = "userFuzzyLocation";
+    AuthKey["werun"] = "werun";
+    AuthKey["writePhotosAlbum"] = "writePhotosAlbum";
+    AuthKey["WxFriendInteraction"] = "WxFriendInteraction";
+    AuthKey["gameClubData"] = "gameClubData";
+})(AuthKey || (AuthKey = {}));
 // 缓存判断是否已授权，只在本次运行时有效
 const scope = {
     userInfo: false,
@@ -233,17 +242,11 @@ function getAuth(key, needShowModal = true, showPrivacy = true) {
     return cachedPromiseScope[key];
 }
 /**
- * 获取是否已授权好友关系，如果没有授权则拉起授权弹窗
- */
-function getAuthWxFriendInteraction(needShowModal = true) {
-    return getAuth('WxFriendInteraction', needShowModal);
-}
-/**
  * 获取是否已授权个人信息，如果没有授权则拉起授权弹窗
  * 请务必在点击事件后调用改函数
  */
 function getAuthUserInfo(needShowModal = true, showPrivacy = true) {
-    return getAuth('userInfo', needShowModal, showPrivacy);
+    return getAuth(AuthKey.userInfo, needShowModal, showPrivacy);
 }
 /**
  * 创建获取个人信息按钮
@@ -341,4 +344,4 @@ setTimeout(() => {
         });
     });
 }, 500);
-export { scope, requirePrivacyAuthorize, hideUserInfoButton, getAuthWxFriendInteraction, getAuthUserInfo, createUserInfoButton, };
+export { scope, AuthKey, requirePrivacyAuthorize, hideUserInfoButton, getAuth, getAuthUserInfo, createUserInfoButton, };

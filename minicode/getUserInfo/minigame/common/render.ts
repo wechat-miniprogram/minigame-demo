@@ -29,11 +29,14 @@ const template = `
     </view>
     <view class="scene">
       <richtext class="text explanation"></richtext>
+      <view id="scene_buttons">
+        <text class="button scene_button"></text>
+      </view>
       <text class="text tips"></text>
     </view>
     <view class="footer">
-      <text class="button footer_botton footer_button_left" value="上一场景"></text>
-      <text class="button footer_botton footer_button_right" value="下一场景"></text>
+      <text class="button footer_button footer_button_left" value="上一场景"></text>
+      <text class="button footer_button footer_button_right" value="下一场景"></text>
     </view>
   </view>
 `;
@@ -97,7 +100,15 @@ const style = {
       backgroundColor: '#05944a',
     },
   },
-  footer_botton: {
+  scene_buttons: {
+    marginTop: 16 * pixelRatio,
+  },
+  scene_button: {
+    height: 30 * pixelRatio,
+    lineHeight: 30 * pixelRatio,
+    borderRadius: 4 * pixelRatio,
+  },
+  footer_button: {
     height: footerInnerHeight - 16 * pixelRatio,
     lineHeight: footerInnerHeight - 16 * pixelRatio,
     borderRadius: 4 * pixelRatio,
@@ -116,13 +127,19 @@ layout.updateViewPort({
 
 layout.layout(ctx);
 
-const footerButtonLeft = layout.getElementsByClassName('footer_button_left')[0] as Text;
-const footerButtonRight = layout.getElementsByClassName('footer_button_right')[0] as Text;
+const footerButtonLeft = layout.getElementsByClassName(
+  'footer_button_left',
+)[0] as Text;
+const footerButtonRight = layout.getElementsByClassName(
+  'footer_button_right',
+)[0] as Text;
 const sceneTitle = layout.getElementsByClassName('title')[0] as Text;
 const sceneExplanation = layout.getElementsByClassName(
   'explanation',
 )[0] as unknown as RichText;
-const tips = layout.getElementsByClassName('tips')[0] as Text;
+const sceneButtons = layout.getElementById('scene_buttons');
+const sceneButton = layout.getElementsByClassName('scene_button')[0] as Text;
+const sceneTips = layout.getElementsByClassName('tips')[0] as Text;
 
 footerButtonLeft.on('click', () => {
   scene.preScene();
@@ -133,12 +150,20 @@ footerButtonRight.on('click', () => {
 const sceneChanged = () => {
   sceneTitle.value = scene.currentScene.title;
   sceneExplanation.text = scene.currentScene.explanation || '';
-}
+  sceneButtons?.children.forEach((it) => {
+    sceneButtons.removeChild(it);
+  });
+  scene.currentScene.buttons?.forEach((config) => {
+    const button = layout.cloneNode(sceneButton);
+    button.value = config.name;
+    button.on('click', config.callback);
+    sceneButtons?.appendChild(button);
+  });
+};
 scene.on('sceneChanged', sceneChanged);
-sceneChanged();
 
 const changeTips = (value: string) => {
-  tips.value = value;
+  sceneTips.value = value;
 };
 
 export { screenWidth, screenHeight, changeTips };

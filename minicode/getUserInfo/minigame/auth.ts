@@ -1,10 +1,12 @@
-type AuthKey =
-  | 'userInfo'
-  | 'userFuzzyLocation'
-  | 'werun'
-  | 'writePhotosAlbum'
-  | 'WxFriendInteraction'
-  | 'gameClubData';
+enum AuthKey {
+  userInfo = 'userInfo',
+  userFuzzyLocation = 'userFuzzyLocation',
+  werun = 'werun',
+  writePhotosAlbum = 'writePhotosAlbum',
+  WxFriendInteraction = 'WxFriendInteraction',
+  gameClubData = 'gameClubData',
+}
+
 // 缓存判断是否已授权，只在本次运行时有效
 const scope: Record<AuthKey, boolean> = {
   userInfo: false,
@@ -14,6 +16,7 @@ const scope: Record<AuthKey, boolean> = {
   WxFriendInteraction: false,
   gameClubData: false,
 };
+
 // 展示提示文案
 const scopeMsg: Record<AuthKey, string> = {
   userInfo: '需要先授权用户信息',
@@ -23,6 +26,7 @@ const scopeMsg: Record<AuthKey, string> = {
   WxFriendInteraction: '需要先授权微信朋友关系',
   gameClubData: '需要先授权游戏圈数据',
 };
+
 // 缓存查询授权
 const cachedPromiseScope: Record<AuthKey, Promise<string> | null> = {
   userInfo: null,
@@ -32,6 +36,7 @@ const cachedPromiseScope: Record<AuthKey, Promise<string> | null> = {
   WxFriendInteraction: null,
   gameClubData: null,
 };
+
 // 是否跳出过隐私授权，首次打开时会跳出隐私授权
 let hasPrivacySetting = false;
 // 短时间内弹过不再弹授权
@@ -256,18 +261,11 @@ function getAuth(
 }
 
 /**
- * 获取是否已授权好友关系，如果没有授权则拉起授权弹窗
- */
-function getAuthWxFriendInteraction(needShowModal = true) {
-  return getAuth('WxFriendInteraction', needShowModal);
-}
-
-/**
  * 获取是否已授权个人信息，如果没有授权则拉起授权弹窗
  * 请务必在点击事件后调用改函数
  */
 function getAuthUserInfo(needShowModal = true, showPrivacy = true) {
-  return getAuth('userInfo', needShowModal, showPrivacy);
+  return getAuth(AuthKey.userInfo, needShowModal, showPrivacy);
 }
 
 /**
@@ -376,9 +374,10 @@ setTimeout(() => {
 
 export {
   scope,
+  AuthKey,
   requirePrivacyAuthorize,
   hideUserInfoButton,
-  getAuthWxFriendInteraction,
+  getAuth,
   getAuthUserInfo,
   createUserInfoButton,
 };
