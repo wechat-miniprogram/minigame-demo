@@ -14,7 +14,7 @@
     "skipLibCheck": true,
   },
   "include": [
-    "*",
+    "minigame",
   ],
   "exclude": ["*.js"]
 }

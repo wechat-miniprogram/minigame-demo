@@ -1,26 +1,38 @@
 // 缓存判断是否已授权，只在本次运行时有效
 const scope = {
-    WxFriendInteraction: false,
     userInfo: false,
+    userFuzzyLocation: false,
+    werun: false,
+    writePhotosAlbum: false,
+    WxFriendInteraction: false,
+    gameClubData: false,
 };
 // 展示提示文案
 const scopeMsg = {
-    WxFriendInteraction: "需要先授权微信朋友关系",
-    userInfo: "需要先授权用户信息",
+    userInfo: '需要先授权用户信息',
+    userFuzzyLocation: '需要先授权模糊地理位置',
+    werun: '需要先授权微信运动步数',
+    writePhotosAlbum: '需要先授权保存相册',
+    WxFriendInteraction: '需要先授权微信朋友关系',
+    gameClubData: '需要先授权游戏圈数据',
 };
 // 缓存查询授权
 const cachedPromiseScope = {
-    WxFriendInteraction: null,
     userInfo: null,
+    userFuzzyLocation: null,
+    werun: null,
+    writePhotosAlbum: null,
+    WxFriendInteraction: null,
+    gameClubData: null,
 };
 // 是否跳出过隐私授权，首次打开时会跳出隐私授权
 let hasPrivacySetting = false;
 // 短时间内弹过不再弹授权
-let gapTime = 3000;
+const gapTime = 3000;
 // 上一次弹出消息的时间
 let lastPrivacyTime = 0;
 // 获取信息按钮列表
-let userInfoButtonList = {};
+const userInfoButtonList = {};
 /**
  * 主动拉起授权
  */
@@ -39,7 +51,7 @@ function requirePrivacyAuthorize() {
         wx.requirePrivacyAuthorize({
             success: () => {
                 // 用户同意授权
-                resolve("");
+                resolve('');
             },
             fail: () => {
                 // 用户拒绝授权
@@ -54,21 +66,21 @@ function requirePrivacyAuthorize() {
 function needAuthorization() {
     return new Promise((resolve, reject) => {
         if (!wx.getPrivacySetting) {
-            reject("");
+            reject('');
         }
         wx.getPrivacySetting({
             success: (res) => {
-                console.log("getPrivacySetting success:", res);
+                console.log('getPrivacySetting success:', res);
                 // 用户同意授权
                 if (res.needAuthorization) {
-                    resolve("");
+                    resolve('');
                 }
                 else {
                     reject();
                 }
             },
             fail: (res) => {
-                console.log("getPrivacySetting fail:", res);
+                console.log('getPrivacySetting fail:', res);
                 reject();
             },
         });
@@ -86,8 +98,8 @@ function showToast() {
                 // console.log(res);
                 if (!res.needAuthorization) {
                     wx.showToast({
-                        icon: "none",
-                        title: "授权失败，请稍后再试",
+                        icon: 'none',
+                        title: '授权失败，请稍后再试',
                     });
                 }
                 else {
@@ -98,8 +110,8 @@ function showToast() {
     }
     else {
         wx.showToast({
-            icon: "none",
-            title: "授权失败，请稍后再试",
+            icon: 'none',
+            title: '授权失败，请稍后再试',
         });
     }
 }
@@ -107,31 +119,31 @@ function showToast() {
  * 向用户发起授权请求
  */
 function authorize(key, getScope, needShowModal, resolve, reject) {
-    if (key === "userInfo") {
-        console.warn("除了用户信息以外，其他的授权可以通过authorize获取");
+    if (key === 'userInfo') {
+        console.warn('除了用户信息以外，其他的授权可以通过authorize获取');
         reject();
         return;
     }
     wx.authorize({ scope: `scope.${key}` })
         .then((res) => {
-        console.log("用户已授权", res);
+        console.log('用户已授权', res);
         // 已授权
-        resolve("");
+        resolve('');
     })
         .catch((res) => {
-        console.log("用户未授权", res);
+        console.log('用户未授权', res);
         // 未授权
-        if (res.errMsg.indexOf("not authorized in gap") > -1) {
+        if (res.errMsg.indexOf('not authorized in gap') > -1) {
             showToast();
         }
         // 如果是之前弹过授权且用户拒绝，尝试弹窗提醒用户打开
-        if (res.errMsg.indexOf("auth deny") > -1 &&
+        if (res.errMsg.indexOf('auth deny') > -1 &&
             needShowModal &&
             getScope === false) {
             // 用户拒绝
             wx.showModal({
                 content: scopeMsg[key],
-                confirmText: "去授权",
+                confirmText: '去授权',
                 success: (res) => {
                     if (res.confirm) {
                         wx.openSetting({
@@ -139,7 +151,7 @@ function authorize(key, getScope, needShowModal, resolve, reject) {
                                 const authKey = `scope.${key}`;
                                 if (res.authSetting[authKey] === true) {
                                     // 已授权
-                                    resolve("");
+                                    resolve('');
                                     return;
                                 }
                                 reject();
@@ -174,21 +186,21 @@ function getAuth(key, needShowModal = true, showPrivacy = true) {
                 const authKey = `scope.${key}`;
                 const getScope = res.authSetting[authKey];
                 if (getScope === true) {
-                    console.log("已授权");
-                    resolve("");
+                    console.log('已授权');
+                    resolve('');
                     return;
                 }
                 needAuthorization()
                     .then(() => {
-                    console.log("需要隐私弹窗");
+                    console.log('需要隐私弹窗');
                     if (showPrivacy) {
                         requirePrivacyAuthorize()
                             .then(() => {
-                            console.log("用户同意弹窗");
+                            console.log('用户同意弹窗');
                             authorize(key, getScope, needShowModal, resolve, reject);
                         })
                             .catch(() => {
-                            console.log("用户不同意弹窗");
+                            console.log('用户不同意弹窗');
                             reject();
                         });
                     }
@@ -197,19 +209,19 @@ function getAuth(key, needShowModal = true, showPrivacy = true) {
                     }
                 })
                     .catch(() => {
-                    console.log("不需要隐私弹窗");
+                    console.log('不需要隐私弹窗');
                     authorize(key, getScope, needShowModal, resolve, reject);
                 });
             },
             fail(res) {
-                console.warn("getSetting fail:", res);
+                console.warn('getSetting fail:', res);
                 reject();
             },
         });
     })
         .then(() => {
         scope[key] = true;
-        return Promise.resolve("");
+        return Promise.resolve('');
     })
         .catch(() => {
         scope[key] = false;
@@ -224,14 +236,14 @@ function getAuth(key, needShowModal = true, showPrivacy = true) {
  * 获取是否已授权好友关系，如果没有授权则拉起授权弹窗
  */
 function getAuthWxFriendInteraction(needShowModal = true) {
-    return getAuth("WxFriendInteraction", needShowModal);
+    return getAuth('WxFriendInteraction', needShowModal);
 }
 /**
  * 获取是否已授权个人信息，如果没有授权则拉起授权弹窗
  * 请务必在点击事件后调用改函数
  */
 function getAuthUserInfo(needShowModal = true, showPrivacy = true) {
-    return getAuth("userInfo", needShowModal, showPrivacy);
+    return getAuth('userInfo', needShowModal, showPrivacy);
 }
 /**
  * 创建获取个人信息按钮
@@ -252,7 +264,7 @@ function createUserInfoButton(key, data, callback) {
     })
         .catch(() => {
         userInfoButtonList[key] = wx.createUserInfoButton({
-            type: "text",
+            type: 'text',
             text: key,
             style: {
                 left: x,
@@ -260,9 +272,9 @@ function createUserInfoButton(key, data, callback) {
                 width: width,
                 height: height,
                 lineHeight: height,
-                textAlign: "center",
-                color: "#ffffff",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                textAlign: 'center',
+                color: '#ffffff',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
             },
         });
         // 如果你希望按钮是透明的，改backgroundColor的透明度
@@ -277,10 +289,9 @@ function createUserInfoButton(key, data, callback) {
         //   },
         // });
         userInfoButtonList[key].onTap((res) => {
-            console.warn(res);
-            if (res.errMsg.indexOf(":ok") > -1 && !!res.rawData) {
+            if (res.errMsg.indexOf(':ok') > -1 && !!res.rawData) {
                 // 同意
-                console.log("同意", res);
+                console.log(res);
                 destroyAllButton();
                 if (callback) {
                     callback(res);
@@ -288,7 +299,7 @@ function createUserInfoButton(key, data, callback) {
             }
             else {
                 // 拒绝
-                console.log("拒绝", res);
+                console.error(res);
             }
         });
     });
