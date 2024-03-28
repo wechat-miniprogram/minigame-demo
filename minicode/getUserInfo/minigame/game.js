@@ -1,6 +1,7 @@
 import { hideUserInfoButton, createUserInfoButton, requirePrivacyAuthorize, getAuth, scope, AuthKey, } from './auth';
 import { screenWidth, screenHeight, changeTips } from './common/render';
 import { scene } from './common/scene';
+// 当前的坐标位置只是示例，实际使用时需要根据具体需求对齐游戏UI
 const userInfoButtonRect = {
     x: screenWidth / 2 - 70,
     y: screenHeight / 2 + 50,
