@@ -90,6 +90,7 @@ scene.init([
     {
         title: '好友数据场景',
         explanation: `<p>当前场景是为了模拟需要使用开放数据域的场景，获取好友授权</p>
+      <br>
       <p>如果调试面板提示<span style="color: red">please go to mp open official popup</span>，请先在mp端设置隐私授权弹窗”</p>
       <p>如果调试面板提示<span style="color: red">game appid no privacy api permission</span>，请先在mp端配置《用户隐私保护指引》中增加“微信朋友关系”</p>`,
         exposed: () => {
@@ -115,7 +116,9 @@ scene.init([
     {
         title: '保存图片场景',
         explanation: `<p>当前场景是为了模拟需要保存图片的场景</p>
+      <br>
       <p>这个示例并不会成功保存图片，只是演示授权逻辑</p>
+      <br>
       <p>如果调试面板提示<span style="color: red">please go to mp open official popup</span>，请先在mp端设置隐私授权弹窗”</p>
       <p>如果调试面板提示<span style="color: red">game appid no privacy api permission</span>，请先在mp端配置《用户隐私保护指引》中增加“相册（仅写入）权限”</p>`,
         exposed: () => { },

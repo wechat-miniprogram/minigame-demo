@@ -107,6 +107,7 @@ const style = {
     height: 30 * pixelRatio,
     lineHeight: 30 * pixelRatio,
     borderRadius: 4 * pixelRatio,
+    marginBottom: 8 * pixelRatio,
   },
   footer_button: {
     height: footerInnerHeight - 16 * pixelRatio,
