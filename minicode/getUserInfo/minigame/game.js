@@ -90,7 +90,7 @@ scene.init([
         },
     },
     {
-        title: 'loading场景',
+        title: 'Loading场景',
         explanation: `<p>当前场景是为了模拟<strong>提前弹出隐私协议弹窗</strong>，避免在其他需要用到隐私数据的场景弹出</p>
       <p>主要演示<span style="color: green">wx.requirePrivacyAuthorize</span>的使用</p>
       <p>可以查看<span style="color: blue">auth.ts</span>中<span style="color: blue">requirePrivacyAuthorize</span>函数</p>
