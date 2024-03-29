@@ -302,6 +302,8 @@ function createUserInfoButton(
           textAlign: 'center',
           color: '#ffffff',
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          fontSize: height * 0.4,
+          borderRadius: height * 0.2,
         },
       });
       // 如果你希望按钮是透明的，改backgroundColor的透明度

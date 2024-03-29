@@ -28,6 +28,7 @@ scene.init([
       <span style="color: green">wx.openSetting</span>
       </p>
       <p>主要的实现逻辑都在auth.ts中，可以直接复制该脚本使用</p>
+      <p>主要的调用逻辑都在game.ts中，可以参考</p>
       <br>
       <p>当前场景是为了演示如何获取用户信息</p>`,
         exposed: () => {
@@ -50,7 +51,7 @@ scene.init([
     },
     {
         title: '其他用户信息场景',
-        explanation: `<p>当前场景是为了模拟真实游戏过程中，需要切换场景时，userInfoButton的销毁和创建</p>`,
+        explanation: `<p>当前场景是为了模拟真实游戏过程中，需要切换场景时，<strong>userInfoButton的销毁和创建</strong></p>`,
         exposed: () => {
             // 当切换到其他有需要登录的场景
             if (scope.userInfo) {
@@ -71,7 +72,7 @@ scene.init([
     },
     {
         title: 'loading场景',
-        explanation: `<p>当前场景是为了模拟提前弹出隐私协议弹窗，避免在其他需要用到隐私数据的场景弹出</p>
+        explanation: `<p>当前场景是为了模拟<strong>提前弹出隐私协议弹窗</strong>，避免在其他需要用到隐私数据的场景弹出</p>
       <br>
       <p>如果是开发者工具中，可以通过“清缓存”来清除隐私授权信息来进行测试</p>`,
         exposed: () => {
@@ -90,7 +91,7 @@ scene.init([
     },
     {
         title: '好友数据场景',
-        explanation: `<p>当前场景是为了模拟需要使用开放数据域的场景，获取好友授权</p>
+        explanation: `<p>当前场景是为了模拟需要<strong>使用开放数据域的场景</strong>，获取好友授权</p>
       <br>
       <p>如果调试面板提示<span style="color: red">please go to mp open official popup</span>，请先在mp端设置隐私授权弹窗”</p>
       <p>如果调试面板提示<span style="color: red">game appid no privacy api permission</span>，请先在mp端配置《用户隐私保护指引》中增加“微信朋友关系”</p>`,
@@ -116,7 +117,7 @@ scene.init([
     },
     {
         title: '保存图片场景',
-        explanation: `<p>当前场景是为了模拟需要保存图片的场景</p>
+        explanation: `<p>当前场景是为了模拟需要<strong>保存图片的场景</strong></p>
       <br>
       <p>这个示例并不会成功保存图片，只是演示授权逻辑</p>
       <br>
