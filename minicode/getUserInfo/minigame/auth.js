@@ -36,10 +36,10 @@ const cachedPromiseScope = {
 };
 // 是否跳出过隐私授权，首次打开时会跳出隐私授权
 let hasPrivacySetting = false;
-// 短时间内弹过不再弹授权
-const gapTime = 3000;
-// 上一次弹出消息的时间
-let lastPrivacyTime = 0;
+// // 短时间内弹过不再弹授权
+// const gapTime = 3000;
+// // 上一次弹出消息的时间
+// let lastPrivacyTime = 0;
 // 获取信息按钮列表
 const userInfoButtonList = {};
 /**
@@ -48,21 +48,25 @@ const userInfoButtonList = {};
 function requirePrivacyAuthorize() {
     return new Promise((resolve, reject) => {
         if (!wx.requirePrivacyAuthorize) {
+            console.log('版本太低');
             reject();
             return;
         }
-        if (Date.now() - lastPrivacyTime < gapTime) {
-            // in gap
-            reject();
-            return;
-        }
-        lastPrivacyTime = Date.now();
+        // if (Date.now() - lastPrivacyTime < gapTime) {
+        //   // in gap
+        //   console.log('调用太频繁');
+        //   reject();
+        //   return;
+        // }
+        // lastPrivacyTime = Date.now();
         wx.requirePrivacyAuthorize({
             success: () => {
+                console.log('requirePrivacyAuthorize success');
                 // 用户同意授权
                 resolve('');
             },
-            fail: () => {
+            fail: (res) => {
+                console.log('requirePrivacyAuthorize fail:', res);
                 // 用户拒绝授权
                 reject();
             },
@@ -253,6 +257,7 @@ function getAuthUserInfo(needShowModal = true, showPrivacy = true) {
  */
 function createUserInfoButton(key, data, callback) {
     const { x, y, width, height } = data;
+    // 如果已存在创建的按钮，则说明用户还没授权，直接提示
     if (userInfoButtonList[key]) {
         showUserInfoButton(key);
         return;
@@ -297,6 +302,7 @@ function createUserInfoButton(key, data, callback) {
             if (res.errMsg.indexOf(':ok') > -1 && !!res.rawData) {
                 // 同意
                 console.log(res);
+                // 用户同意后销毁所有按钮
                 destroyAllButton();
                 if (callback) {
                     callback(res);
