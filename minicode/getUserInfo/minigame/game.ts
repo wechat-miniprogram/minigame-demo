@@ -127,8 +127,9 @@ scene.init([
       <p>除个人信息外，都可以使用wx.authorize提前向用户发起授权请求，及时我们并没有调用到相关的接口</p>
       <p>可以查看<span style="color: blue">auth.ts</span>中<span style="color: blue">getAuth</span>函数</p>
       <br>
+      <p>如果调试面板提示<span style="color: red">please go to mp to announce your privacy usage</span>，请先在mp端更新隐私协议”</p>
       <p>如果调试面板提示<span style="color: red">please go to mp open official popup</span>，请先在mp端设置隐私授权弹窗”</p>
-      <p>如果调试面板提示<span style="color: red">game appid no privacy api permission</span>，请先在mp端配置《用户隐私保护指引》中增加“微信朋友关系”</p>
+      <p>如果调试面板提示<span style="color: red">api scope is not declared in the privacy agreement</span>，请先在mp端配置《用户隐私保护指引》中增加“微信朋友关系”</p>
       <br>
       <p>下方会有文案说明用户是否同意了好友授权：</p>`,
     exposed: () => {
@@ -157,8 +158,9 @@ scene.init([
       <p>主要演示<span style="color: green">wx.openSetting</span>的使用</p>
       <p>在不使用wx.authorize的情况下，直接调用需要隐私授权的接口，也会向用户发起授权请求</p>
       <br>
+      <p>如果调试面板提示<span style="color: red">please go to mp to announce your privacy usage</span>，请先在mp端更新隐私协议”</p>
       <p>如果调试面板提示<span style="color: red">please go to mp open official popup</span>，请先在mp端设置隐私授权弹窗”</p>
-      <p>如果调试面板提示<span style="color: red">game appid no privacy api permission</span>，请先在mp端配置《用户隐私保护指引》中增加“相册（仅写入）权限”</p>
+      <p>如果调试面板提示<span style="color: red">api scope is not declared in the privacy agreement</span>，请先在mp端配置《用户隐私保护指引》中增加“相册（仅写入）权限”</p>
       <br>
       <p>这个示例并不会成功保存图片，仅演示授权逻辑，请点击下方按钮调用接口：</p>`,
 
@@ -179,7 +181,7 @@ scene.init([
               if (res.errMsg.indexOf('auth') > -1) {
                 getAuth(AuthKey.writePhotosAlbum);
               } else {
-                changeTips('调用了保存，可能因为路径原因所以没有成功');
+                changeTips('调用了保存，但是保存失败');
               }
             },
           });
