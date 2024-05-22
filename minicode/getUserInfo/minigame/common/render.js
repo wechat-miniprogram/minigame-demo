@@ -136,9 +136,10 @@ footerButtonRight.on('click', () => {
 const sceneChanged = () => {
     sceneTitle.value = scene.currentScene.title;
     sceneExplanation.text = scene.currentScene.explanation || '';
-    sceneButtons?.children.forEach((it) => {
-        sceneButtons.removeChild(it);
-    });
+    const len = sceneButtons?.children.length || 0;
+    for (let i = len - 1; i >= 0; i--) {
+        sceneButtons?.removeChild(sceneButtons?.children[i]);
+    }
     scene.currentScene.buttons?.forEach((config) => {
         const button = layout.cloneNode(sceneButton);
         button.value = config.name;
@@ -150,4 +151,4 @@ scene.on('sceneChanged', sceneChanged);
 const changeTips = (value) => {
     sceneTips.value = value;
 };
-export { screenWidth, screenHeight, changeTips };
+export { canvas, screenWidth, screenHeight, changeTips };

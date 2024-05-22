@@ -168,4 +168,4 @@ const changeTips = (value: string) => {
   sceneTips.value = value;
 };
 
-export { screenWidth, screenHeight, changeTips };
+export { canvas, screenWidth, screenHeight, changeTips };
