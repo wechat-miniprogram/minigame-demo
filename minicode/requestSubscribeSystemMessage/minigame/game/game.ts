@@ -3,9 +3,9 @@ import {
   changeTips,
   canvas,
   pixelRatio,
-  changeExtraTips,
   updateShareCanvas,
   stopTicker,
+  screenHeight,
 } from './common/render';
 import { scene } from './common/scene';
 import {
@@ -19,13 +19,13 @@ import {
 const openDataContext = wx.getOpenDataContext();
 const sharedCanvas = openDataContext.canvas;
 sharedCanvas.width = screenWidth * pixelRatio;
-sharedCanvas.height = 400 * pixelRatio;
+sharedCanvas.height = (screenHeight - 260) * pixelRatio;
 
 // 每帧绘制sharecanvas
 function drawShareCanvas() {
   const sharedCanvas = openDataContext.canvas;
   const context = canvas.getContext('2d');
-  context.drawImage(sharedCanvas, 0, 200 * pixelRatio);
+  context.drawImage(sharedCanvas, 0, 260 * pixelRatio);
 }
 
 scene.init([
@@ -66,7 +66,6 @@ scene.init([
       {
         name: '获取朋友权限',
         callback: () => {
-          changeTips('');
           getWxFriendInteraction().then(() => {
             changeTipText();
           });
@@ -75,7 +74,6 @@ scene.init([
       {
         name: '获取消息权限',
         callback: () => {
-          changeExtraTips('');
           getSubscribeSystemMessage().then(() => {
             changeTipText();
           });
@@ -83,14 +81,14 @@ scene.init([
       },
     ],
     destroyed: () => {
-      changeTips('');
-      changeExtraTips('');
+      changeTips();
       wx.offShow(changeTipText);
     },
   },
   {
     title: '好友互动场景',
     explanation: `<p>当前场景是为了模拟真实游戏过程中，需要与好友互动的情况</p>
+      <p>演示<span style="color: green">wx.modifyFriendInteractiveStorage</span>和<span style="color: green">wx.getFriendCloudStorage</span>的使用</p>
       <p>代码可以查看<span style="color: blue">openDataContext</span></p>
       <br>
       <br>`,
@@ -108,34 +106,33 @@ scene.init([
     },
     destroyed: () => {
       stopTicker(drawShareCanvas);
-      changeTips('');
-      changeExtraTips('');
+      changeTips();
     },
   },
 ]);
 
 function changeTipText() {
+  changeTips();
   wx.getSetting({
     withSubscriptions: true,
     success(res) {
-      let tip = '';
+      let friendTip = '';
       if (res.authSetting['scope.WxFriendInteraction']) {
-        tip += '微信朋友信息：已授权使用';
+        friendTip = '微信朋友信息：已授权使用';
       } else {
-        tip += '微信朋友信息：未授权使用，拒绝后可在设置页打开';
+        friendTip = '微信朋友信息：未授权使用，拒绝后可在设置页打开';
       }
       const SYS_MSG_TYPE_INTERACTIVE =
         res.subscriptionsSetting.itemSettings?.SYS_MSG_TYPE_INTERACTIVE;
-      let tips =
+      let systemTip =
         SYSTEM_MESSAGE[SYS_MSG_TYPE_INTERACTIVE as keyof SYSTEM_MESSAGE_TYPE];
-      if (tips === undefined || tips === null) {
-        tips = '发生错误，麻烦联系官方说明情况';
+      if (systemTip === undefined || systemTip === null) {
+        systemTip = '发生错误，麻烦联系官方说明情况';
       }
       if (res.subscriptionsSetting.mainSwitch === false) {
-        tips = '系统消息订阅权限：需打开主开关设置';
+        systemTip = '系统消息订阅权限：需打开主开关设置';
       }
-      changeTips(tip);
-      changeExtraTips(tips);
+      changeTips([friendTip, systemTip]);
     },
   });
 }

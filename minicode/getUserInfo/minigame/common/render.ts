@@ -32,7 +32,7 @@ const template = `
       <view id="scene_buttons">
         <text class="button scene_button"></text>
       </view>
-      <text class="text tips"></text>
+      <richtext class="text tips"></richtext>
     </view>
     <view class="footer">
       <text class="button footer_button footer_button_left" value="上一场景"></text>
@@ -85,7 +85,8 @@ const style = {
     lineHeight: 20 * pixelRatio,
   },
   tips: {
-    fontSize: 18 * pixelRatio,
+    width: GAME_WIDTH - 40 * pixelRatio,
+    fontSize: 14 * pixelRatio,
     lineHeight: 20 * pixelRatio,
     marginTop: 20 * pixelRatio,
     opacity: 0.6,
@@ -117,7 +118,9 @@ const style = {
 } as Record<string, IStyle>;
 
 layout.use(richText);
-layout.init(template, style);
+layout.init(template, style, function (a) {
+  return a;
+});
 
 layout.updateViewPort({
   x: 0,
@@ -140,7 +143,9 @@ const sceneExplanation = layout.getElementsByClassName(
 )[0] as unknown as RichText;
 const sceneButtons = layout.getElementById('scene_buttons');
 const sceneButton = layout.getElementsByClassName('scene_button')[0] as Text;
-const sceneTips = layout.getElementsByClassName('tips')[0] as Text;
+const sceneTips = layout.getElementsByClassName(
+  'tips',
+)[0] as unknown as RichText;
 
 footerButtonLeft.on('click', () => {
   scene.preScene();
@@ -164,8 +169,35 @@ const sceneChanged = () => {
 };
 scene.on('sceneChanged', sceneChanged);
 
-const changeTips = (value: string) => {
-  sceneTips.value = value;
+const changeTips = (value?: string[] | string) => {
+  if (!value) {
+    sceneTips.text = '';
+    return;
+  }
+  if (typeof value === 'string') {
+    value = [value];
+  }
+  sceneTips.text = value.map((it) => `<p>${it}</p>`).join('');
 };
 
-export { canvas, screenWidth, screenHeight, changeTips };
+const updateShareCanvas = (callback: () => void) => {
+  layout.ticker.add(callback);
+};
+
+const stopTicker = (callback: () => void) => {
+  layout.ticker.remove(callback);
+};
+
+wx.onShow(() => {
+  layout.repaint();
+});
+
+export {
+  screenWidth,
+  screenHeight,
+  changeTips,
+  canvas,
+  pixelRatio,
+  updateShareCanvas,
+  stopTicker,
+};

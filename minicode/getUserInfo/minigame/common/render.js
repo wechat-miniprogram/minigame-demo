@@ -29,7 +29,7 @@ const template = `
       <view id="scene_buttons">
         <text class="button scene_button"></text>
       </view>
-      <text class="text tips"></text>
+      <richtext class="text tips"></richtext>
     </view>
     <view class="footer">
       <text class="button footer_button footer_button_left" value="上一场景"></text>
@@ -81,7 +81,8 @@ const style = {
         lineHeight: 20 * pixelRatio,
     },
     tips: {
-        fontSize: 18 * pixelRatio,
+        width: GAME_WIDTH - 40 * pixelRatio,
+        fontSize: 14 * pixelRatio,
         lineHeight: 20 * pixelRatio,
         marginTop: 20 * pixelRatio,
         opacity: 0.6,
@@ -112,7 +113,9 @@ const style = {
     },
 };
 layout.use(richText);
-layout.init(template, style);
+layout.init(template, style, function (a) {
+    return a;
+});
 layout.updateViewPort({
     x: 0,
     y: 0,
@@ -149,6 +152,22 @@ const sceneChanged = () => {
 };
 scene.on('sceneChanged', sceneChanged);
 const changeTips = (value) => {
-    sceneTips.value = value;
+    if (!value) {
+        sceneTips.text = '';
+        return;
+    }
+    if (typeof value === 'string') {
+        value = [value];
+    }
+    sceneTips.text = value.map((it) => `<p>${it}</p>`).join('');
 };
-export { canvas, screenWidth, screenHeight, changeTips };
+const updateShareCanvas = (callback) => {
+    layout.ticker.add(callback);
+};
+const stopTicker = (callback) => {
+    layout.ticker.remove(callback);
+};
+wx.onShow(() => {
+    layout.repaint();
+});
+export { screenWidth, screenHeight, changeTips, canvas, pixelRatio, updateShareCanvas, stopTicker, };

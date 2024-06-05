@@ -29,8 +29,7 @@ const template = `
       <view id="scene_buttons">
         <text class="button scene_button"></text>
       </view>
-      <text class="text tips"></text>
-      <text class="text tipss"></text>
+      <richtext class="text tips"></richtext>
     </view>
     <view class="footer">
       <text class="button footer_button footer_button_left" value="上一场景"></text>
@@ -82,12 +81,7 @@ const style = {
         lineHeight: 20 * pixelRatio,
     },
     tips: {
-        fontSize: 14 * pixelRatio,
-        lineHeight: 20 * pixelRatio,
-        marginTop: 20 * pixelRatio,
-        opacity: 0.6,
-    },
-    tipss: {
+        width: GAME_WIDTH - 40 * pixelRatio,
         fontSize: 14 * pixelRatio,
         lineHeight: 20 * pixelRatio,
         marginTop: 20 * pixelRatio,
@@ -136,7 +130,6 @@ const sceneExplanation = layout.getElementsByClassName('explanation')[0];
 const sceneButtons = layout.getElementById('scene_buttons');
 const sceneButton = layout.getElementsByClassName('scene_button')[0];
 const sceneTips = layout.getElementsByClassName('tips')[0];
-const sceneTipss = layout.getElementsByClassName('tipss')[0];
 footerButtonLeft.on('click', () => {
     scene.preScene();
 });
@@ -159,10 +152,14 @@ const sceneChanged = () => {
 };
 scene.on('sceneChanged', sceneChanged);
 const changeTips = (value) => {
-    sceneTips.value = value;
-};
-const changeExtraTips = (value) => {
-    sceneTipss.value = value;
+    if (!value) {
+        sceneTips.text = '';
+        return;
+    }
+    if (typeof value === 'string') {
+        value = [value];
+    }
+    sceneTips.text = value.map((it) => `<p>${it}</p>`).join('');
 };
 const updateShareCanvas = (callback) => {
     layout.ticker.add(callback);
@@ -173,4 +170,4 @@ const stopTicker = (callback) => {
 wx.onShow(() => {
     layout.repaint();
 });
-export { screenWidth, screenHeight, changeTips, canvas, pixelRatio, changeExtraTips, updateShareCanvas, stopTicker, };
+export { screenWidth, screenHeight, changeTips, canvas, pixelRatio, updateShareCanvas, stopTicker, };

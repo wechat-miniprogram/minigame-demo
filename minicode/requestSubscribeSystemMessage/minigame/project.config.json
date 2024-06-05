@@ -12,6 +12,7 @@
     },
     "enhance": true
   },
+  "miniprogramRoot": "game/",
   "compileType": "game",
   "libVersion": "3.3.4",
   "appid": "wx7a727ff7d940bb3f",
@@ -25,5 +26,6 @@
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
-  "jsserverRoot": "jsserver/"
+  "jsserverRoot": "jsserver/",
+  "srcMiniprogramRoot": "game/"
 }
