@@ -1,14 +1,15 @@
-import { getInteractUI } from './interact';
+import { getInteractUI } from './friend_interactive';
 import { Box } from './type';
 
 wx.onMessage((res) => {
   if (res.command === 'renderFriend') {
     setData(100);
     getDataAndDraw(false, res.box);
-  } else {
-    setData(res.score);
-    getDataAndDraw(true, res.box);
   }
+  //  else {
+  //   setData(res.score);
+  //   getDataAndDraw(true, res.box);
+  // }
 });
 
 function setData(score: number) {

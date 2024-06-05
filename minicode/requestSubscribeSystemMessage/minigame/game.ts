@@ -28,11 +28,6 @@ function drawShareCanvas() {
   context.drawImage(sharedCanvas, 0, 200 * pixelRatio);
 }
 
-// 改变场景内的tip
-function changeSceneTip() {
-  changeTipText();
-}
-
 scene.init([
   {
     title: '首页场景',
@@ -65,7 +60,7 @@ scene.init([
       <p>该场景通过使用<span style="color: green"> wx.getSetting </span> 判断用户是否已授权（必须两个权限都已授权才能使用后续功能）</p>`,
     exposed: () => {
       changeTipText();
-      wx.onShow(changeSceneTip);
+      wx.onShow(changeTipText);
     },
     buttons: [
       {
@@ -90,7 +85,7 @@ scene.init([
     destroyed: () => {
       changeTips('');
       changeExtraTips('');
-      wx.offShow(changeSceneTip);
+      wx.offShow(changeTipText);
     },
   },
   {

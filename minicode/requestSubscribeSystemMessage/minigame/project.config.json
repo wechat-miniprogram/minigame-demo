@@ -9,7 +9,8 @@
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    }
+    },
+    "enhance": true
   },
   "compileType": "game",
   "libVersion": "3.3.4",

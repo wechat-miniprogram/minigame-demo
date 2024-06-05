@@ -1,8 +1,11 @@
 const SYSTEM_MESSAGE = {
     accept: '系统消息订阅权限：已授权使用',
-    acceptWithAlert: '系统消息订阅权限：已授权使用',
+    acceptWithAlert: '系统消息订阅权限：已授权并开启弹窗提醒',
+    acceptWithAudio: '系统消息订阅权限：已授权并开启语音提醒',
+    acceptWithForcePush: '系统消息订阅权限：已授权并开启推送提醒',
     reject: '系统消息订阅权限：拒绝授权使用，可在设置页打开',
     ban: '系统消息订阅权限：该功能已被后台封禁',
+    filter: '系统消息订阅权限：该功能已被后台过滤',
     undefined: '系统消息订阅权限：该功能未向用户请求过',
 };
 // 获取订阅消息设置
@@ -12,7 +15,7 @@ function getSubscribeSystemMessage() {
             msgTypeList: ['SYS_MSG_TYPE_INTERACTIVE', 'SYS_MSG_TYPE_RANK'],
             success(res) {
                 console.log('订阅系统消息api调用成功', res);
-                if (res.SYS_MSG_TYPE_INTERACTIVE === 'reject') {
+                if (res['SYS_MSG_TYPE_INTERACTIVE'] === 'reject') {
                     navigateToSetting('系统订阅消息');
                 }
                 resolve('');

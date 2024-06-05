@@ -177,9 +177,11 @@ scene.on('sceneChanged', sceneChanged);
 const changeTips = (value: string) => {
   sceneTips.value = value;
 };
+
 const changeExtraTips = (value: string) => {
   sceneTipss.value = value;
 };
+
 const updateShareCanvas = (callback: () => void) => {
   layout.ticker.add(callback);
 };
