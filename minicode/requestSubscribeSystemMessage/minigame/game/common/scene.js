@@ -20,7 +20,6 @@ class Scene extends TinyEmitter {
             this._currentIndex = 0;
         }
         this.emit('sceneChanged');
-        this.currentScene.exposed?.();
     }
     preScene() {
         this.currentScene.destroyed?.();
@@ -29,7 +28,6 @@ class Scene extends TinyEmitter {
             this._currentIndex = this._scenes.length - 1;
         }
         this.emit('sceneChanged');
-        this.currentScene.exposed?.();
     }
 }
 export const scene = new Scene();

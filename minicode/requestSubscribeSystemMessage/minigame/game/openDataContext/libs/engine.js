@@ -371,6 +371,9 @@ var Element = /** @class */ (function () {
         var activeStyle = this.style[':active'];
         if (activeStyle) {
             Object.keys(activeStyle).forEach(function (key) {
+                if (!_this.cacheStyle) {
+                    return;
+                }
                 if (_this.cacheStyle[key]) {
                     // @ts-ignore
                     _this.style[key] = _this.cacheStyle[key];

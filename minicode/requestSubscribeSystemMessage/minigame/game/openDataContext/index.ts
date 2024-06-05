@@ -36,7 +36,6 @@ function getDataAndDraw(flag: boolean, box: Box) {
       console.log('getData => ', res);
       if (!flag) {
         getInteractUI(res.data, box);
-      } else {
       }
     },
     fail: (res) => {

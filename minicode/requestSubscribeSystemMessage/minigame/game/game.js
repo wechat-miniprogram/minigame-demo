@@ -1,16 +1,15 @@
-import { screenWidth, changeTips, canvas, pixelRatio, updateShareCanvas, stopTicker, screenHeight, } from './common/render';
+import { screenWidth, screenHeight, changeTips, canvas, pixelRatio, startTicker, stopTicker, canRenderBox, } from './common/render';
 import { scene } from './common/scene';
 import { getSubscribeSystemMessage, getWxFriendInteraction, SYSTEM_MESSAGE, } from './message';
 // 获取开放数据域的canvas并设置长宽
 const openDataContext = wx.getOpenDataContext();
 const sharedCanvas = openDataContext.canvas;
 sharedCanvas.width = screenWidth * pixelRatio;
-sharedCanvas.height = (screenHeight - 260) * pixelRatio;
+sharedCanvas.height = screenHeight * pixelRatio;
+const context = canvas.getContext('2d');
 // 每帧绘制sharecanvas
 function drawShareCanvas() {
-    const sharedCanvas = openDataContext.canvas;
-    const context = canvas.getContext('2d');
-    context.drawImage(sharedCanvas, 0, 260 * pixelRatio);
+    context.drawImage(sharedCanvas, 0, 0);
 }
 scene.init([
     {
@@ -73,24 +72,16 @@ scene.init([
         title: '好友互动场景',
         explanation: `<p>当前场景是为了模拟真实游戏过程中，需要与好友互动的情况</p>
       <p>演示<span style="color: green">wx.modifyFriendInteractiveStorage</span>和<span style="color: green">wx.getFriendCloudStorage</span>的使用</p>
-      <p>代码可以查看<span style="color: blue">openDataContext</span></p>
-      <br>
-      <br>`,
+      <p>代码可以查看<span style="color: blue">openDataContext</span></p>`,
         exposed: () => {
             openDataContext.postMessage({
                 command: 'renderFriend',
-                box: {
-                    x: 0,
-                    y: 200,
-                    width: screenWidth,
-                    height: 400,
-                },
+                box: canRenderBox,
             });
-            updateShareCanvas(drawShareCanvas);
+            startTicker(drawShareCanvas);
         },
         destroyed: () => {
             stopTicker(drawShareCanvas);
-            changeTips();
         },
     },
 ]);

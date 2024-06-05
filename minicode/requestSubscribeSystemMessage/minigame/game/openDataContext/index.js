@@ -33,8 +33,6 @@ function getDataAndDraw(flag, box) {
             if (!flag) {
                 getInteractUI(res.data, box);
             }
-            else {
-            }
         },
         fail: (res) => {
             console.log('getData => ', res);

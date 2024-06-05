@@ -136,6 +136,17 @@ footerButtonLeft.on('click', () => {
 footerButtonRight.on('click', () => {
     scene.nextScene();
 });
+const canRenderBox = {
+    x: 0,
+    y: 0,
+    width: GAME_WIDTH,
+    height: GAME_HEIGHT - footerHeight - 20 * pixelRatio,
+};
+const updateCanRenderBox = () => {
+    const lastNode = sceneTips.layoutBox;
+    canRenderBox.y = lastNode.originalAbsoluteY + lastNode.height;
+    canRenderBox.height = GAME_HEIGHT - footerHeight - 20 * pixelRatio - canRenderBox.y;
+};
 const sceneChanged = () => {
     sceneTitle.value = scene.currentScene.title;
     sceneExplanation.text = scene.currentScene.explanation || '';
@@ -149,19 +160,27 @@ const sceneChanged = () => {
         button.on('click', config.callback);
         sceneButtons?.appendChild(button);
     });
+    layout.ticker.next(() => {
+        updateCanRenderBox();
+        scene.currentScene.exposed?.();
+    });
 };
 scene.on('sceneChanged', sceneChanged);
 const changeTips = (value) => {
     if (!value) {
         sceneTips.text = '';
-        return;
     }
-    if (typeof value === 'string') {
-        value = [value];
+    else {
+        if (typeof value === 'string') {
+            value = [value];
+        }
+        sceneTips.text = value.map((it) => `<p>${it}</p>`).join('');
     }
-    sceneTips.text = value.map((it) => `<p>${it}</p>`).join('');
+    layout.ticker.next(() => {
+        updateCanRenderBox();
+    });
 };
-const updateShareCanvas = (callback) => {
+const startTicker = (callback) => {
     layout.ticker.add(callback);
 };
 const stopTicker = (callback) => {
@@ -170,4 +189,4 @@ const stopTicker = (callback) => {
 wx.onShow(() => {
     layout.repaint();
 });
-export { screenWidth, screenHeight, changeTips, canvas, pixelRatio, updateShareCanvas, stopTicker, };
+export { screenWidth, screenHeight, changeTips, canvas, pixelRatio, startTicker, stopTicker, canRenderBox, };
