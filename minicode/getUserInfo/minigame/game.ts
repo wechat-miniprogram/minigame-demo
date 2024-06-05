@@ -67,7 +67,7 @@ scene.init([
     },
     destroyed: () => {
       hideUserInfoButton();
-      changeTips('');
+      changeTips();
     },
   },
   {
@@ -94,7 +94,7 @@ scene.init([
     },
     destroyed: () => {
       hideUserInfoButton();
-      changeTips('');
+      changeTips();
     },
   },
   {
@@ -117,7 +117,7 @@ scene.init([
         });
     },
     destroyed: () => {
-      changeTips('');
+      changeTips();
     },
   },
   {
@@ -148,7 +148,7 @@ scene.init([
       }
     },
     destroyed: () => {
-      changeTips('');
+      changeTips();
     },
   },
   {
@@ -169,7 +169,7 @@ scene.init([
       {
         name: '保存图片',
         callback: () => {
-          changeTips('');
+          changeTips();
           // 这个示例并不会成功保存图片，只是演示授权逻辑
           wx.saveImageToPhotosAlbum({
             filePath: '',
@@ -189,7 +189,7 @@ scene.init([
       },
     ],
     destroyed: () => {
-      changeTips('');
+      changeTips();
     },
   },
   {
@@ -233,7 +233,7 @@ scene.init([
       },
     ],
     destroyed: () => {
-      changeTips('');
+      changeTips();
     },
   },
 ]);
