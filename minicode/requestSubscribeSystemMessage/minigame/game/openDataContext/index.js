@@ -1,13 +1,13 @@
-import { getInteractUI } from './interact';
+import { getInteractUI } from './friend_interactive';
 wx.onMessage((res) => {
     if (res.command === 'renderFriend') {
         setData(100);
         getDataAndDraw(false, res.box);
     }
-    else {
-        setData(res.score);
-        getDataAndDraw(true, res.box);
-    }
+    //  else {
+    //   setData(res.score);
+    //   getDataAndDraw(true, res.box);
+    // }
 });
 function setData(score) {
     wx.setUserCloudStorage({
@@ -32,8 +32,6 @@ function getDataAndDraw(flag, box) {
             console.log('getData => ', res);
             if (!flag) {
                 getInteractUI(res.data, box);
-            }
-            else {
             }
         },
         fail: (res) => {

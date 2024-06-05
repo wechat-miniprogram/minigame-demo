@@ -29,7 +29,7 @@ const template = `
       <view id="scene_buttons">
         <text class="button scene_button"></text>
       </view>
-      <text class="text tips"></text>
+      <richtext class="text tips"></richtext>
     </view>
     <view class="footer">
       <text class="button footer_button footer_button_left" value="上一场景"></text>
@@ -81,7 +81,8 @@ const style = {
         lineHeight: 20 * pixelRatio,
     },
     tips: {
-        fontSize: 18 * pixelRatio,
+        width: GAME_WIDTH - 40 * pixelRatio,
+        fontSize: 14 * pixelRatio,
         lineHeight: 20 * pixelRatio,
         marginTop: 20 * pixelRatio,
         opacity: 0.6,
@@ -127,27 +128,74 @@ const sceneExplanation = layout.getElementsByClassName('explanation')[0];
 const sceneButtons = layout.getElementById('scene_buttons');
 const sceneButton = layout.getElementsByClassName('scene_button')[0];
 const sceneTips = layout.getElementsByClassName('tips')[0];
-footerButtonLeft.on('click', () => {
-    scene.preScene();
-});
-footerButtonRight.on('click', () => {
-    scene.nextScene();
-});
-const sceneChanged = () => {
-    sceneTitle.value = scene.currentScene.title;
-    sceneExplanation.text = scene.currentScene.explanation || '';
-    sceneButtons?.children.forEach((it) => {
-        sceneButtons.removeChild(it);
+footerButtonLeft &&
+    footerButtonLeft.on('click', () => {
+        scene.preScene();
     });
+footerButtonRight &&
+    footerButtonRight.on('click', () => {
+        scene.nextScene();
+    });
+const canRenderBox = {
+    x: 0,
+    y: 0,
+    width: GAME_WIDTH,
+    height: GAME_HEIGHT - footerHeight - 20 * pixelRatio,
+};
+const updateCanRenderBox = () => {
+    if (sceneTips) {
+        const lastNode = sceneTips.layoutBox;
+        canRenderBox.y = lastNode.originalAbsoluteY + lastNode.height;
+        canRenderBox.height =
+            GAME_HEIGHT - footerHeight - 20 * pixelRatio - canRenderBox.y;
+    }
+};
+const sceneChanged = () => {
+    sceneTitle && (sceneTitle.value = scene.currentScene.title);
+    sceneExplanation &&
+        (sceneExplanation.text = scene.currentScene.explanation || '');
+    const len = sceneButtons?.children.length || 0;
+    for (let i = len - 1; i >= 0; i--) {
+        sceneButtons?.removeChild(sceneButtons?.children[i]);
+    }
     scene.currentScene.buttons?.forEach((config) => {
-        const button = layout.cloneNode(sceneButton);
-        button.value = config.name;
-        button.on('click', config.callback);
-        sceneButtons?.appendChild(button);
+        if (sceneButton) {
+            const button = layout.cloneNode(sceneButton);
+            button.value = config.name;
+            button.on('click', config.callback);
+            sceneButtons?.appendChild(button);
+        }
+    });
+    layout.ticker.next(() => {
+        updateCanRenderBox();
+        scene.currentScene.exposed?.();
     });
 };
 scene.on('sceneChanged', sceneChanged);
 const changeTips = (value) => {
-    sceneTips.value = value;
+    if (!sceneTips) {
+        return;
+    }
+    if (!value) {
+        sceneTips.text = '';
+    }
+    else {
+        if (typeof value === 'string') {
+            value = [value];
+        }
+        sceneTips.text = value.map((it) => `<p>${it}</p>`).join('');
+    }
+    layout.ticker.next(() => {
+        updateCanRenderBox();
+    });
 };
-export { screenWidth, screenHeight, changeTips };
+const startTicker = (callback) => {
+    layout.ticker.add(callback);
+};
+const stopTicker = (callback) => {
+    layout.ticker.remove(callback);
+};
+wx.onShow(() => {
+    layout.repaint();
+});
+export { screenWidth, screenHeight, changeTips, canvas, pixelRatio, startTicker, stopTicker, canRenderBox, };

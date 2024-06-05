@@ -1,5 +1,6 @@
 {
     "deviceOrientation": "portrait",
+    "iOSHighPerformance": true,
     "openDataContext": "openDataContext",
     "modifyFriendInteractiveStorageTemplates": [
       {

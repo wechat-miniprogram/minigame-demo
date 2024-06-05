@@ -6,7 +6,7 @@ import {
   scope,
   AuthKey,
 } from './auth';
-import { screenWidth, screenHeight, changeTips } from './common/render';
+import { canvas, screenWidth, screenHeight, changeTips } from './common/render';
 import { scene } from './common/scene';
 
 // 当前的坐标位置只是示例，实际使用时需要根据具体需求对齐游戏UI
@@ -67,7 +67,7 @@ scene.init([
     },
     destroyed: () => {
       hideUserInfoButton();
-      changeTips('');
+      changeTips();
     },
   },
   {
@@ -94,7 +94,7 @@ scene.init([
     },
     destroyed: () => {
       hideUserInfoButton();
-      changeTips('');
+      changeTips();
     },
   },
   {
@@ -117,7 +117,7 @@ scene.init([
         });
     },
     destroyed: () => {
-      changeTips('');
+      changeTips();
     },
   },
   {
@@ -148,7 +148,7 @@ scene.init([
       }
     },
     destroyed: () => {
-      changeTips('');
+      changeTips();
     },
   },
   {
@@ -169,7 +169,7 @@ scene.init([
       {
         name: '保存图片',
         callback: () => {
-          changeTips('');
+          changeTips();
           // 这个示例并不会成功保存图片，只是演示授权逻辑
           wx.saveImageToPhotosAlbum({
             filePath: '',
@@ -189,7 +189,51 @@ scene.init([
       },
     ],
     destroyed: () => {
-      changeTips('');
+      changeTips();
+    },
+  },
+  {
+    title: '分享海报场景',
+    explanation: `<p>当前场景是为了模拟需要<strong>分享海报的场景</strong></p>
+      <br>
+      <p>主要演示<span style="color: green">wx.showShareImageMenu</span>的使用</p>
+      <br>
+      <p>如果调试面板提示<span style="color: red">please go to mp to announce your privacy usage</span>，请先在mp端更新隐私协议”</p>
+      <p>如果调试面板提示<span style="color: red">please go to mp open official popup</span>，请先在mp端设置隐私授权弹窗”</p>
+      <p>如果调试面板提示<span style="color: red">api scope is not declared in the privacy agreement</span>，请先在mp端配置《用户隐私保护指引》中增加“相册（仅写入）权限”</p>
+      <p>如果没有展示转发按钮，则检查账号是否异常，更换一个正式运行的appid再尝试</p>`,
+    exposed: () => {},
+    buttons: [
+      {
+        name: '分享海报',
+        callback: () => {
+          const tempFilePath = canvas.toTempFilePathSync({
+            x: 0,
+            y: 0,
+            width: 300,
+            height: 300,
+          });
+          wx.showShareImageMenu({
+            path: tempFilePath,
+            style: 'v2',
+            needShowEntrance: 'true',
+            success: (res) => {
+              console.log('showShareImageMenu success:', res);
+            },
+            fail: (res) => {
+              console.log('showShareImageMenu fail:', res);
+              if (res.errMsg.indexOf('auth') > -1) {
+                getAuth(AuthKey.writePhotosAlbum);
+              } else {
+                changeTips('其他失败场景');
+              }
+            },
+          });
+        },
+      },
+    ],
+    destroyed: () => {
+      changeTips();
     },
   },
 ]);

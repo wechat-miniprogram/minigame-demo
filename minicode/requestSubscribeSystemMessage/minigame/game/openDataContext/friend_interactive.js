@@ -11,17 +11,17 @@ export function getInteractUI(data, box) {
       <view class="content">
         <image src="${user.avatarUrl}" class="img"></image>
         <text class="name" value="${user.nickname}"></text>
-        <view class="interactFooter">
-          <text class="interactButton" value="赠送" data-id="${user.openid}"></text> 
-        </view>
+        <text class="interactButton" data-id="${user.openid}" value="赠送"></text>
       </view>
     `;
     });
     template += `</scrollview>`;
     const style = {
         container: {
-            width: box.width * pixelRatio,
-            height: box.height * pixelRatio,
+            left: box.x,
+            top: box.y,
+            width: box.width,
+            height: box.height,
             backgroundColor: '#F8F8FF',
         },
         content: {
@@ -36,33 +36,37 @@ export function getInteractUI(data, box) {
         },
         name: {
             color: 'black',
-            fontSize: 20 * pixelRatio,
-            marginLeft: 100 * pixelRatio,
+            fontSize: 16 * pixelRatio,
+            marginLeft: 8 * pixelRatio,
             width: 60 * pixelRatio,
-            marginTop: 5 * pixelRatio,
-            textAlign: 'center',
-        },
-        interactFooter: {
-            backgroundColor: '#07c160',
-            width: 70 * pixelRatio,
-            height: 30 * pixelRatio,
-            marginLeft: (box.width - 300) * pixelRatio,
-            borderRadius: 15,
+            marginTop: 4 * pixelRatio,
         },
         interactButton: {
-            marginLeft: 20 * pixelRatio,
-            color: 'white',
-            verticalAlign: 'bottom',
-            lineHeight: 14 * pixelRatio,
-            textAlign: 'center',
-            marginTop: 8 * pixelRatio,
+            position: 'absolute',
+            right: 8 * pixelRatio,
+            backgroundColor: '#07c160',
+            width: 60 * pixelRatio,
+            height: 30 * pixelRatio,
+            lineHeight: 30 * pixelRatio,
             fontSize: 14 * pixelRatio,
+            marginLeft: (box.width - 300) * pixelRatio,
+            borderRadius: 12,
+            color: 'white',
+            textAlign: 'center',
+            ':active': {
+                backgroundColor: '#05944a',
+            },
         },
     };
     const sharedCanvas = wx.getSharedCanvas();
     const ctx = sharedCanvas.getContext('2d');
     layout.init(template, style);
-    layout.updateViewPort(box);
+    layout.updateViewPort({
+        x: 0,
+        y: 0,
+        width: box.width / pixelRatio,
+        height: box.height / pixelRatio,
+    });
     layout.layout(ctx);
     bindEvent();
 }

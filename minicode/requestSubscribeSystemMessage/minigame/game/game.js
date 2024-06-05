@@ -1,20 +1,15 @@
-import { screenWidth, changeTips, canvas, pixelRatio, changeExtraTips, updateShareCanvas, stopTicker, } from './common/render';
+import { screenWidth, screenHeight, changeTips, canvas, pixelRatio, startTicker, stopTicker, canRenderBox, } from './common/render';
 import { scene } from './common/scene';
 import { getSubscribeSystemMessage, getWxFriendInteraction, SYSTEM_MESSAGE, } from './message';
 // 获取开放数据域的canvas并设置长宽
 const openDataContext = wx.getOpenDataContext();
 const sharedCanvas = openDataContext.canvas;
 sharedCanvas.width = screenWidth * pixelRatio;
-sharedCanvas.height = 400 * pixelRatio;
+sharedCanvas.height = screenHeight * pixelRatio;
+const context = canvas.getContext('2d');
 // 每帧绘制sharecanvas
 function drawShareCanvas() {
-    const sharedCanvas = openDataContext.canvas;
-    const context = canvas.getContext('2d');
-    context.drawImage(sharedCanvas, 0, 200 * pixelRatio);
-}
-// 改变场景内的tip
-function changeSceneTip() {
-    changeTipText();
+    context.drawImage(sharedCanvas, 0, 0);
 }
 scene.init([
     {
@@ -26,11 +21,6 @@ scene.init([
       <br>
       <span style="color: green">wx.requestSubscribeSystemMessage</span>｜
       <span style="color: green">wx.modifyFriendInteractiveStorage</span>｜
-      <span style="color: green">wx.authorize</span>｜
-      <span style="color: green">wx.getOpenDataContext</span>｜
-      <span style="color: green">wx.getSetting</span>｜
-      <span style="color: green">wx.onMessage</span>｜
-      <span style="color: green">wx.setUserCloudStorage</span>
       <span style="color: green">wx.getFriendCloudStorage</span>
       </p>
       <br>
@@ -48,13 +38,12 @@ scene.init([
       <p>该场景通过使用<span style="color: green"> wx.getSetting </span> 判断用户是否已授权（必须两个权限都已授权才能使用后续功能）</p>`,
         exposed: () => {
             changeTipText();
-            wx.onShow(changeSceneTip);
+            wx.onShow(changeTipText);
         },
         buttons: [
             {
                 name: '获取朋友权限',
                 callback: () => {
-                    changeTips('');
                     getWxFriendInteraction().then(() => {
                         changeTipText();
                     });
@@ -63,7 +52,6 @@ scene.init([
             {
                 name: '获取消息权限',
                 callback: () => {
-                    changeExtraTips('');
                     getSubscribeSystemMessage().then(() => {
                         changeTipText();
                     });
@@ -71,57 +59,48 @@ scene.init([
             },
         ],
         destroyed: () => {
-            changeTips('');
-            changeExtraTips('');
-            wx.offShow(changeSceneTip);
+            changeTips();
+            wx.offShow(changeTipText);
         },
     },
     {
         title: '好友互动场景',
         explanation: `<p>当前场景是为了模拟真实游戏过程中，需要与好友互动的情况</p>
-      <p>代码可以查看<span style="color: blue">openDataContext</span></p>
-      <br>
-      <br>`,
+      <p>演示<span style="color: green">wx.modifyFriendInteractiveStorage</span>和<span style="color: green">wx.getFriendCloudStorage</span>的使用</p>
+      <p>代码可以查看<span style="color: blue">openDataContext</span></p>`,
         exposed: () => {
             openDataContext.postMessage({
                 command: 'renderFriend',
-                box: {
-                    x: 0,
-                    y: 200,
-                    width: screenWidth,
-                    height: 400,
-                },
+                box: canRenderBox,
             });
-            updateShareCanvas(drawShareCanvas);
+            startTicker(drawShareCanvas);
         },
         destroyed: () => {
             stopTicker(drawShareCanvas);
-            changeTips('');
-            changeExtraTips('');
         },
     },
 ]);
 function changeTipText() {
+    changeTips();
     wx.getSetting({
         withSubscriptions: true,
         success(res) {
-            let tip = '';
+            let friendTip = '';
             if (res.authSetting['scope.WxFriendInteraction']) {
-                tip += '微信朋友信息：已授权使用';
+                friendTip = '微信朋友信息：已授权使用';
             }
             else {
-                tip += '微信朋友信息：未授权使用，拒绝后可在设置页打开';
+                friendTip = '微信朋友信息：未授权使用，拒绝后可在设置页打开';
             }
             const SYS_MSG_TYPE_INTERACTIVE = res.subscriptionsSetting.itemSettings?.SYS_MSG_TYPE_INTERACTIVE;
-            let tips = SYSTEM_MESSAGE[SYS_MSG_TYPE_INTERACTIVE];
-            if (tips === undefined || tips === null) {
-                tips = '发生错误，麻烦联系官方说明情况';
+            let systemTip = SYSTEM_MESSAGE[SYS_MSG_TYPE_INTERACTIVE];
+            if (systemTip === undefined || systemTip === null) {
+                systemTip = '发生错误，麻烦联系官方说明情况';
             }
             if (res.subscriptionsSetting.mainSwitch === false) {
-                tips = '系统消息订阅权限：需打开主开关设置';
+                systemTip = '系统消息订阅权限：需打开主开关设置';
             }
-            changeTips(tip);
-            changeExtraTips(tips);
+            changeTips([friendTip, systemTip]);
         },
     });
 }

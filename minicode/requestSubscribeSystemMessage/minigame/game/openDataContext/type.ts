@@ -3,6 +3,7 @@ interface UserData {
   nickname: string;
   openid: string;
 }
+
 interface Box {
   x: number;
   y: number;
