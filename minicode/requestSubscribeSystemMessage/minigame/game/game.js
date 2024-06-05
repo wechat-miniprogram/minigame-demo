@@ -21,11 +21,6 @@ scene.init([
       <br>
       <span style="color: green">wx.requestSubscribeSystemMessage</span>｜
       <span style="color: green">wx.modifyFriendInteractiveStorage</span>｜
-      <span style="color: green">wx.authorize</span>｜
-      <span style="color: green">wx.getOpenDataContext</span>｜
-      <span style="color: green">wx.getSetting</span>｜
-      <span style="color: green">wx.onMessage</span>｜
-      <span style="color: green">wx.setUserCloudStorage</span>
       <span style="color: green">wx.getFriendCloudStorage</span>
       </p>
       <br>
