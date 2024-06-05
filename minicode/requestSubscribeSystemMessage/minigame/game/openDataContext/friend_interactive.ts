@@ -1,5 +1,9 @@
-import layout, { IStyle } from './libs/engine';
+import layout, { Layout } from './libs/engine';
 import { UserData, Box } from './type';
+
+type Element = InstanceType<Layout['Element']>;
+type IStyle = Element['style'];
+
 // 设置游戏画布尺寸
 const info = wx.getSystemInfoSync();
 const { pixelRatio } = info;
@@ -18,7 +22,7 @@ export function getInteractUI(data: Array<UserData>, box: Box) {
     `;
   });
   template += `</scrollview>`;
-  const style = {
+  const style: Record<string, IStyle> = {
     container: {
       left: box.x,
       top: box.y,
@@ -59,7 +63,7 @@ export function getInteractUI(data: Array<UserData>, box: Box) {
         backgroundColor: '#05944a',
       },
     },
-  } as Record<string, IStyle>;
+  };
 
   const sharedCanvas = wx.getSharedCanvas();
   const ctx = sharedCanvas.getContext('2d');
