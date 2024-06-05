@@ -1165,8 +1165,6 @@ var computeLayout = (function() {
       };
     }
 
-    // console.log('fillNodes', node.layout, node.isDirty, node)
-
     if (!node.style) {
       node.style = {};
     }
@@ -2231,7 +2229,6 @@ var computeLayout = (function() {
       node.lastLayout.parentMaxWidth === parentMaxWidth &&
       node.lastLayout.direction === direction;
 
-    // console.log('skipLayout', skipLayout, node)
     if (skipLayout) {
       node.layout.width = node.lastLayout.width;
       node.layout.height = node.lastLayout.height;

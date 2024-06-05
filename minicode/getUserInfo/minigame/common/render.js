@@ -128,12 +128,14 @@ const sceneExplanation = layout.getElementsByClassName('explanation')[0];
 const sceneButtons = layout.getElementById('scene_buttons');
 const sceneButton = layout.getElementsByClassName('scene_button')[0];
 const sceneTips = layout.getElementsByClassName('tips')[0];
-footerButtonLeft.on('click', () => {
-    scene.preScene();
-});
-footerButtonRight.on('click', () => {
-    scene.nextScene();
-});
+footerButtonLeft &&
+    footerButtonLeft.on('click', () => {
+        scene.preScene();
+    });
+footerButtonRight &&
+    footerButtonRight.on('click', () => {
+        scene.nextScene();
+    });
 const canRenderBox = {
     x: 0,
     y: 0,
@@ -141,23 +143,28 @@ const canRenderBox = {
     height: GAME_HEIGHT - footerHeight - 20 * pixelRatio,
 };
 const updateCanRenderBox = () => {
-    const lastNode = sceneTips.layoutBox;
-    canRenderBox.y = lastNode.originalAbsoluteY + lastNode.height;
-    canRenderBox.height =
-        GAME_HEIGHT - footerHeight - 20 * pixelRatio - canRenderBox.y;
+    if (sceneTips) {
+        const lastNode = sceneTips.layoutBox;
+        canRenderBox.y = lastNode.originalAbsoluteY + lastNode.height;
+        canRenderBox.height =
+            GAME_HEIGHT - footerHeight - 20 * pixelRatio - canRenderBox.y;
+    }
 };
 const sceneChanged = () => {
-    sceneTitle.value = scene.currentScene.title;
-    sceneExplanation.text = scene.currentScene.explanation || '';
+    sceneTitle && (sceneTitle.value = scene.currentScene.title);
+    sceneExplanation &&
+        (sceneExplanation.text = scene.currentScene.explanation || '');
     const len = sceneButtons?.children.length || 0;
     for (let i = len - 1; i >= 0; i--) {
         sceneButtons?.removeChild(sceneButtons?.children[i]);
     }
     scene.currentScene.buttons?.forEach((config) => {
-        const button = layout.cloneNode(sceneButton);
-        button.value = config.name;
-        button.on('click', config.callback);
-        sceneButtons?.appendChild(button);
+        if (sceneButton) {
+            const button = layout.cloneNode(sceneButton);
+            button.value = config.name;
+            button.on('click', config.callback);
+            sceneButtons?.appendChild(button);
+        }
     });
     layout.ticker.next(() => {
         updateCanRenderBox();
@@ -166,6 +173,9 @@ const sceneChanged = () => {
 };
 scene.on('sceneChanged', sceneChanged);
 const changeTips = (value) => {
+    if (!sceneTips) {
+        return;
+    }
     if (!value) {
         sceneTips.text = '';
     }
