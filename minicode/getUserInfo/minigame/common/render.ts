@@ -118,9 +118,7 @@ const style = {
 } as Record<string, IStyle>;
 
 layout.use(richText);
-layout.init(template, style, function (a) {
-  return a;
-});
+layout.init(template, style);
 
 layout.updateViewPort({
   x: 0,
@@ -153,6 +151,21 @@ footerButtonLeft.on('click', () => {
 footerButtonRight.on('click', () => {
   scene.nextScene();
 });
+
+const canRenderBox = {
+  x: 0,
+  y: 0,
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT - footerHeight - 20 * pixelRatio,
+};
+
+const updateCanRenderBox = () => {
+  const lastNode = (sceneTips as any).layoutBox;
+  canRenderBox.y = lastNode.originalAbsoluteY + lastNode.height;
+  canRenderBox.height =
+    GAME_HEIGHT - footerHeight - 20 * pixelRatio - canRenderBox.y;
+};
+
 const sceneChanged = () => {
   sceneTitle.value = scene.currentScene.title;
   sceneExplanation.text = scene.currentScene.explanation || '';
@@ -166,21 +179,28 @@ const sceneChanged = () => {
     button.on('click', config.callback);
     sceneButtons?.appendChild(button);
   });
+  layout.ticker.next(() => {
+    updateCanRenderBox();
+    scene.currentScene.exposed?.();
+  });
 };
 scene.on('sceneChanged', sceneChanged);
 
 const changeTips = (value?: string[] | string) => {
   if (!value) {
     sceneTips.text = '';
-    return;
+  } else {
+    if (typeof value === 'string') {
+      value = [value];
+    }
+    sceneTips.text = value.map((it) => `<p>${it}</p>`).join('');
   }
-  if (typeof value === 'string') {
-    value = [value];
-  }
-  sceneTips.text = value.map((it) => `<p>${it}</p>`).join('');
+  layout.ticker.next(() => {
+    updateCanRenderBox();
+  });
 };
 
-const updateShareCanvas = (callback: () => void) => {
+const startTicker = (callback: () => void) => {
   layout.ticker.add(callback);
 };
 
@@ -198,6 +218,7 @@ export {
   changeTips,
   canvas,
   pixelRatio,
-  updateShareCanvas,
+  startTicker,
   stopTicker,
+  canRenderBox,
 };

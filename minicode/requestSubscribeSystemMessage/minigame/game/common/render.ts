@@ -118,9 +118,7 @@ const style = {
 } as Record<string, IStyle>;
 
 layout.use(richText);
-layout.init(template, style, function (a) {
-  return a;
-});
+layout.init(template, style);
 
 layout.updateViewPort({
   x: 0,

@@ -113,9 +113,7 @@ const style = {
     },
 };
 layout.use(richText);
-layout.init(template, style, function (a) {
-    return a;
-});
+layout.init(template, style);
 layout.updateViewPort({
     x: 0,
     y: 0,
