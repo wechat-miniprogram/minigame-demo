@@ -31,7 +31,7 @@ module.exports = function (PIXI, app, obj, titleName, buttonName, tip, config, m
         screen = p_texture(PIXI, {
             width: obj.width,
             height: obj.height * 0.8 - (title.height + title.y + 78 * PIXI.ratio),
-            y: title.height + title.y + 78 * PIXI.ratio,
+            y: title.height + title.y,
             x: 0
         });
 
@@ -43,12 +43,22 @@ module.exports = function (PIXI, app, obj, titleName, buttonName, tip, config, m
     
         component.onReady(app, config, mode);
 
+        desc = p_text(PIXI, {
+            content: tip,
+            fontSize: 26 * PIXI.ratio,
+            fill: 0x576b95,
+            y: title.height + title.y + 100 + component.data.height,
+            relative_middle: {
+                containerWidth: obj.width
+            }
+        });
+
         if(buttonName != null){
             let button = p_button(PIXI, {
                 width: 370 * PIXI.ratio,
                 height: 80 * PIXI.ratio,
                 fill: 0x07c160,
-                y: title.height + title.y + 100 + component.data.height,
+                y: title.height + title.y + 200 + component.data.height,
             });
 
             let buttonText =   p_text(PIXI, {
@@ -78,16 +88,6 @@ module.exports = function (PIXI, app, obj, titleName, buttonName, tip, config, m
 
             scroll.myAddChildFn(button);
         }
-
-        desc = p_text(PIXI, {
-            content: tip,
-            fontSize: 26 * PIXI.ratio,
-            fill: 0x576b95,
-            y: title.height + title.y + 150 + component.data.height  + 80 * PIXI.ratio,
-            relative_middle: {
-                containerWidth: obj.width
-            }
-        });
 
 
 
