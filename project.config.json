@@ -39,7 +39,7 @@
   },
   "compileType": "game",
   "libVersion": "2.21.0",
-  "appid": "wxb44e2096fe38c90d",
+  "appid": "wx7a727ff7d940bb3f",
   "projectname": "miniGameExample",
   "miniprogramRoot": "miniprogram/",
   "cloudfunctionRoot": "cloudfunction/",
