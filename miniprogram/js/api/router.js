@@ -402,6 +402,11 @@ const signIn = [
             name: "createGroupTask",
             path: "chatTool/groupTask/createGroupTask/index",
           },
+          {
+            label: "群任务详情",
+            name: "groupTaskDetail",
+            path: "chatTool/groupTask/groupTaskDetail/index",
+          },
         ],
       },
       {
