@@ -40,6 +40,7 @@ module.exports = function (PIXI, app, obj) {
         wx.showToast({
           title: "发布成功",
         });
+        obj.onCreateTaskSuccess();
         drawFn();
         break;
     }

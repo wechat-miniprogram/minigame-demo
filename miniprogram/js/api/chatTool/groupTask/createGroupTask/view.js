@@ -3,6 +3,7 @@ import {
   p_text,
   p_box,
   p_img,
+  p_line,
 } from "../../../../libs/component/index";
 import fixedTemplate from "../../../../libs/template/fixed";
 
@@ -98,16 +99,16 @@ module.exports = function (PIXI, app, obj, callBack) {
     },
   });
   // 分割线
-  let splitLine = p_box(PIXI, {
-    parentWidth: BtnBox.width,
-    width: contentWidth,
-    height: r(0.5),
-    y: allParticipantBtn.y + allParticipantBtn.height,
-    background: {
-      color: 0xe1e1e1,
-      alpha: 1,
+  let splitLine = p_line(
+    PIXI,
+    {
+      width: r(0.5),
+      color: 0x000000,
+      alpha: 0.1,
     },
-  });
+    [0, allParticipantBtn.y + allParticipantBtn.height],
+    [contentWidth, 0]
+  );
   // 指定参与人
   let specifyParticipantBtn = p_button(PIXI, {
     y: allParticipantBtn.y + allParticipantBtn.height + splitLine.height,
@@ -146,6 +147,15 @@ module.exports = function (PIXI, app, obj, callBack) {
   BtnBox.addChild(specifyParticipantBtn);
 
   allParticipantBtn.addChild(allParticipantBtnText);
+  allParticipantBtn.addChild(allParticipantSelectedImg);
+  wx.updateShareMenu({
+    withShareTicket: true,
+    isUpdatableMessage: true,
+    activityId: "xxx", // TODO: 需要从后端获取
+    useForChatTool: true,
+    chooseType: 2,
+    templateInfo: "2A84254B945674A2F88CE4970782C402795EB607", // 模板id常量
+  });
   allParticipantBtn.onClickFn(() => {
     callBack({
       status: "allParticipant",
@@ -195,7 +205,7 @@ module.exports = function (PIXI, app, obj, callBack) {
     callBack({
       status: "publish",
       drawFn() {
-        console.log("publish");
+        window.router.navigateBack();
       },
     });
   });
