@@ -389,6 +389,18 @@ const signIn = [
             label: "群任务",
             name: "groupTask",
             path: "chatTool/groupTask/index",
+            children: [
+              // {
+              //   label: "创建群任务",
+              //   name: "createGroupTask",
+              //   path: "chatTool/groupTask/createGroupTask/index",
+              // },
+            ],
+          },
+          {
+            label: "创建群任务",
+            name: "createGroupTask",
+            path: "chatTool/groupTask/createGroupTask/index",
           },
         ],
       },

@@ -15,29 +15,28 @@ module.exports = function (PIXI, app, obj, callBack) {
         api_name: "群任务",
       }
     );
-  /**** taskBox ****/
+  /**** taskList ****/
   // 任务列表
-  let taskBox = p_box(PIXI, {
+  let taskListBox = p_box(PIXI, {
     width: r(322),
     height: r(413),
     y: r(171),
     radius: r(8),
   });
   // 任务列表提示
-  let taskBoxPrompt = p_text(PIXI, {
+  let taskListBoxPrompt = p_text(PIXI, {
     content: "当前暂无任务",
     fontSize: r(17),
     fill: "rgba(0,0,0,0.5)",
     align: "center",
-    lineHeight: r(24),
     relative_middle: {
-      containerWidth: taskBox.width,
-      containerHeight: taskBox.height,
+      containerWidth: taskListBox.width,
+      containerHeight: taskListBox.height,
     },
   });
 
-  taskBox.addChild(taskBoxPrompt);
-  /**** taskBox ****/
+  taskListBox.addChild(taskListBoxPrompt);
+  /**** taskList ****/
 
   /**** createGroupTaskBtn ****/
   let createGroupTaskBtn = p_button(PIXI, {
@@ -62,15 +61,15 @@ module.exports = function (PIXI, app, obj, callBack) {
       status: "openChatTool",
       drawFn() {
         createGroupTaskBtnText.turnText("创建新任务");
-        // window.router.delPage();
         setTimeout(() => {
-          window.router.navigateTo("showModal", {});
+          window.router.navigateTo("createGroupTask", {});
         }, 0);
       },
     });
   });
   /**** createGroupTaskBtn ****/
 
+  // 一定要加这个reload, 否则会报错
   window.router.getNowPage((page) => {
     page.reload = function () {
       logo.reloadImg({ src: "images/logo.png" });
@@ -82,7 +81,7 @@ module.exports = function (PIXI, app, obj, callBack) {
     title,
     api_name,
     underline,
-    taskBox,
+    taskListBox,
     createGroupTaskBtn,
     logo,
     logoName
