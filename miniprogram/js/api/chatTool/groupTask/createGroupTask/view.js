@@ -148,14 +148,6 @@ module.exports = function (PIXI, app, obj, callBack) {
 
   allParticipantBtn.addChild(allParticipantBtnText);
   allParticipantBtn.addChild(allParticipantSelectedImg);
-  wx.updateShareMenu({
-    withShareTicket: true,
-    isUpdatableMessage: true,
-    activityId: "xxx", // TODO: 需要从后端获取
-    useForChatTool: true,
-    chooseType: 2,
-    templateInfo: "2A84254B945674A2F88CE4970782C402795EB607", // 模板id常量
-  });
   allParticipantBtn.onClickFn(() => {
     callBack({
       status: "allParticipant",

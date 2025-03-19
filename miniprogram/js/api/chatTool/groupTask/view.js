@@ -1,5 +1,13 @@
-import { p_button, p_text, p_box, p_line } from "../../../libs/component/index";
+import {
+  p_button,
+  p_text,
+  p_box,
+  p_scroll,
+  p_line,
+} from "../../../libs/component/index";
 import fixedTemplate from "../../../libs/template/fixed";
+
+let taskInfoList = [];
 
 module.exports = function (PIXI, app, obj, callBack) {
   const r = (value) => {
@@ -25,6 +33,12 @@ module.exports = function (PIXI, app, obj, callBack) {
     y: r(171),
     radius: r(8),
   });
+  let taskList = p_scroll(PIXI, {
+    width: contentWidth,
+    height: r(413),
+    x: 0,
+    y: 0,
+  });
   // 任务列表提示
   let taskListBoxPrompt = p_text(PIXI, {
     content: "当前暂无任务",
@@ -36,64 +50,58 @@ module.exports = function (PIXI, app, obj, callBack) {
       containerHeight: taskListBox.height,
     },
   });
-  function taskButton(parent, lastButton) {
-    return p_button(PIXI, {
-      parentWidth: parent.width,
+  function taskButton() {
+    let buttonNumber = taskInfoList.length;
+    let button = p_button(PIXI, {
+      parentWidth: taskList.width,
       width: contentWidth,
-      color: 0xffffff,
-      y: lastButton ? lastButton.y + lastButton.height : 0,
+      alpha: 0,
+      y: buttonNumber * r(63 + 1),
       height: r(63 + 1),
-      radius: r(8),
     });
-  }
-  function taskButtonText(container) {
-    return p_text(PIXI, {
-      content: "群任务",
-      x: r(16),
-      fontSize: r(17),
-      fill: 0x000000,
-      align: "center",
-      relative_middle: {
-        containerHeight: container.height,
-      },
-    });
-  }
-  function taskButtonArrow(container) {
-    return p_text(PIXI, {
-      content: " >",
-      x: r(291),
-      fontSize: r(17),
-      fill: 0x000000,
-      align: "center",
-      relative_middle: {
-        containerHeight: container.height,
-      },
-    });
-  }
-  function taskButtonLine() {
-    return p_line(
-      PIXI,
-      {
-        width: r(1),
-        color: 0x000000,
-        alpha: 0.1,
-      },
-      [r(16), r(63.5)],
-      [r(290), 0]
+    button.myAddChildFn(
+      p_text(PIXI, {
+        content: "群任务" + taskInfoList[buttonNumber]?.groupName,
+        x: r(16),
+        fontSize: r(17),
+        fill: 0x000000,
+        align: "center",
+        relative_middle: {
+          containerHeight: button.height,
+        },
+      }),
+      p_text(PIXI, {
+        content: " >",
+        x: r(291),
+        fontSize: r(17),
+        fill: 0x000000,
+        align: "center",
+        relative_middle: {
+          containerHeight: button.height,
+        },
+      }),
+      p_line(
+        PIXI,
+        {
+          width: r(1),
+          color: 0x000000,
+          alpha: 0.1,
+        },
+        [r(16), r(63.5)],
+        [r(290), 0]
+      )
     );
-  }
-  let taskButtonList = [];
-  let previousButton = null;
-
-  for (let i = 0; i < 5; i++) {
-    let button = taskButton(taskListBox, previousButton);
-    button.addChild(taskButtonText(button));
-    button.addChild(taskButtonArrow(button));
-    button.addChild(taskButtonLine());
-    taskButtonList.push(button);
-    previousButton = button;
+    button.onClickFn(() => {
+      window.router.navigateTo("groupTaskDetail", {
+        activityId: taskInfoList[buttonNumber]?.activityId,
+        groupName: taskInfoList[buttonNumber]?.groupName,
+        isAuthor: true,
+      });
+    });
+    return button;
   }
 
+  taskListBox.addChild(taskList);
   taskListBox.addChild(taskListBoxPrompt);
   /**** taskList ****/
 
@@ -120,7 +128,10 @@ module.exports = function (PIXI, app, obj, callBack) {
       status: "openChatTool",
       drawFn() {
         setTimeout(() => {
-          window.router.navigateTo("createGroupTask", { onCreateTaskSuccess });
+          window.router.navigateTo("createGroupTask", {
+            onCreateTaskSuccess,
+            onDeleteTask,
+          });
         }, 0);
       },
     });
@@ -146,10 +157,21 @@ module.exports = function (PIXI, app, obj, callBack) {
   );
   app.stage.addChild(container);
 
-  function onCreateTaskSuccess() {
+  function onCreateTaskSuccess(activityId, groupName) {
     createGroupTaskBtnText.turnText("创建新任务");
-    taskListBox.addChild(taskButtonList[obj.taskButtonCount - 1]);
     taskListBox.removeChild(taskListBoxPrompt);
+    taskList.myAddChildFn(taskButton());
+    taskInfoList.push({ activityId, groupName });
+  }
+
+  function onDeleteTask(activityId) {
+    taskList.myRemoveChildrenFn(
+      taskInfoList.length - 1,
+      taskInfoList.length - 1
+    ); // 删除最后一个按钮
+    taskInfoList = taskInfoList.filter(
+      (task) => task.activityId !== activityId
+    );
   }
 
   return container;
