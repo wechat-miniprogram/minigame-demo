@@ -1,10 +1,10 @@
-import "./js/libs/weapp-adapter";
-import * as PIXI from "./js/libs/pixi.min";
+import './js/libs/weapp-adapter';
+import * as PIXI from './js/libs/pixi.min';
 //import * as PIXI from './js/libs/pixi';
-import pmgressBar from "./js/libs/pmgressBar";
-import share from "./js/libs/share";
+import pmgressBar from './js/libs/pmgressBar';
+import share from './js/libs/share';
 
-wx.cloud.init({ env: "example-69d3b" });
+wx.cloud.init({ env: 'example-69d3b' });
 
 wx.updateShareMenu({
   withShareTicket: true,
@@ -34,6 +34,8 @@ PIXI.interaction.InteractionManager.prototype.mapPositionToPoint = (
   point.y = y * pixelRatio;
 };
 
+// TMP
+// eslint-disable-next-line no-import-assign
 PIXI.ratio = (windowWidth * pixelRatio) / 750;
 
 let loadingFn = pmgressBar(PIXI, app, {
@@ -43,29 +45,29 @@ let loadingFn = pmgressBar(PIXI, app, {
 
 PIXI.loader
   .add([
-    "images/official.png",
-    "images/APIicon.png",
-    "images/storage-fileSystem.png",
-    "images/rendering.png",
-    "images/network.png",
-    "images/media.png",
-    "images/worker.png",
-    "images/star.png",
-    "images/customerService.png",
-    "images/facility.png",
-    "images/right.png",
-    "images/abilityOpen.png",
-    "images/interface.png",
-    "images/AD.png",
-    "images/recommend.png",
-    "images/visionkit-ability.png",
-    "images/chatTool.png",
+    'images/official.png',
+    'images/APIicon.png',
+    'images/storage-fileSystem.png',
+    'images/rendering.png',
+    'images/network.png',
+    'images/media.png',
+    'images/worker.png',
+    'images/star.png',
+    'images/customerService.png',
+    'images/facility.png',
+    'images/right.png',
+    'images/abilityOpen.png',
+    'images/interface.png',
+    'images/AD.png',
+    'images/recommend.png',
+    'images/visionkit-ability.png',
+    'images/chatTool.png',
   ])
   .load(() => {
     wx.loadSubpackage({
-      name: "api",
+      name: 'api',
       success() {
-        let router = require("./js/api/game"),
+        let router = require('./js/api/game'),
           options = wx.getLaunchOptionsSync(),
           query = options.query;
 
@@ -83,7 +85,7 @@ PIXI.loader
 
         wx.onShow((res) => {
           let query = Object.assign(window.query || {}, res.query),
-            noNavigateToRequired = !["VoIPChat"].includes(query.pathName);
+            noNavigateToRequired = !['VoIPChat'].includes(query.pathName);
 
           if (Object.keys(query).length && query.pathName) {
             noNavigateToRequired && window.router.navigateBack();

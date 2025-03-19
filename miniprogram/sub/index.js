@@ -2,9 +2,7 @@ import style from 'render/style.js';
 import tplFn from 'render/tplfn.js';
 
 const Layout = requirePlugin('Layout').default;
-import {
-  showLoading
-} from './loading';
+import { showLoading } from './loading';
 
 GameGlobal.Layout = Layout;
 
@@ -16,19 +14,14 @@ import {
   findSelf,
   injectSelfToList,
   replaceSelfDataInList,
-  gameServer
+  gameServer,
 } from 'data.js';
 
-import {
-  interactive,
-  directional,
-  refreshDirected
-} from './pushMessage.js';
+import { interactive, directional, refreshDirected } from './pushMessage.js';
 
-import {
-  bindCheckHandoffEnabled,
-  bindStartHandoff
-} from './PCHandoff.js';
+import { bindCheckHandoffEnabled, bindStartHandoff } from './PCHandoff.js';
+
+import { renderGroupTaskMembersInfo } from './chatTool/index.js';
 
 let userinfo;
 let selfData;
@@ -48,14 +41,14 @@ function draw(title, data = []) {
       data,
       self: selfData,
       selfIndex,
-      isBillboard
+      isBillboard,
     });
 
   Layout.init(template, style);
   Layout.layout(sharedContext);
 }
 
-function renderData(data, info, title = "排行榜", mock = false, type) {
+function renderData(data, info, title = '排行榜', mock = false, type) {
   data.sort((a, b) => b.score - a.score);
   let find = findSelf(data, info);
   selfData = find.self;
@@ -88,7 +81,6 @@ function renderData(data, info, title = "排行榜", mock = false, type) {
     }
   }
 
-
   draw(title, data, selfData, currentMaxScore, type);
 
   // 关系链互动
@@ -103,15 +95,15 @@ function showGroupRank(shareTicket) {
   if (!userinfo) {
     getUserInfo((info) => {
       userinfo = info;
-      getGroupFriendData(key, shareTicket, data => {
-        console.log(key, shareTicket, data)
-        renderData(data, info, "群排行", false);
+      getGroupFriendData(key, shareTicket, (data) => {
+        console.log(key, shareTicket, data);
+        renderData(data, info, '群排行', false);
       });
     });
   } else {
-    getGroupFriendData(key, shareTicket, data => {
+    getGroupFriendData(key, shareTicket, (data) => {
       console.log(key, shareTicket, data);
-      renderData(data, userinfo, "群排行", false);
+      renderData(data, userinfo, '群排行', false);
     });
   }
 }
@@ -125,12 +117,12 @@ function showFriendRank(type) {
     getUserInfo((info) => {
       userinfo = info;
       getFriendData(key, (data) => {
-        renderData(data, info, "排行榜", false, type);
+        renderData(data, info, '排行榜', false, type);
       });
     });
   } else {
     getFriendData(key, (data) => {
-      renderData(data, userinfo, "排行榜", false, type);
+      renderData(data, userinfo, '排行榜', false, type);
     });
   }
 }
@@ -147,8 +139,8 @@ function showPotentialFriendList() {
 
       directional(res.list);
       refreshDirected(showPotentialFriendList);
-    }
-  })
+    },
+  });
 }
 
 // 显示当前用户所有好友的在线状态
@@ -158,8 +150,8 @@ function showFriendsOnlineStatus() {
       res.list = res.list.slice(0, 20);
       res.list.onLine = true;
       draw('我的好友', res.list);
-    }
-  })
+    },
+  });
 }
 
 // PC 接力
@@ -169,50 +161,50 @@ function runPCHandoff() {
     button: true,
     isEnabled: true,
     className: 'queryLoginStatus',
-    content: '查询是否支持接力'
+    content: '查询是否支持接力',
   });
 
   // 绑定“查询是否支持接力按钮”的点击事件
   bindCheckHandoffEnabled({
     className: 'queryLoginStatus',
     success(res) {
-      console.log('bindCheckHandoffEnabled', res)
-      if (!res.isEnabled) return draw('', {
-        button: true,
-        isEnabled: res.isEnabled,
-        content: '请下载/登录最新版windows电脑端微信'
-      });
+      console.log('bindCheckHandoffEnabled', res);
+      if (!res.isEnabled)
+        return draw('', {
+          button: true,
+          isEnabled: res.isEnabled,
+          content: '请下载/登录最新版windows电脑端微信',
+        });
 
       // 绘制“在电脑上打开按钮”
       draw('', {
         button: true,
         isEnabled: res.isEnabled,
         className: 'startHandoff',
-        content: '在电脑上打开'
+        content: '在电脑上打开',
       });
 
       // 绑定“在电脑上打开按钮”的点击事件
       bindStartHandoff({
-        className: 'startHandoff'
-      })
+        className: 'startHandoff',
+      });
     },
     fail(res) {
-      console.warn('bindCheckHandoffEnabled', res)
+      console.warn('bindCheckHandoffEnabled', res);
       // 错误处理
-      let {
-        errCode
-      } = res;
-      if (typeof errCode === 'number') errCode = {
-        0: '未知错误',
-        1: '用户取消',
-        2: '电脑微信未登录',
-        3: '电脑微信版本过低'
-      } [errCode]
+      let { errCode } = res;
+      if (typeof errCode === 'number')
+        errCode = {
+          0: '未知错误',
+          1: '用户取消',
+          2: '电脑微信未登录',
+          3: '电脑微信版本过低',
+        }[errCode];
 
       draw('', {
         button: true,
         isEnabled: false,
-        content: `不支持：${errCode || '权限没有开通'}`
+        content: `不支持：${errCode || '权限没有开通'}`,
       });
     },
   });
@@ -220,9 +212,10 @@ function runPCHandoff() {
 
 function init() {
   currentMaxScore = 0;
+  console.log('!!! init');
 
-  wx.onMessage(data => {
-
+  wx.onMessage((data) => {
+    console.log('!!! opendata onMessage', data);
     switch (data.event) {
       case 'updateViewPort':
         Layout.updateViewPort(data.box);
@@ -255,8 +248,10 @@ function init() {
       case 'close':
         Layout.clearAll();
         break;
+      case 'renderGroupTaskMembersInfo':
+        renderGroupTaskMembersInfo(data);
+        break;
     }
-
   });
 }
 

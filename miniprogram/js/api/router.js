@@ -1,394 +1,394 @@
 const signIn = [
   {
-    label: "小游戏示例",
-    name: "APIentry",
-    path: "APIentry/index",
-    tabBar: "index",
+    label: '小游戏示例',
+    name: 'APIentry',
+    path: 'APIentry/index',
+    tabBar: 'index',
     children: [
       {
-        label: "开放能力",
-        name: "abilityOpen",
+        label: '开放能力',
+        name: 'abilityOpen',
         children: [
           {
-            label: "开放数据域",
-            name: "openDataContext",
-            path: "abilityOpen/openDataContext/index",
+            label: '开放数据域',
+            name: 'openDataContext',
+            path: 'abilityOpen/openDataContext/index',
           },
           {
-            label: "关系链互动",
-            name: "relationalChaininteractiveData",
-            path: "abilityOpen/relationalChaininteractiveData/index",
+            label: '关系链互动',
+            name: 'relationalChaininteractiveData',
+            path: 'abilityOpen/relationalChaininteractiveData/index',
           },
           {
-            label: "定向分享",
-            name: "directedSharing",
-            path: "abilityOpen/directedSharing/index",
+            label: '定向分享',
+            name: 'directedSharing',
+            path: 'abilityOpen/directedSharing/index',
           },
           {
-            label: "一次性订阅",
-            name: "requestSubscribeMessage",
-            path: "abilityOpen/requestSubscribeMessage/index",
+            label: '一次性订阅',
+            name: 'requestSubscribeMessage',
+            path: 'abilityOpen/requestSubscribeMessage/index',
           },
           {
-            label: "永久订阅",
-            name: "requestSubscribeSystemMessage",
-            path: "abilityOpen/requestSubscribeSystemMessage/index",
+            label: '永久订阅',
+            name: 'requestSubscribeSystemMessage',
+            path: 'abilityOpen/requestSubscribeSystemMessage/index',
           },
           {
-            label: "好友对战（帧同步）",
-            name: "getGameServerManager",
+            label: '好友对战（帧同步）',
+            name: 'getGameServerManager',
             path() {
               // gitHub地址 https://github.com/wechat-miniprogram/minigame-lockstep-demo
-              wx.navigateToMiniProgram({ appId: "wx4f4a4549a1069d03" });
+              wx.navigateToMiniProgram({ appId: 'wx4f4a4549a1069d03' });
             },
           },
           {
-            label: "对局匹配",
-            name: "matchedPattern",
-            path: "abilityOpen/matchedPattern/index",
+            label: '对局匹配',
+            name: 'matchedPattern',
+            path: 'abilityOpen/matchedPattern/index',
           },
           {
-            label: "游戏对局回放",
-            name: "getGameRecorder",
-            path: "abilityOpen/getGameRecorder/index",
+            label: '游戏对局回放',
+            name: 'getGameRecorder',
+            path: 'abilityOpen/getGameRecorder/index',
           },
           {
-            label: "实时语音",
-            name: "VoIPChat",
-            path: "abilityOpen/VoIPChat/index",
+            label: '实时语音',
+            name: 'VoIPChat',
+            path: 'abilityOpen/VoIPChat/index',
           },
           {
-            label: "微信登录",
-            name: "login",
-            path: "abilityOpen/login/index",
+            label: '微信登录',
+            name: 'login',
+            path: 'abilityOpen/login/index',
           },
           {
-            label: "获取用户信息",
-            name: "getUserInfo",
-            path: "abilityOpen/getUserInfo/index",
+            label: '获取用户信息',
+            name: 'getUserInfo',
+            path: 'abilityOpen/getUserInfo/index',
           },
           {
-            label: "转发",
-            name: "onShareAppMessage",
-            path: "abilityOpen/onShareAppMessage/index",
+            label: '转发',
+            name: 'onShareAppMessage',
+            path: 'abilityOpen/onShareAppMessage/index',
           },
           {
-            label: "主动转发",
-            name: "shareAppMessage",
-            path: "abilityOpen/shareAppMessage/index",
+            label: '主动转发',
+            name: 'shareAppMessage',
+            path: 'abilityOpen/shareAppMessage/index',
           },
           {
-            label: "PC接力",
-            name: "startHandoff",
-            path: "abilityOpen/startHandoff/index",
+            label: 'PC接力',
+            name: 'startHandoff',
+            path: 'abilityOpen/startHandoff/index',
           },
           {
-            label: "二维码",
-            name: "appletCode",
-            path: "abilityOpen/appletCode/index",
+            label: '二维码',
+            name: 'appletCode',
+            path: 'abilityOpen/appletCode/index',
           },
           {
-            label: "UnionID",
-            name: "UnionID",
-            path: "abilityOpen/UnionID/index",
+            label: 'UnionID',
+            name: 'UnionID',
+            path: 'abilityOpen/UnionID/index',
           },
           {
-            label: "游戏圈",
-            name: "createGameClubButton",
-            path: "abilityOpen/createGameClubButton/index",
+            label: '游戏圈',
+            name: 'createGameClubButton',
+            path: 'abilityOpen/createGameClubButton/index',
           },
           {
-            label: "客服服务",
-            name: "customerService",
-            path: "abilityOpen/customerService/index",
+            label: '客服服务',
+            name: 'customerService',
+            path: 'abilityOpen/customerService/index',
           },
           {
-            label: "设置",
-            name: "setting",
-            path: "abilityOpen/setting/index",
-          },
-        ],
-      },
-      {
-        label: "界面",
-        name: "interface",
-        children: [
-          {
-            label: "显示操作菜单",
-            name: "showActionSheet",
-            path: "interface/showActionSheet/index",
-          },
-          {
-            label: "显示模态弹窗",
-            name: "showModal",
-            path: "interface/showModal/index",
-          },
-          {
-            label: "显示消息提示框",
-            name: "showToast",
-            path: "interface/showToast/index",
+            label: '设置',
+            name: 'setting',
+            path: 'abilityOpen/setting/index',
           },
         ],
       },
       {
-        label: "渲染",
-        name: "rendering",
+        label: '界面',
+        name: 'interface',
         children: [
           {
-            label: "画布内容转换为URL",
-            name: "toDataURL",
-            path: "rendering/toDataURL/index",
+            label: '显示操作菜单',
+            name: 'showActionSheet',
+            path: 'interface/showActionSheet/index',
           },
           {
-            label: "截图生成一个临时文件",
-            name: "toTempFilePath",
-            path: "rendering/toTempFilePath/index",
+            label: '显示模态弹窗',
+            name: 'showModal',
+            path: 'interface/showModal/index',
           },
           {
-            label: "渲染帧率",
-            name: "setPreferredFramesPerSecond",
-            path: "rendering/setPreferredFramesPerSecond/index",
-          },
-          {
-            label: "加载自定义字体文件",
-            name: "loadFont",
-            path: "rendering/loadFont/index",
-          },
-          {
-            label: "创建一个图片对象",
-            name: "createImage",
-            path: "rendering/createImage/index",
+            label: '显示消息提示框',
+            name: 'showToast',
+            path: 'interface/showToast/index',
           },
         ],
       },
       {
-        label: "设备",
-        name: "facility",
+        label: '渲染',
+        name: 'rendering',
         children: [
           {
-            label: "更新",
-            name: "getUpdateManager",
-            path: "facility/getUpdateManager/index",
+            label: '画布内容转换为URL',
+            name: 'toDataURL',
+            path: 'rendering/toDataURL/index',
           },
           {
-            label: "振动",
-            name: "vibrate",
-            path: "facility/vibrate/index",
+            label: '截图生成一个临时文件',
+            name: 'toTempFilePath',
+            path: 'rendering/toTempFilePath/index',
           },
           {
-            label: "剪贴板",
-            name: "clipboardData",
-            path: "facility/clipboardData/index",
+            label: '渲染帧率',
+            name: 'setPreferredFramesPerSecond',
+            path: 'rendering/setPreferredFramesPerSecond/index',
           },
           {
-            label: "获取当前位置",
-            name: "getLocation",
-            path: "facility/getLocation/index",
+            label: '加载自定义字体文件',
+            name: 'loadFont',
+            path: 'rendering/loadFont/index',
           },
           {
-            label: "获取手机网络状态",
-            name: "getNetworkType",
-            path: "facility/getNetworkType/index",
-          },
-          {
-            label: "监听手机网络变化",
-            name: "onNetworkStatusChange",
-            path: "facility/onNetworkStatusChange/index",
-          },
-          {
-            label: "获取设备电量状态",
-            name: "getBatteryInfo",
-            path: "facility/getBatteryInfo/index",
-          },
-          {
-            label: "屏幕亮度",
-            name: "screenBrightness",
-            path: "facility/screenBrightness/index",
-          },
-          {
-            label: "设置保持常亮状态",
-            name: "setKeepScreenOn",
-            path: "facility/setKeepScreenOn/index",
-          },
-          {
-            label: "监听罗盘数据",
-            name: "compassChange",
-            path: "facility/compassChange/index",
-          },
-          {
-            label: "重力感应",
-            name: "accelerometerChange",
-            path: "facility/accelerometerChange/index",
-          },
-          {
-            label: "监听设备方向",
-            name: "deviceMotionChange",
-            path: "facility/deviceMotionChange/index",
-          },
-          {
-            label: "监听陀螺仪数据",
-            name: "gyroscopeChange",
-            path: "facility/gyroscopeChange/index",
-          },
-          {
-            label: "横竖屏切换",
-            name: "deviceOrientationChange",
-            path: "facility/deviceOrientationChange/index",
+            label: '创建一个图片对象',
+            name: 'createImage',
+            path: 'rendering/createImage/index',
           },
         ],
       },
       {
-        label: "网络",
-        name: "network",
+        label: '设备',
+        name: 'facility',
         children: [
           {
-            label: "发送请求",
-            name: "request",
-            path: "network/request/index",
+            label: '更新',
+            name: 'getUpdateManager',
+            path: 'facility/getUpdateManager/index',
           },
           {
-            label: "下载文件",
-            name: "downloadFile",
-            path: "network/downloadFile/index",
+            label: '振动',
+            name: 'vibrate',
+            path: 'facility/vibrate/index',
           },
           {
-            label: "上传文件",
-            name: "uploadFile",
-            path: "network/uploadFile/index",
+            label: '剪贴板',
+            name: 'clipboardData',
+            path: 'facility/clipboardData/index',
           },
           {
-            label: "WebSocket",
-            name: "WebSocket",
-            path: "network/webSocket/index",
+            label: '获取当前位置',
+            name: 'getLocation',
+            path: 'facility/getLocation/index',
+          },
+          {
+            label: '获取手机网络状态',
+            name: 'getNetworkType',
+            path: 'facility/getNetworkType/index',
+          },
+          {
+            label: '监听手机网络变化',
+            name: 'onNetworkStatusChange',
+            path: 'facility/onNetworkStatusChange/index',
+          },
+          {
+            label: '获取设备电量状态',
+            name: 'getBatteryInfo',
+            path: 'facility/getBatteryInfo/index',
+          },
+          {
+            label: '屏幕亮度',
+            name: 'screenBrightness',
+            path: 'facility/screenBrightness/index',
+          },
+          {
+            label: '设置保持常亮状态',
+            name: 'setKeepScreenOn',
+            path: 'facility/setKeepScreenOn/index',
+          },
+          {
+            label: '监听罗盘数据',
+            name: 'compassChange',
+            path: 'facility/compassChange/index',
+          },
+          {
+            label: '重力感应',
+            name: 'accelerometerChange',
+            path: 'facility/accelerometerChange/index',
+          },
+          {
+            label: '监听设备方向',
+            name: 'deviceMotionChange',
+            path: 'facility/deviceMotionChange/index',
+          },
+          {
+            label: '监听陀螺仪数据',
+            name: 'gyroscopeChange',
+            path: 'facility/gyroscopeChange/index',
+          },
+          {
+            label: '横竖屏切换',
+            name: 'deviceOrientationChange',
+            path: 'facility/deviceOrientationChange/index',
           },
         ],
       },
       {
-        label: "媒体",
-        name: "media",
+        label: '网络',
+        name: 'network',
         children: [
           {
-            label: "视频",
-            name: "video",
-            path: "media/video/index",
+            label: '发送请求',
+            name: 'request',
+            path: 'network/request/index',
           },
           {
-            label: "音频",
-            name: "voiceFrequency",
-            path: "media/voiceFrequency/index",
+            label: '下载文件',
+            name: 'downloadFile',
+            path: 'network/downloadFile/index',
           },
           {
-            label: "录音",
-            name: "voice",
-            path: "media/voice/index",
+            label: '上传文件',
+            name: 'uploadFile',
+            path: 'network/uploadFile/index',
           },
           {
-            label: "相机",
-            name: "camera",
-            path: "media/camera/index",
+            label: 'WebSocket',
+            name: 'WebSocket',
+            path: 'network/webSocket/index',
           },
         ],
       },
       {
-        label: "数据与文件系统",
-        name: "storage-fileSystem",
+        label: '媒体',
+        name: 'media',
         children: [
           {
-            label: "创建/删除目录",
-            name: "dir",
-            path: "storage-fileSystem/dir/index",
+            label: '视频',
+            name: 'video',
+            path: 'media/video/index',
           },
           {
-            label: "判断文件/目录是否存在",
-            name: "access",
-            path: "storage-fileSystem/access/index",
+            label: '音频',
+            name: 'voiceFrequency',
+            path: 'media/voiceFrequency/index',
           },
           {
-            label: "重命名",
-            name: "rename",
-            path: "storage-fileSystem/rename/index",
+            label: '录音',
+            name: 'voice',
+            path: 'media/voice/index',
           },
           {
-            label: "保存临时文件到本地",
-            name: "saveFile",
-            path: "storage-fileSystem/saveFile/index",
-          },
-          {
-            label: "查看目录内容",
-            name: "readdir",
-            path: "storage-fileSystem/readdir/index",
-          },
-          {
-            label: "操作文件",
-            name: "operationFile",
-            path: "storage-fileSystem/operationFile/index",
-          },
-          {
-            label: "获取文件信息",
-            name: "getFileInfo",
-            path: "storage-fileSystem/getFileInfo/index",
-          },
-          {
-            label: "判断文件路径是否是目录",
-            name: "stat",
-            path: "storage-fileSystem/stat/index",
-          },
-          {
-            label: "解压文件",
-            name: "unzip",
-            path: "storage-fileSystem/unzip/index",
-          },
-          {
-            label: "本地缓存文件",
-            name: "savedFile",
-            path: "storage-fileSystem/savedFile/index",
-          },
-          {
-            label: "数据缓存",
-            name: "storage",
-            path: "storage-fileSystem/storage/index",
+            label: '相机',
+            name: 'camera',
+            path: 'media/camera/index',
           },
         ],
       },
       {
-        label: "多线程",
-        name: "worker",
-        path: "worker/index",
-      },
-      {
-        label: "广告组件",
-        name: "AD",
+        label: '数据与文件系统',
+        name: 'storage-fileSystem',
         children: [
           {
-            label: "banner 广告",
-            name: "createBannerAd",
-            path: "AD/createBannerAd/index",
+            label: '创建/删除目录',
+            name: 'dir',
+            path: 'storage-fileSystem/dir/index',
           },
           {
-            label: "grid 广告",
-            name: "createGridAd",
-            path: "AD/createGridAd/index",
+            label: '判断文件/目录是否存在',
+            name: 'access',
+            path: 'storage-fileSystem/access/index',
           },
           {
-            label: "激励视频广告",
-            name: "createRewardedVideoAd",
-            path: "AD/createRewardedVideoAd/index",
+            label: '重命名',
+            name: 'rename',
+            path: 'storage-fileSystem/rename/index',
           },
           {
-            label: "插屏广告",
-            name: "createInterstitialAd",
-            path: "AD/createInterstitialAd/index",
+            label: '保存临时文件到本地',
+            name: 'saveFile',
+            path: 'storage-fileSystem/saveFile/index',
+          },
+          {
+            label: '查看目录内容',
+            name: 'readdir',
+            path: 'storage-fileSystem/readdir/index',
+          },
+          {
+            label: '操作文件',
+            name: 'operationFile',
+            path: 'storage-fileSystem/operationFile/index',
+          },
+          {
+            label: '获取文件信息',
+            name: 'getFileInfo',
+            path: 'storage-fileSystem/getFileInfo/index',
+          },
+          {
+            label: '判断文件路径是否是目录',
+            name: 'stat',
+            path: 'storage-fileSystem/stat/index',
+          },
+          {
+            label: '解压文件',
+            name: 'unzip',
+            path: 'storage-fileSystem/unzip/index',
+          },
+          {
+            label: '本地缓存文件',
+            name: 'savedFile',
+            path: 'storage-fileSystem/savedFile/index',
+          },
+          {
+            label: '数据缓存',
+            name: 'storage',
+            path: 'storage-fileSystem/storage/index',
           },
         ],
       },
       {
-        label: "聊天工具",
-        name: "chatTool",
+        label: '多线程',
+        name: 'worker',
+        path: 'worker/index',
+      },
+      {
+        label: '广告组件',
+        name: 'AD',
         children: [
           {
-            label: "群任务",
-            name: "groupTask",
-            path: "chatTool/groupTask/index",
+            label: 'banner 广告',
+            name: 'createBannerAd',
+            path: 'AD/createBannerAd/index',
+          },
+          {
+            label: 'grid 广告',
+            name: 'createGridAd',
+            path: 'AD/createGridAd/index',
+          },
+          {
+            label: '激励视频广告',
+            name: 'createRewardedVideoAd',
+            path: 'AD/createRewardedVideoAd/index',
+          },
+          {
+            label: '插屏广告',
+            name: 'createInterstitialAd',
+            path: 'AD/createInterstitialAd/index',
+          },
+        ],
+      },
+      {
+        label: '聊天工具',
+        name: 'chatTool',
+        children: [
+          {
+            label: '群任务',
+            name: 'groupTask',
+            path: 'chatTool/groupTask/index',
             children: [
               // {
               //   label: "创建群任务",
@@ -398,61 +398,61 @@ const signIn = [
             ],
           },
           {
-            label: "创建群任务",
-            name: "createGroupTask",
-            path: "chatTool/groupTask/createGroupTask/index",
+            label: '创建群任务',
+            name: 'createGroupTask',
+            path: 'chatTool/groupTask/createGroupTask/index',
           },
           {
-            label: "群任务详情",
-            name: "groupTaskDetail",
-            path: "chatTool/groupTask/groupTaskDetail/index",
-          },
-        ],
-      },
-      {
-        label: "推荐组件",
-        name: "recommend",
-        children: [
-          {
-            label: "小游戏推荐banner",
-            name: "createGameBanner",
-            path: "recommend/createGameBanner/index",
-          },
-          {
-            label: "小游戏推荐弹窗",
-            name: "createGamePortal",
-            path: "recommend/createGamePortal/index",
-          },
-          {
-            label: "小游戏推荐icon",
-            name: "createGameIcon",
-            path: "recommend/createGameIcon/index",
+            label: '群任务详情',
+            name: 'groupTaskDetail',
+            path: 'chatTool/groupTask/groupTaskDetail/index',
           },
         ],
       },
       {
-        label: "VisionKit视觉能力",
-        name: "visionkit-ability",
+        label: '推荐组件',
+        name: 'recommend',
         children: [
           {
-            label: "VisionKit基础",
-            name: "visionkit-basic",
-            path: "AR/visionkit-basic/index",
+            label: '小游戏推荐banner',
+            name: 'createGameBanner',
+            path: 'recommend/createGameBanner/index',
           },
           {
-            label: "VisionKit基础-v2",
-            name: "visionkit-basic-v2",
-            path: "AR/visionkit-basic-v2/index",
+            label: '小游戏推荐弹窗',
+            name: 'createGamePortal',
+            path: 'recommend/createGamePortal/index',
           },
           {
-            label: "水平面AR",
-            name: "plane-ar",
-            path: "AR/plane-ar/index",
+            label: '小游戏推荐icon',
+            name: 'createGameIcon',
+            path: 'recommend/createGameIcon/index',
+          },
+        ],
+      },
+      {
+        label: 'VisionKit视觉能力',
+        name: 'visionkit-ability',
+        children: [
+          {
+            label: 'VisionKit基础',
+            name: 'visionkit-basic',
+            path: 'AR/visionkit-basic/index',
           },
           {
-            label: "人脸识别",
-            name: "face-detect",
-            path: "AR/face-detect/index",
+            label: 'VisionKit基础-v2',
+            name: 'visionkit-basic-v2',
+            path: 'AR/visionkit-basic-v2/index',
+          },
+          {
+            label: '水平面AR',
+            name: 'plane-ar',
+            path: 'AR/plane-ar/index',
+          },
+          {
+            label: '人脸识别',
+            name: 'face-detect',
+            path: 'AR/face-detect/index',
           },
         ],
       },
@@ -491,13 +491,13 @@ function router(PIXI, app, parameter) {
   }
 
   window.router = new (function () {
-    this.treeView = ["APIentry"];
+    this.treeView = ['APIentry'];
     this.navigateTo = function (newPage, query, res) {
       let lastOne = this.treeView.length - 1,
         name = this.treeView[lastOne];
       if (name === newPage) return;
 
-      if (typeof treePage[newPage].path === "function")
+      if (typeof treePage[newPage].path === 'function')
         return treePage[newPage].path();
 
       this.treeView.push(newPage);
@@ -516,12 +516,12 @@ function router(PIXI, app, parameter) {
         treePage[name].page.visible = false;
         treePage[newPage].page.visible = true;
       } catch (e) {
-        console.error("!!! 功能错误:", e);
+        console.error('!!! 功能错误:', e);
         this.treeView.pop();
         wx.showModal({
-          content: "你的微信版本过低，无法演示该功能！",
+          content: '你的微信版本过低，无法演示该功能！',
           showCancel: false,
-          confirmColor: "#02BB00",
+          confirmColor: '#02BB00',
         });
       }
     };
@@ -530,7 +530,7 @@ function router(PIXI, app, parameter) {
 
       if (!treePage[this.getNowPageName()].reload) {
         this.delPage();
-        treePage[this.getNowPageName()].reload();
+        treePage[this.getNowPageName()].reload?.();
         return;
       }
 
