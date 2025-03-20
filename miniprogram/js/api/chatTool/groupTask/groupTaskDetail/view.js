@@ -1,7 +1,6 @@
-"use strict";
-const { p_button, p_text, p_box, p_img, p_line, p_scroll, } = require("../../../../libs/component/index");
-const fixedTemplate = require("../../../../libs/template/fixed");
-module.exports = function (PIXI, app, obj, callBack) {
+import { p_button, p_text, p_box, p_img, p_line, p_scroll, } from "../../../../libs/component/index";
+import fixedTemplate from "../../../../libs/template/fixed";
+export default function (PIXI, app, obj, callBack) {
     const r = (value) => {
         return PIXI.ratio * value * 2; // 尚不清楚这个2哪里来
     };
@@ -210,4 +209,5 @@ module.exports = function (PIXI, app, obj, callBack) {
     container.addChild(goBack, title, api_name, underline, taskTitleText, taskDetailText, endTaskBtn, shareBtn, participantBox, logo, logoName);
     app.stage.addChild(container);
     return container;
-};
+}
+;

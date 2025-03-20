@@ -1,8 +1,6 @@
-"use strict";
-const view = require("./view");
+import view from "./view";
 module.exports = function (PIXI, app, obj) {
     let activityId = '';
-    let i = 0;
     function updateAllParticipantShareMenu() {
         wx.updateShareMenu({
             withShareTicket: true,
@@ -101,13 +99,12 @@ module.exports = function (PIXI, app, obj) {
                 wx.selectGroupMembers({
                     success: (res) => {
                         console.log('!!! selectGroupMembers success', res);
-                        const members = res?.members || [];
-                        let openDataContext = wx.getOpenDataContext();
-                        console.log('!!! openDataContext', openDataContext);
-                        openDataContext.postMessage({
-                            event: 'renderGroupTaskMembersInfo',
-                            members,
-                        });
+                        // const members = res?.members || [];
+                        // let openDataContext = wx.getOpenDataContext();
+                        // openDataContext.postMessage({
+                        //   event: 'renderGroupTaskMembersInfo',
+                        //   members,
+                        // });
                         updateSpecifyParticipantShareMenu(res.members);
                         drawFn(res.members.length);
                     },
@@ -129,7 +126,7 @@ module.exports = function (PIXI, app, obj) {
                     path: '?pathName=groupTaskDetail&activityId=' + activityId,
                     success: (res) => {
                         console.log('!!! shareAppMessageToGroup success', res);
-                        obj.onCreateTaskSuccess(activityId, ++i);
+                        obj.onCreateTaskSuccess(activityId, '示例', []);
                         drawFn();
                     },
                     fail: (err) => {

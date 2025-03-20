@@ -1,4 +1,4 @@
-const view = require("./view");
+import view from "./view";
 
 module.exports = function (PIXI: any, app: any, obj: any) {
   return view(PIXI, app, obj, (data: any) => {

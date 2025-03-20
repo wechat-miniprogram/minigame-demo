@@ -1,5 +1,4 @@
-"use strict";
-const view = require("./view");
+import view from "./view";
 module.exports = function (PIXI, app, obj) {
     const { activityId, groupName } = obj;
     return view(PIXI, app, obj, (data) => {

@@ -1,8 +1,9 @@
-const view = require("./view");
+import view from "./view";
 
-module.exports = function (PIXI: any, app: any, obj: any) {
+module.exports = function (PIXI: any, app: any, obj: {
+  onCreateTaskSuccess: (activityId: string, groupName: string, participantOpenGIDList: string[]) => void
+}) {
   let activityId = '';
-  let i = 0;
   function updateAllParticipantShareMenu() {
     wx.updateShareMenu({
       withShareTicket: true,
@@ -104,13 +105,12 @@ module.exports = function (PIXI: any, app: any, obj: any) {
         wx.selectGroupMembers({
           success: (res: any) => {
             console.log('!!! selectGroupMembers success', res);
-            const members = res?.members || [];
-            let openDataContext = wx.getOpenDataContext();
-            console.log('!!! openDataContext', openDataContext);
-            openDataContext.postMessage({
-              event: 'renderGroupTaskMembersInfo',
-              members,
-            });
+            // const members = res?.members || [];
+            // let openDataContext = wx.getOpenDataContext();
+            // openDataContext.postMessage({
+            //   event: 'renderGroupTaskMembersInfo',
+            //   members,
+            // });
             updateSpecifyParticipantShareMenu(res.members);
             drawFn(res.members.length);
           },
@@ -132,7 +132,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
           path: '?pathName=groupTaskDetail&activityId=' + activityId,
           success: (res: any) => {
             console.log('!!! shareAppMessageToGroup success', res);
-            obj.onCreateTaskSuccess(activityId, ++i);
+            obj.onCreateTaskSuccess(activityId, '示例', []);
             drawFn();
           },
           fail: (err: any) => {

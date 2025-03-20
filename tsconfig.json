@@ -12,6 +12,7 @@
     "forceConsistentCasingInFileNames": true, // 禁止对同一文件使用不同的大小写引用
     "typeRoots": ["./node_modules/@types", "./node_modules/minigame-api-typings/types"],
     "skipLibCheck": true,
+    "noImplicitAny": false
   },
   "include": ["miniprogram"],
   "exclude": ["*.js"]

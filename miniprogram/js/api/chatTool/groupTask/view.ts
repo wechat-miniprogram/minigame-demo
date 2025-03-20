@@ -1,22 +1,16 @@
-const {
+import {
   p_button,
   p_text,
   p_box,
   p_scroll,
   p_line,
-} = require("../../../libs/component/index");
-const fixedTemplate = require("../../../libs/template/fixed");
-
-// 定义接口
-interface TaskInfo {
-  activityId: string;
-  groupName: string;
-}
+} from "../../../libs/component/index";
+import fixedTemplate from "../../../libs/template/fixed";
 
 // 为taskInfoList指定类型
-let taskInfoList: TaskInfo[] = [];
+let taskInfoList: GroupTaskInfo[] = [];
 
-module.exports = function (PIXI: any, app: any, obj: any, callBack: (data: any) => void) {
+export default function (PIXI: any, app: any, obj: any, callBack: (data: any) => void) {
   const r = (value: any) => {
     return PIXI.ratio * value * 2; // 尚不清楚这个2哪里来
   };
@@ -58,7 +52,8 @@ module.exports = function (PIXI: any, app: any, obj: any, callBack: (data: any) 
     },
   });
   function taskButton() {
-    let buttonNumber = taskInfoList.length;
+    let buttonNumber = taskInfoList.length - 1;
+    console.log('!!! taskButton', buttonNumber);
     let button = p_button(PIXI, {
       parentWidth: taskList.width,
       width: contentWidth,
@@ -107,6 +102,16 @@ module.exports = function (PIXI: any, app: any, obj: any, callBack: (data: any) 
       });
     });
     return button;
+  }
+  function reloadButtons() {
+    if (taskInfoList.length === 0) {
+      taskListBox.addChild(taskListBoxPrompt);
+    } else {
+      taskListBox.removeChild(taskListBoxPrompt);
+      for (let i = 0; i < taskInfoList.length; i++) {
+        taskList.myAddChildFn(taskButton());
+      }
+    }
   }
 
   taskListBox.addChild(taskList);
@@ -167,21 +172,23 @@ module.exports = function (PIXI: any, app: any, obj: any, callBack: (data: any) 
   );
   app.stage.addChild(container);
 
-  function onCreateTaskSuccess(activityId: string, groupName: string) {
+  function onCreateTaskSuccess(activityId: string, groupName: string, participantOpenGIDList: string[]) {
+    console.log('!!! onCreateTaskSuccess', activityId, groupName, participantOpenGIDList);
     createGroupTaskBtnText.turnText("创建新任务");
     taskListBox.removeChild(taskListBoxPrompt);
+    taskInfoList.push({ activityId, groupName, participantOpenGIDList });
     taskList.myAddChildFn(taskButton());
-    taskInfoList.push({ activityId, groupName });
   }
 
   function onDeleteTask(activityId: string) {
     taskList.myRemoveChildrenFn(
-      taskInfoList.length - 1,
+      0,
       taskInfoList.length - 1
-    ); // 删除最后一个按钮
+    ); // 删除全部按钮
     taskInfoList = taskInfoList.filter(
       (task) => task.activityId !== activityId
     );
+    reloadButtons();
   }
 
   return container;

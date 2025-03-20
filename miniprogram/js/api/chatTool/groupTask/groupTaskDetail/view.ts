@@ -1,14 +1,14 @@
-const {
+import {
   p_button,
   p_text,
   p_box,
   p_img,
   p_line,
   p_scroll,
-} = require("../../../../libs/component/index");
-const fixedTemplate = require("../../../../libs/template/fixed");
+} from "../../../../libs/component/index";
+import fixedTemplate from "../../../../libs/template/fixed";
 
-module.exports = function (PIXI: any, app: any, obj: any, callBack: (data: any) => void) {
+export default function (PIXI: any, app: any, obj: any, callBack: (data: any) => void) {
   const r = (value: any) => {
     return PIXI.ratio * value * 2; // 尚不清楚这个2哪里来
   };
