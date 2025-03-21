@@ -96,32 +96,30 @@ module.exports = function (PIXI: any, app: any, obj: {
           };
           wx.updateShareMenu({
             ...params,
-            success() {
+            success(res) {
+              console.info("updateShareMenu success: ", res);
               // @ts-ignore 声明未更新临时处理
               wx.shareAppMessageToGroup({
                 title: "群友们，为了星球而战～",
                 path: getGroupTaskDetailPath(activityId),
                 success(res) {
                   console.info("shareAppMessageToGroup success: ", res);
+                  wx.hideLoading({});
+                  activityId = "";
+                  createActivityID(); // 刷新待创建的活动id
                   drawFn();
                 },
                 fail(err) {
                   console.info("shareAppMessageToGroup fail: ", err);
+                  wx.showToast({
+                    title: "分享失败",
+                    icon: "none",
+                  });
                 },
               });
             },
             fail(res) {
               console.info("updateShareMenu fail: ", res);
-              wx.showToast({
-                title: "分享失败",
-                icon: "none",
-              });
-            },
-            complete(res) {
-              wx.hideLoading({});
-              activityId = "";
-              createActivityID(); // 刷新待创建的活动id
-              console.info("updateShareMenu complete: ", res);
             },
           });
         });
