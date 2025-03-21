@@ -1,5 +1,5 @@
 {
-  "name": "setChatToolMsg",
+  "name": "openapi",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "wx-server-sdk": "~3.0.1"
+    "wx-server-sdk": "latest"
   }
 }

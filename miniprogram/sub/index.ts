@@ -26,17 +26,23 @@ let selfIndex = 0;
 
 /********* v2 *********/
 
-import getTipsXML from './openDataContext_v2/render/tpls/tips';
-import getTipsStyle from './openDataContext_v2/render/styles/tips';
-import getFriendRankXML from './openDataContext_v2/render/tpls/groupTaskFriendList';
-import getFriendRankStyle from './openDataContext_v2/render/styles/groupTaskFriendList';
-import { getGroupMembersInfo } from './openDataContext_v2/data/index';
+import getTipsXML from './render/tpls/tips.js';
+import getTipsStyle from './render/styles/tips.js';
+import getGroupTaskFriendListXML from './render/tpls/groupTaskFriendList.js';
+import getGroupTaskFriendListStyle from './render/styles/groupTaskFriendList.js';
+import { getGroupMembersInfo } from './data/index';
 
 const Layout = requirePlugin('Layout').default;
 GameGlobal.Layout = Layout;
+
+const systemInfo = wx.getSystemInfoSync();
+const { screenWidth, screenHeight, pixelRatio } = systemInfo;
+console.log('!!! systemInfo', screenWidth, screenHeight, pixelRatio);
+
 const sharedCanvas = wx.getSharedCanvas();
+sharedCanvas.width = screenWidth * pixelRatio;
+sharedCanvas.height = screenHeight * pixelRatio;
 const sharedContext = sharedCanvas.getContext('2d');
-console.log('!!! sharedCanvas', sharedCanvas, sharedContext);
 
 const MessageType = {
   UPDATE_VIEW_PORT: 'updateViewPort',
@@ -51,79 +57,96 @@ const MessageType = {
   SHOW_FRIENDS_ONLINE_STATUS: 'showFriendsOnlineStatus',
 };
 
+
+function getBoxSize(hasAssigned: Boolean) {
+  if (hasAssigned) {
+    return {
+      left: 16,
+      top: 281,
+      width: 342,
+      height: 215,
+      scale: systemInfo.screenWidth / 375,
+    };
+  } else {
+    return {
+      left: 16,
+      top: 231,
+      width: 343,
+      height: 329,
+      scale: systemInfo.screenWidth / 375,
+    };
+  }
+}
+
 /**
- * 初始化开放域，主要是使得 Layout 能够正确处理跨引擎的事件处理
- * 如果游戏里面有移动开放数据域对应的 RawImage，也需要抛事件过来执行Layout.updateViewPort
+ * 初始化开放域
  */
-const initOpenDataCanvas = async (data: any) => {
-  console.log('!!! initOpenDataCanvas', data);
+const initOpenDataCanvas = async () => {
+  console.log('!!! initOpenDataCanvas');
   Layout.updateViewPort({
-    x: data.x / data.devicePixelRatio,
-    y: data.y / data.devicePixelRatio,
-    width: data.width / data.devicePixelRatio,
-    height: data.height / data.devicePixelRatio,
+    x: 0,
+    y: 0,
+    width: screenWidth,
+    height: screenHeight,
   });
 };
 
-// const { screenWidth, screenHeight } = wx.getSystemInfoSync();
-setTimeout(() => {
-  initOpenDataCanvas({
-    x: 0,
-    y: 0,
-    width: sharedCanvas.width,
-    height: sharedCanvas.height,
-  });
-  // 假设 sharedContext 已经被正确初始化
-  // const size = 50; // 正方形的边长
-  // const x = 100; // 正方形的 x 坐标
-  // const y = 100; // 正方形的 y 坐标
-
-  // // 设置填充颜色
-  // sharedContext.fillStyle = '#FF0000'; // 红色
-
-  // // 绘制正方形
-  // sharedContext.fillRect(x, y, size, size);
-}, 1000);
+initOpenDataCanvas();
 
 
 // 给定 xml 和 style，渲染至 sharedCanvas
 function LayoutWithTplAndStyle(xml: any, style: any) {
-  console.log('!!! LayoutWithTplAndStyle', xml, style);
   Layout.clear();
   Layout.init(xml, style);
   Layout.layout(sharedContext);
-  console.log('!!! LayoutWithTplAndStyle', Layout);
 }
 
 // 仅仅渲染一些提示，比如数据加载中、当前无授权等
-function renderTips(tips = '') {
+function renderTips(tips = '', hasAssigned: boolean) {
   LayoutWithTplAndStyle(
     getTipsXML({
       tips,
     }),
-    getTipsStyle({
-      width: sharedCanvas.width,
-      height: sharedCanvas.height,
-    }),
+    getTipsStyle(getBoxSize(hasAssigned)),
   );
 }
 
 async function renderGroupTaskMembers(data: any) {
   showLoading();
+  const memberCountList: Record<string, number> = {}; // 用于存储每个 openid 的计数
+
   try {
+    console.log('!!! renderGroupTaskMembers openid:', data);
     const res = await getGroupMembersInfo(data.members);
-    console.log('!!! renderGroupTaskMembers', res);
+    console.log('!!! renderGroupTaskMembers res:', res);
 
     if (!res.groupMembers.length) {
-      renderTips('暂无参与记录');
+      renderTips('暂无参与记录', data.hasAssigned);
       return;
     }
 
+    if (data.renderCount) {
+      // 统计每个 openid 的出现次数
+      data.members.forEach((member: { openid: string }) => {
+        if (memberCountList[member.openid]) {
+          memberCountList[member.openid]++;
+        } else {
+          memberCountList[member.openid] = 1;
+        }
+      });
+
+      console.log('Member count list:', memberCountList);
+
+      res.groupMembers.forEach((member: any) => {
+        member.count = memberCountList[member.openid] || 0;
+      });
+    }
+
     LayoutWithTplAndStyle(
-      getFriendRankXML({
+      getGroupTaskFriendListXML({
         data: res.groupMembers,
       }),
-      getFriendRankStyle(),
+      getGroupTaskFriendListStyle(getBoxSize(data.hasAssigned)),
     );
 
     // initShareEvents();
@@ -259,7 +282,7 @@ function showFriendsOnlineStatus() {
 
 // PC 接力
 function runPCHandoff() {
-  // 绘制“查询是否支持接力按钮”
+  // 绘制"查询是否支持接力按钮"
   draw('', {
     button: true,
     isEnabled: true,
@@ -267,7 +290,7 @@ function runPCHandoff() {
     content: '查询是否支持接力',
   });
 
-  // 绑定“查询是否支持接力按钮”的点击事件
+  // 绑定"查询是否支持接力按钮"的点击事件
   bindCheckHandoffEnabled({
     className: 'queryLoginStatus',
     success(res) {
@@ -279,7 +302,7 @@ function runPCHandoff() {
           content: '请下载/登录最新版windows电脑端微信',
         });
 
-      // 绘制“在电脑上打开按钮”
+      // 绘制"在电脑上打开按钮"
       draw('', {
         button: true,
         isEnabled: res.isEnabled,
@@ -287,7 +310,7 @@ function runPCHandoff() {
         content: '在电脑上打开',
       });
 
-      // 绑定“在电脑上打开按钮”的点击事件
+      // 绑定"在电脑上打开按钮"的点击事件
       bindStartHandoff({
         className: 'startHandoff',
       });

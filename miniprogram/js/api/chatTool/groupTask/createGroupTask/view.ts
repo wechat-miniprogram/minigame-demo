@@ -197,6 +197,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     callBack({
       status: "publish",
       drawFn() {
+        obj.fetchActivityList();
         // @ts-ignore 框架遗留问题
         window.router.navigateBack();
       },

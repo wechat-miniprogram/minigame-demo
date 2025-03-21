@@ -390,23 +390,28 @@ const signIn = [
             name: 'groupTask',
             path: 'chatTool/groupTask/index',
             children: [
-              // {
-              //   label: "创建群任务",
-              //   name: "createGroupTask",
-              //   path: "chatTool/groupTask/createGroupTask/index",
-              // },
+              {
+                label: "创建群任务",
+                name: "createGroupTask",
+                path: "chatTool/groupTask/createGroupTask/index",
+              },
+              {
+                label: '群任务详情',
+                name: 'groupTaskDetail',
+                path: 'chatTool/groupTask/groupTaskDetail/index',
+              },
             ],
           },
-          {
-            label: '创建群任务',
-            name: 'createGroupTask',
-            path: 'chatTool/groupTask/createGroupTask/index',
-          },
-          {
-            label: '群任务详情',
-            name: 'groupTaskDetail',
-            path: 'chatTool/groupTask/groupTaskDetail/index',
-          },
+          // {
+          //   label: '创建群任务',
+          //   name: 'createGroupTask',
+          //   path: 'chatTool/groupTask/createGroupTask/index',
+          // },
+          // {
+          //   label: '群任务详情',
+          //   name: 'groupTaskDetail',
+          //   path: 'chatTool/groupTask/groupTaskDetail/index',
+          // },
         ],
       },
       {
@@ -505,6 +510,7 @@ function router(PIXI, app, parameter) {
 
       try {
         if (!treePage[newPage].init) {
+          console.warn('!!! newPage', newPage, treePage[newPage].path);
           treePage[newPage].page = require(treePage[newPage].path)(PIXI, app, {
             ...treePage[newPage].parameter,
             ...query,

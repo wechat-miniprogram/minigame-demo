@@ -4,7 +4,6 @@ import {
   p_box,
   p_img,
   p_line,
-  p_scroll,
 } from "../../../../libs/component/index";
 import fixedTemplate from "../../../../libs/template/fixed";
 
@@ -13,15 +12,13 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     return PIXI.ratio * value * 2; // 尚不清楚这个2哪里来
   };
 
-  const { activityId, groupName, isAuthor } = obj;
-
   let container = new PIXI.Container(),
     { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(
       PIXI,
       {
         obj,
         title: "聊天工具",
-        api_name: groupName,
+        api_name: "示例",
       }
     );
 
@@ -64,14 +61,11 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   endTaskBtn.onClickFn(() => {
     callBack({
       status: "endTask",
-      drawFn() {
-        // @ts-ignore 框架遗留
-        window.router.navigateBack();
-      },
+      drawFn() { },
     });
   });
   // 分享按钮
-  let shareBtn = p_button(PIXI, {
+  let smallShareBtn = p_button(PIXI, {
     width: r(24),
     height: r(24),
     x: r(335),
@@ -83,10 +77,10 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     width: r(24),
     height: r(24),
   });
-  shareBtn.addChild(shareBtnImg);
-  shareBtn.onClickFn(() => {
+  smallShareBtn.addChild(shareBtnImg);
+  smallShareBtn.onClickFn(() => {
     callBack({
-      status: "share",
+      status: "smallShare",
       drawFn() { },
     });
   });
@@ -178,63 +172,194 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     });
   });
 
-  // 成员列表
-  let memberList = p_scroll(PIXI, {
-    width: contentWidth,
-    height: r(329 - 46),
-    x: 0,
-    y: r(46),
-  });
-  let memberListPrompt = p_text(PIXI, {
-    content: "暂无参与记录",
-    fontSize: r(16),
-    fill: "rgba(0,0,0,0.3)",
-    align: "center",
-    relative_middle: {
-      containerHeight: memberList.height,
-      containerWidth: memberList.width,
-    },
-  });
-  memberList.addChild(memberListPrompt);
-  participantBox.addChild(participatedBtn, notParticipatedBtn, memberList);
+  participantBox.addChild(participatedBtn, notParticipatedBtn);
   /**** participant ****/
 
-  function showList(participantList: any, hasDesignatedPerson: boolean) {
-    // 如果是发起人，则显示结束任务按钮
-    if (isAuthor) {
+  /**** Buttons ****/
+  // 做任务
+  let doTaskBtn = p_button(PIXI, {
+    width: r(196),
+    height: r(48),
+    color: 0x07c160,
+    radius: r(4),
+    y: r(588),
+  });
+  let doTaskBtnText = p_text(PIXI, {
+    content: "做任务",
+    fontSize: r(17),
+    fill: 0xffffff,
+    align: "center",
+    relative_middle: {
+      containerWidth: doTaskBtn.width,
+      containerHeight: doTaskBtn.height,
+    },
+  });
+  doTaskBtn.addChild(doTaskBtnText);
+  doTaskBtn.onClickFn(() => {
+    callBack({
+      status: "doTask",
+      drawFn() {
+
+      },
+    });
+  });
+  // 任务已完成/已结束/未参与任务
+  let taskFinishedBox = p_box(PIXI, {
+    width: r(196),
+    height: r(48),
+    background: {
+      color: 0x07c160,
+      alpha: 0.3,
+    },
+    radius: r(4),
+    y: r(588),
+  });
+  let taskFinishedBtnText = p_text(PIXI, {
+    content: "任务已完成",
+    fontSize: r(17),
+    fill: 0xffffff,
+    align: "center",
+    relative_middle: {
+      containerWidth: taskFinishedBox.width,
+      containerHeight: taskFinishedBox.height,
+    },
+  });
+  taskFinishedBox.addChild(taskFinishedBtnText);
+  // 提醒未参与的人/分享结果/分享进度
+  let Btn2 = p_button(PIXI, {
+    width: r(196),
+    height: r(48),
+    color: 0x000000,
+    alpha: 0.05,
+    radius: r(4),
+    y: r(648),
+  });
+  let Btn2Text = p_text(PIXI, {
+    content: "提醒未参与的人",
+    fontSize: r(17),
+    fill: 0x07c160,
+    align: "center",
+    relative_middle: {
+      containerWidth: Btn2.width,
+      containerHeight: Btn2.height,
+    },
+  });
+  Btn2.addChild(Btn2Text);
+  Btn2.onClickFn(() => {
+    callBack({
+      status: "Btn2",
+      drawFn() { },
+    });
+  });
+  // 分享进度
+  let shareBtn = p_button(PIXI, {
+    width: r(196),
+    height: r(48),
+    color: 0x000000,
+    alpha: 0.05,
+    radius: r(4),
+    y: r(708),
+  });
+  let shareBtnText = p_text(PIXI, {
+    content: "分享进度",
+    fontSize: r(17),
+    fill: 0x07c160,
+    align: "center",
+    relative_middle: {
+      containerWidth: shareBtn.width,
+      containerHeight: shareBtn.height,
+    },
+  });
+  shareBtn.addChild(shareBtnText);
+  shareBtn.onClickFn(() => {
+    callBack({
+      status: "shareResult",
+      drawFn() { },
+    });
+  });
+
+  function refreshDraw(isOwner: boolean, useAssigner: boolean,
+    participantCnt: number, taskCnt: number, totalTaskNum: number,
+    finished: boolean, signInStatus: boolean
+  ) {
+    // 如果是发起人并且任务未结束，则显示结束任务按钮
+    if (isOwner && !finished) {
       container.addChild(endTaskBtn);
     } else {
       container.removeChild(endTaskBtn);
     }
+    // 文字描述
+    taskTitleText.turnText(`加入boss战，累积打${totalTaskNum}次`)
+    taskDetailText.turnText(`${participantCnt}人参与，进度${taskCnt}/${totalTaskNum}`)
 
-    participantBox.removeChild(memberList).destroy(true);
-    memberList = p_scroll(PIXI, {
-      width: contentWidth,
-      height: r(329 - 46),
-      x: 0,
-      y: r(46),
-    });
-    if (hasDesignatedPerson) {
-      memberList.addChild(memberList);
-      memberListPrompt.hideFn();
-    } else {
-      memberList.addChild(memberListPrompt);
+    // 做任务按钮
+    if (taskCnt < totalTaskNum) {
+      container.removeChild(taskFinishedBox);
+      container.addChild(doTaskBtn);
+    } else { // 任务已完成/已结束/未参与任务
+      container.removeChild(doTaskBtn);
+      container.addChild(taskFinishedBox);
+      if (finished) {
+        taskFinishedBtnText.turnText("已结束")
+      } else if (!signInStatus) {
+        taskFinishedBtnText.turnText("未参与任务")
+      } else {
+        taskFinishedBtnText.turnText("任务已完成")
+      }
     }
-    for (let i = 0, len = participantList.length; i < len; i++) {
-      let participant = participantList[i];
-      let participantItem = p_text(PIXI, {
-        content: participant,
-      });
+
+    // 已指定参与人
+    if (useAssigner) {
+      // 已参与/未参与
+      participantBox.addChild(participatedBtn);
+      participantBox.addChild(notParticipatedBtn);
+      // 第二个按钮
+      if (finished || taskCnt >= totalTaskNum) { // 已结束/已完成
+        Btn2Text.turnText("分享结果")
+        container.removeChild(shareBtn);
+      } else { // 进行中
+        Btn2Text.turnText("提醒未参与的人")
+        container.addChild(shareBtn); // 只有进行中才显示第三个按钮
+      }
+    } else { // 未指定参与人
+      // 已参与/未参与
+      participantBox.removeChild(participatedBtn);
+      participantBox.removeChild(notParticipatedBtn);
+      // 分享进度
+      container.removeChild(shareBtn);
+      // 第二个按钮
+      if (finished || taskCnt >= totalTaskNum) { // 已结束/已完成
+        Btn2Text.turnText("分享结果")
+      } else { // 进行中
+        Btn2Text.turnText("分享进度")
+      }
     }
   }
 
+  function detailRefresh() {
+    callBack({
+      status: "refresh",
+      drawFn(isOwner: boolean, useAssigner: boolean,
+        participantCnt: number, taskCnt: number, totalTaskNum: number,
+        finished: boolean, signInStatus: boolean) {
+        refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus)
+      }
+    })
+  }
+
+  detailRefresh();
+
+  // 返回按钮 销毁开放数据域
+  goBack.callBack = callBack.bind(null, { status: "destroy" });
+
   // 一定要加这个reload, 否则会报错
   // @ts-ignore 框架遗留
-  window.router.getNowPage((page: any) => {
-    page.reload = function () {
-      logo.reloadImg({ src: "images/logo.png" });
-    };
-  });
+  // window.router.getNowPage((page: any) => {
+  //   page.reload = function () {
+  //     logo.reloadImg({ src: "images/logo.png" });
+  //     detailRefresh();
+  //   };
+  // });
 
   container.addChild(
     goBack,
@@ -244,10 +369,13 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     taskTitleText,
     taskDetailText,
     endTaskBtn,
-    shareBtn,
+    smallShareBtn,
     participantBox,
-    logo,
-    logoName
+    doTaskBtn,
+    Btn2,
+    shareBtn,
+    // logo,
+    // logoName
   );
   app.stage.addChild(container);
 

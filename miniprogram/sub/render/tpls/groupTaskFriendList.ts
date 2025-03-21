@@ -5,35 +5,39 @@
  * https://wechat-miniprogram.github.io/minigame-canvas-engine/playground.html
  * 如果觉得模板引擎使用过于麻烦，也可以手动拼接字符串，本文件对应函数的目标仅仅是为了创建出 xml 节点数
  */
+
 /*
 <view class="container" id="main">
   <view class="rankList">
     <scrollview class="list" scrollY="true">
       {{~it.data :item:index}}
         <view class="listItem">
-          <image class="rankAvatar" src="{{= item.avatarUrl }}"></image>
-          <text class="rankName" value="{{= item.nickname }}"></text>
+          <image class="rankAvatar" src="{{= item.avatarUrl || 'https://bs.qpic.cn/mmux/icTNT8MxQgGc6cPfvPdoVuyCNAaibWkiaYuR3Yv2lnmUeWY8Nl0MGhfQQbBusI1KYY2K9EdPzM9bZ0/360'}}"></image>
+          <text class="rankName" value="{{= item.nickName || '微信用户' }}"></text>
+          <text class="countText" value="{{= item.count || '' }}"></text>
         </view>
       {{~}}
     </scrollview>
   </view>
 </view>
 */
+
 /**
  * xml经过doT.js编译出的模板函数
  * 因为小游戏不支持new Function，模板函数只能外部编译
  * 可直接拷贝本函数到小游戏中使用
  */
 export default function anonymous(it) {
-    var out = '<view class="container" id="main"> <view class="rankList"> <scrollview class="list" scrollY="true"> ';
-    var arr1 = it.data;
-    if (arr1) {
-        var item, index = -1, l1 = arr1.length - 1;
-        while (index < l1) {
-            item = arr1[index += 1];
-            out += ' <view class="listItem"> <image class="rankAvatar" src="' + (item.avatarUrl) + '"></image> <text class="rankName" value="' + (item.nickname) + '"></text> </view> ';
-        }
+  var out = '<view class="container" id="main"> <view class="rankList"> <scrollview class="list" scrollY="true"> ';
+  var arr1 = it.data;
+  if (arr1) {
+    var item, index = -1,
+      l1 = arr1.length - 1;
+    while (index < l1) {
+      item = arr1[index += 1];
+      out += ' <view class="listItem"> <image class="rankAvatar" src="' + (item.avatarUrl || 'https://bs.qpic.cn/mmux/icTNT8MxQgGc6cPfvPdoVuyCNAaibWkiaYuR3Yv2lnmUeWY8Nl0MGhfQQbBusI1KYY2K9EdPzM9bZ0/360') + '"></image> <text class="rankName" value="' + (item.nickName || '微信用户') + '"></text> <text class="countText" value="' + (item.count || '') + '"></text> </view> ';
     }
-    out += ' </scrollview> </view></view>';
-    return out;
+  }
+  out += ' </scrollview> </view></view>';
+  return out;
 }

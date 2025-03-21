@@ -6,9 +6,7 @@ import {
   p_line,
 } from "../../../libs/component/index";
 import fixedTemplate from "../../../libs/template/fixed";
-
-// 为taskInfoList指定类型
-let taskInfoList: GroupTaskInfo[] = [];
+import { ActivityInfo } from "./types";
 
 export default function (PIXI: any, app: any, obj: any, callBack: (data: any) => void) {
   const r = (value: any) => {
@@ -51,9 +49,8 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       containerHeight: taskListBox.height,
     },
   });
-  function taskButton() {
-    let buttonNumber = taskInfoList.length - 1;
-    console.log('!!! taskButton', buttonNumber);
+  function taskButton(buttonNumber: number, activityId: string, roomid: string) {
+    console.log('!!! taskButton', buttonNumber, activityId);
     let button = p_button(PIXI, {
       parentWidth: taskList.width,
       width: contentWidth,
@@ -63,7 +60,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     });
     button.myAddChildFn(
       p_text(PIXI, {
-        content: "群任务" + taskInfoList[buttonNumber].groupName,
+        content: "示例" + "群任务",
         x: r(16),
         fontSize: r(17),
         fill: 0x000000,
@@ -94,24 +91,62 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       )
     );
     button.onClickFn(() => {
-      // @ts-ignore 框架遗留
-      window.router.navigateTo("groupTaskDetail", {
-        activityId: taskInfoList[buttonNumber].activityId,
-        groupName: taskInfoList[buttonNumber].groupName,
-        isAuthor: true,
-      });
+      function openChatTool() {
+        // @ts-ignore 声明未更新
+        wx.openChatTool({
+          roomid,
+          // isSingleChat: Boolean(buttonInfo.singlechat),
+          success: () => {
+            console.log('!!! openChatTool success');
+            // @ts-ignore 框架遗留
+            window.router.navigateTo("groupTaskDetail", {
+              activityId,
+            });
+          },
+          fail: (err: any) => {
+            console.error('!!! openChatTool fail: ', err);
+          }
+        });
+      }
+
+      // @ts-ignore 声明未更新临时处理
+      if (wx.isChatTool()) {
+        // @ts-ignore 声明未更新临时处理
+        wx.exitChatTool({
+          success: () => {
+            openChatTool();
+          },
+          fail: (err: any) => {
+            wx.showToast({
+              title: "exitChatTool fail",
+            });
+            console.error('!!! exitChatTool fail: ', err);
+          }
+        });
+      } else {
+        openChatTool();
+      }
+
     });
     return button;
   }
-  function reloadButtons() {
-    if (taskInfoList.length === 0) {
+  function reloadButtons(activityList: ActivityInfo[]) {
+    if (activityList.length === 0) {
       taskListBox.addChild(taskListBoxPrompt);
     } else {
       taskListBox.removeChild(taskListBoxPrompt);
-      for (let i = 0; i < taskInfoList.length; i++) {
-        taskList.myAddChildFn(taskButton());
+      for (let i = 0; i < activityList.length; i++) {
+        taskList.myAddChildFn(taskButton(i, activityList[i].activityId || '', activityList[i].roomid || ''));
       }
     }
+  }
+  function fetchActivityList() {
+    callBack({
+      status: "fetchActivityList",
+      drawFn(activityList: ActivityInfo[]) {
+        reloadButtons(activityList);
+      },
+    });
   }
 
   taskListBox.addChild(taskList);
@@ -138,19 +173,40 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   createGroupTaskBtn.myAddChildFn(createGroupTaskBtnText);
   createGroupTaskBtn.onClickFn(() => {
     callBack({
-      status: "openChatTool",
+      status: "createTask",
       drawFn() {
-        setTimeout(() => {
-          // @ts-ignore 框架遗留
-          window.router.navigateTo("createGroupTask", {
-            onCreateTaskSuccess,
-            onDeleteTask,
-          });
-        }, 0);
+        // @ts-ignore 框架遗留
+        window.router.navigateTo("createGroupTask", {
+          fetchActivityList, // 创建成功后刷新任务列表
+        });
       },
     });
   });
   /**** createGroupTaskBtn ****/
+
+  /**** 刷新任务列表 ****/
+  let refreshTaskBtn = p_button(PIXI, {
+    width: r(196),
+    height: r(48),
+    y: r(608 + 48 + 24),
+    radius: r(4),
+    color: 0x07c160,
+  });
+  refreshTaskBtn.myAddChildFn(p_text(PIXI, {
+    content: "刷新任务列表",
+    fontSize: r(17),
+    fill: 0xffffff,
+    relative_middle: {
+      containerWidth: refreshTaskBtn.width,
+      containerHeight: refreshTaskBtn.height,
+    },
+  }));
+  refreshTaskBtn.onClickFn(() => {
+    fetchActivityList();
+  });
+  /**** 刷新任务列表 ****/
+
+  fetchActivityList();
 
   // 一定要加这个reload, 否则会报错
   // @ts-ignore 框架遗留
@@ -167,29 +223,11 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     underline,
     taskListBox,
     createGroupTaskBtn,
+    refreshTaskBtn,
     logo,
     logoName
   );
   app.stage.addChild(container);
-
-  function onCreateTaskSuccess(activityId: string, groupName: string, participantOpenGIDList: string[]) {
-    console.log('!!! onCreateTaskSuccess', activityId, groupName, participantOpenGIDList);
-    createGroupTaskBtnText.turnText("创建新任务");
-    taskListBox.removeChild(taskListBoxPrompt);
-    taskInfoList.push({ activityId, groupName, participantOpenGIDList });
-    taskList.myAddChildFn(taskButton());
-  }
-
-  function onDeleteTask(activityId: string) {
-    taskList.myRemoveChildrenFn(
-      0,
-      taskInfoList.length - 1
-    ); // 删除全部按钮
-    taskInfoList = taskInfoList.filter(
-      (task) => task.activityId !== activityId
-    );
-    reloadButtons();
-  }
 
   return container;
 };

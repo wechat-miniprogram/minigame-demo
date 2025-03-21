@@ -1,141 +1,141 @@
 import view from "./view";
+import { getChatToolInfo, getGroupTaskDetailPath } from "../util";
 module.exports = function (PIXI, app, obj) {
     let activityId = '';
-    function updateAllParticipantShareMenu() {
-        wx.updateShareMenu({
-            withShareTicket: true,
-            isUpdatableMessage: true,
-            activityId,
-            useForChatTool: true,
-            chooseType: 2,
-            templateInfo: {
-                templateId: '2A84254B945674A2F88CE4970782C402795EB607', // 模板id常量
-                parameterList: [
-                    {
-                        name: 'member_count',
-                        value: '0',
-                    },
-                    {
-                        name: 'room_limit',
-                        value: '5',
-                    },
-                ],
-            },
-            success: () => {
-                console.log('!!! updateAllParticipantShareMenu success');
+    let useAssigner = false;
+    let participant = [];
+    function clickAllParticipant(drawFn) {
+        console.log('clickAllParticipant');
+        useAssigner = false;
+        drawFn();
+    }
+    function clickSpecifyParticipant(drawFn) {
+        console.log('specifyParticipant');
+        useAssigner = true;
+        // @ts-ignore 声明未更新临时处理
+        wx.selectGroupMembers({
+            success: (res) => {
+                console.log('!!! selectGroupMembers success', res);
+                participant = res.members;
+                drawFn(res.members.length);
             },
             fail: (err) => {
-                console.error('!!! updateAllParticipantShareMenu fail', err);
+                console.error('selectGroupMembers fail', err);
             },
         });
     }
-    function updateSpecifyParticipantShareMenu(participant) {
-        wx.updateShareMenu({
-            withShareTicket: true,
-            isUpdatableMessage: true,
-            activityId,
-            useForChatTool: true,
-            chooseType: 1,
-            participant,
-            templateInfo: {
-                templateId: '2A84254B945674A2F88CE4970782C402795EB607', // 模板id常量
-                parameterList: [
-                    {
-                        name: 'member_count',
-                        value: '0',
-                    },
-                    {
-                        name: 'room_limit',
-                        value: '5',
-                    },
-                ],
-            },
-            success: () => {
-                console.log('!!! updateShareMenu success');
-            },
-            fail: (err) => {
-                console.error('!!! updateShareMenu fail', err);
-            },
+    function createActivityID() {
+        return wx.cloud.callFunction({
+            name: 'openapi',
+            data: {
+                action: 'createActivityId',
+            }
+        }).then((resp) => {
+            if (resp.result) {
+                activityId = resp.result.activityId;
+            }
+        }).catch((err) => {
+            console.error("createActivityId fail : ", err);
         });
     }
-    wx.cloud.callFunction({
-        name: 'createActivityId',
-        success: (res) => {
-            console.log('!!! createActivityId success', res);
-            const result = res.result;
-            activityId = result.activityId;
-            updateAllParticipantShareMenu();
-        },
-        fail: (err) => {
-            wx.showToast({
-                title: '创建活动失败',
+    function publish(drawFn) {
+        console.log('publish');
+        if (!activityId) {
+            createActivityID().then(() => {
+                publish(drawFn);
             });
-            console.error('!!! createActivityId fail', err);
-        },
-    });
+            return;
+        }
+        wx.showLoading({ title: '发布中...' });
+        getChatToolInfo()
+            .then((resp) => {
+            wx.cloud.callFunction({
+                name: "quickstartFunctions",
+                data: {
+                    type: "addRecord",
+                    activityId,
+                    roomid: resp.roomid,
+                    chatType: resp.chatType,
+                    // startTime: dateTextStart,
+                    // endTime: dateTextEnd,
+                    participant,
+                    signIn: [],
+                    useAssigner,
+                    finished: false,
+                },
+            }).then(() => {
+                const params = {
+                    withShareTicket: true,
+                    isUpdatableMessage: true,
+                    activityId,
+                    participant,
+                    useForChatTool: true,
+                    chooseType: useAssigner ? 1 : 2,
+                    templateInfo: {
+                        templateId: "2A84254B945674A2F88CE4970782C402795EB607", // 模版ID常量
+                        parameterList: [
+                            {
+                                name: 'member_count',
+                                value: '0',
+                            },
+                            {
+                                name: 'room_limit',
+                                value: '5',
+                            },
+                        ],
+                    },
+                };
+                wx.updateShareMenu({
+                    ...params,
+                    success() {
+                        // @ts-ignore 声明未更新临时处理
+                        wx.shareAppMessageToGroup({
+                            title: "群友们，为了星球而战～",
+                            path: getGroupTaskDetailPath(activityId),
+                            success(res) {
+                                console.info("shareAppMessageToGroup success: ", res);
+                                drawFn();
+                            },
+                            fail(err) {
+                                console.info("shareAppMessageToGroup fail: ", err);
+                            },
+                        });
+                    },
+                    fail(res) {
+                        console.info("updateShareMenu fail: ", res);
+                        wx.showToast({
+                            title: "分享失败",
+                            icon: "none",
+                        });
+                    },
+                    complete(res) {
+                        wx.hideLoading({});
+                        activityId = "";
+                        createActivityID(); // 刷新待创建的活动id
+                        console.info("updateShareMenu complete: ", res);
+                    },
+                });
+            });
+        })
+            .catch((err) => {
+            console.error("publish fail: ", err);
+            wx.showToast({
+                icon: "none",
+                title: "发布失败",
+            });
+        });
+    }
     return view(PIXI, app, obj, (data) => {
         let { status, drawFn } = data;
         switch (status) {
             case 'allParticipant':
-                console.log('allParticipant');
-                if (!activityId) {
-                    wx.showToast({
-                        title: '尚未生成活动ID，请稍后重试',
-                    });
-                    return;
-                }
-                updateAllParticipantShareMenu();
-                drawFn();
+                clickAllParticipant(drawFn);
                 break;
             case 'specifyParticipant':
-                console.log('specifyParticipant');
-                if (!activityId) {
-                    wx.showToast({
-                        title: '尚未生成活动ID，请稍后重试',
-                    });
-                    return;
-                }
-                // @ts-ignore 声明未更新临时处理
-                wx.selectGroupMembers({
-                    success: (res) => {
-                        console.log('!!! selectGroupMembers success', res);
-                        // const members = res?.members || [];
-                        // let openDataContext = wx.getOpenDataContext();
-                        // openDataContext.postMessage({
-                        //   event: 'renderGroupTaskMembersInfo',
-                        //   members,
-                        // });
-                        updateSpecifyParticipantShareMenu(res.members);
-                        drawFn(res.members.length);
-                    },
-                    fail: (err) => {
-                        console.error('selectGroupMembers fail', err);
-                    },
-                });
+                clickSpecifyParticipant(drawFn);
                 break;
             case 'publish':
-                if (!activityId) {
-                    wx.showToast({
-                        title: '尚未生成活动ID，请稍后重试',
-                    });
-                    return;
-                }
-                // @ts-ignore 声明未更新临时处理
-                wx.shareAppMessageToGroup({
-                    title: '群友们，为了星球而战～',
-                    path: '?pathName=groupTaskDetail&activityId=' + activityId,
-                    success: (res) => {
-                        console.log('!!! shareAppMessageToGroup success', res);
-                        obj.onCreateTaskSuccess(activityId, '示例', []);
-                        drawFn();
-                    },
-                    fail: (err) => {
-                        wx.showToast({
-                            title: '分享失败',
-                        });
-                        console.error('!!! shareAppMessageToGroup fail', err);
-                    },
-                });
+                publish(drawFn);
                 break;
         }
     });
