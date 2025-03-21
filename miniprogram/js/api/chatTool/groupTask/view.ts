@@ -49,7 +49,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       containerHeight: taskListBox.height,
     },
   });
-  function taskButton(buttonNumber: number, activityId: string, roomid: string) {
+  function taskButton(buttonNumber: number, activityId: string, roomid: string, chatType: number) {
     console.log('!!! taskButton', buttonNumber, activityId);
     let button = p_button(PIXI, {
       parentWidth: taskList.width,
@@ -95,7 +95,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
         // @ts-ignore 声明未更新
         wx.openChatTool({
           roomid,
-          // isSingleChat: Boolean(buttonInfo.singlechat),
+          chatType,
           success: () => {
             console.log('!!! openChatTool success');
             // @ts-ignore 框架遗留
@@ -136,7 +136,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     } else {
       taskListBox.removeChild(taskListBoxPrompt);
       for (let i = 0; i < activityList.length; i++) {
-        taskList.myAddChildFn(taskButton(i, activityList[i].activityId || '', activityList[i].roomid || ''));
+        taskList.myAddChildFn(taskButton(i, activityList[i].activityId || '', activityList[i].roomid || '', activityList[i].chatType || 3));
       }
     }
   }
