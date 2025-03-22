@@ -327,7 +327,9 @@ export default function (PIXI, app, obj, callBack) {
     //     detailRefresh();
     //   };
     // });
-    container.addChild(goBack, title, api_name, underline, taskTitleText, taskDetailText, endTaskBtn, smallShareBtn, participantBox, doTaskBtn, Btn2, shareBtn);
+    container.addChild(goBack, title, api_name, underline, taskTitleText, taskDetailText, 
+    // endTaskBtn,
+    smallShareBtn, participantBox, doTaskBtn, Btn2);
     app.stage.addChild(container);
     return container;
 }

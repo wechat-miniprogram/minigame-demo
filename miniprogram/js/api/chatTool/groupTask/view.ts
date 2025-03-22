@@ -7,6 +7,7 @@ import {
 } from "../../../libs/component/index";
 import fixedTemplate from "../../../libs/template/fixed";
 import { ActivityInfo } from "./types";
+import { openChatTool } from "./util";
 
 export default function (PIXI: any, app: any, obj: any, callBack: (data: any) => void) {
   const r = (value: any) => {
@@ -91,42 +92,20 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       )
     );
     button.onClickFn(() => {
-      function openChatTool() {
-        // @ts-ignore 声明未更新
-        wx.openChatTool({
-          roomid,
-          chatType,
-          success: () => {
-            console.log('!!! openChatTool success');
-            // @ts-ignore 框架遗留
-            window.router.navigateTo("groupTaskDetail", {
-              activityId,
-            });
-          },
-          fail: (err: any) => {
-            console.error('!!! openChatTool fail: ', err);
-          }
-        });
-      }
-
-      // @ts-ignore 声明未更新临时处理
-      if (wx.isChatTool()) {
-        // @ts-ignore 声明未更新临时处理
-        wx.exitChatTool({
-          success: () => {
-            openChatTool();
-          },
-          fail: (err: any) => {
-            wx.showToast({
-              title: "exitChatTool fail",
-            });
-            console.error('!!! exitChatTool fail: ', err);
-          }
-        });
-      } else {
-        openChatTool();
-      }
-
+      openChatTool(
+        roomid,
+        chatType,
+        (res: any) => {
+          console.log('!!! openChatTool success', res);
+          // @ts-ignore 框架遗留
+          window.router.navigateTo("groupTaskDetail", {
+            activityId,
+          });
+        },
+        (err: any) => {
+          console.error('!!! openChatTool fail: ', err);
+        }
+      )
     });
     return button;
   }

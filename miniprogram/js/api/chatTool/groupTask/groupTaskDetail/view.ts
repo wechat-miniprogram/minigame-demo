@@ -368,12 +368,12 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     underline,
     taskTitleText,
     taskDetailText,
-    endTaskBtn,
+    // endTaskBtn,
     smallShareBtn,
     participantBox,
     doTaskBtn,
     Btn2,
-    shareBtn,
+    // shareBtn,
     // logo,
     // logoName
   );

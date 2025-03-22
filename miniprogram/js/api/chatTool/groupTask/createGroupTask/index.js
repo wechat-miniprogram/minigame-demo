@@ -1,5 +1,5 @@
 import view from "./view";
-import { getChatToolInfo, getGroupTaskDetailPath } from "../util";
+import { getGroupInfo, getGroupTaskDetailPath } from "../util";
 module.exports = function (PIXI, app, obj) {
     let activityId = '';
     let useAssigner = false;
@@ -46,8 +46,8 @@ module.exports = function (PIXI, app, obj) {
             });
             return;
         }
-        wx.showLoading({ title: '发布中...' });
-        getChatToolInfo()
+        wx.showLoading({ title: '发布中...', mask: true });
+        getGroupInfo()
             .then((resp) => {
             wx.cloud.callFunction({
                 name: "quickstartFunctions",

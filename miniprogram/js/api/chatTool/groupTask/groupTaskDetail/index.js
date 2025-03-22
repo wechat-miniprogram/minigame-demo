@@ -1,5 +1,5 @@
 import view from "./view";
-import { getChatToolInfo, getGroupTaskDetailPath } from "../util";
+import { getGroupInfo, getGroupTaskDetailPath } from "../util";
 // const roleType = ["unkown", "owner", "participant", "nonParticipant"]; // 定义角色类型
 const { envVersion } = wx.getAccountInfoSync().miniProgram;
 const getVersionType = () => {
@@ -210,6 +210,7 @@ module.exports = function (PIXI, app, obj) {
     function earlyTerminate() {
         wx.showLoading({
             title: '结束中',
+            mask: true,
         });
         // 提前终止活动
         updateChatToolMsg({
@@ -220,6 +221,7 @@ module.exports = function (PIXI, app, obj) {
     function doTask() {
         wx.showLoading({
             title: '做任务中',
+            mask: true,
         });
         const { roomid, groupOpenID } = groupInfo;
         wx.cloud
@@ -269,8 +271,9 @@ module.exports = function (PIXI, app, obj) {
         console.log('!!! fetchActivity');
         wx.showLoading({
             title: '加载中',
+            // mask: true,
         });
-        await getChatToolInfo().then((_groupInfo) => {
+        await getGroupInfo().then((_groupInfo) => {
             groupInfo = _groupInfo;
             wx.cloud
                 .callFunction({

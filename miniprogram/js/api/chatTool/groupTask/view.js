@@ -1,5 +1,6 @@
 import { p_button, p_text, p_box, p_scroll, p_line, } from "../../../libs/component/index";
 import fixedTemplate from "../../../libs/template/fixed";
+import { openChatTool } from "./util";
 export default function (PIXI, app, obj, callBack) {
     const r = (value) => {
         return PIXI.ratio * value * 2; // 尚不清楚这个2哪里来
@@ -68,41 +69,15 @@ export default function (PIXI, app, obj, callBack) {
             alpha: 0.1,
         }, [r(16), r(63.5)], [r(290), 0]));
         button.onClickFn(() => {
-            function openChatTool() {
-                // @ts-ignore 声明未更新
-                wx.openChatTool({
-                    roomid,
-                    chatType,
-                    success: () => {
-                        console.log('!!! openChatTool success');
-                        // @ts-ignore 框架遗留
-                        window.router.navigateTo("groupTaskDetail", {
-                            activityId,
-                        });
-                    },
-                    fail: (err) => {
-                        console.error('!!! openChatTool fail: ', err);
-                    }
+            openChatTool(roomid, chatType, (res) => {
+                console.log('!!! openChatTool success', res);
+                // @ts-ignore 框架遗留
+                window.router.navigateTo("groupTaskDetail", {
+                    activityId,
                 });
-            }
-            // @ts-ignore 声明未更新临时处理
-            if (wx.isChatTool()) {
-                // @ts-ignore 声明未更新临时处理
-                wx.exitChatTool({
-                    success: () => {
-                        openChatTool();
-                    },
-                    fail: (err) => {
-                        wx.showToast({
-                            title: "exitChatTool fail",
-                        });
-                        console.error('!!! exitChatTool fail: ', err);
-                    }
-                });
-            }
-            else {
-                openChatTool();
-            }
+            }, (err) => {
+                console.error('!!! openChatTool fail: ', err);
+            });
         });
         return button;
     }
