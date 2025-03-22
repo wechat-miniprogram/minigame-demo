@@ -295,7 +295,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
     console.log('!!! fetchActivity');
     wx.showLoading({
       title: '加载中',
-      // mask: true,
+      mask: true,
     });
     await getGroupInfo().then((_groupInfo) => {
       groupInfo = _groupInfo as GroupInfo;

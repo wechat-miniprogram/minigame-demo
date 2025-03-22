@@ -96,10 +96,6 @@ PIXI.loader
             noNavigateToRequired = !['VoIPChat'].includes(query.pathName);
 
           if (Object.keys(query).length && query.pathName) {
-            if (res.chatType) { // 带query从单聊/群聊进入 重启小程序
-              // wx.restartMiniProgram({path: objectToQueryString(query)});
-            }
-            
             // @ts-ignore 框架遗留
             noNavigateToRequired && window.router.navigateBack();
 
@@ -130,10 +126,3 @@ PIXI.loader
       loadingFn(res.progress);
     });
   });
-
-function objectToQueryString(params: Record<string, string>): string {
-  const queryParams = Object.entries(params)
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-    .join('&');
-  return `?${queryParams}`;
-}
