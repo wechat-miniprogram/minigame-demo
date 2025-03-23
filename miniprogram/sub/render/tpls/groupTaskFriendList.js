@@ -11,7 +11,7 @@
     <scrollview class="list" scrollY="true">
       {{~it.data :item:index}}
         <view class="listItem">
-          <image class="rankAvatar" src="{{= item.avatarUrl || 'https://bs.qpic.cn/mmux/icTNT8MxQgGc6cPfvPdoVuyCNAaibWkiaYuR3Yv2lnmUeWY8Nl0MGhfQQbBusI1KYY2K9EdPzM9bZ0/360'}}"></image>
+          <image class="rankAvatar" src="{{= item.avatarUrl || ''}}"></image>
           <text class="rankName" value="{{= item.nickName || '微信用户' }}"></text>
           <text class="countText" value="{{= item.count || '' }}"></text>
         </view>
@@ -32,7 +32,7 @@ export default function anonymous(it) {
         var item, index = -1, l1 = arr1.length - 1;
         while (index < l1) {
             item = arr1[index += 1];
-            out += ' <view class="listItem"> <image class="rankAvatar" src="' + (item.avatarUrl || 'https://bs.qpic.cn/mmux/icTNT8MxQgGc6cPfvPdoVuyCNAaibWkiaYuR3Yv2lnmUeWY8Nl0MGhfQQbBusI1KYY2K9EdPzM9bZ0/360') + '"></image> <text class="rankName" value="' + (item.nickName || '微信用户') + '"></text> <text class="countText" value="' + (item.count || '') + '"></text> </view> ';
+            out += ' <view class="listItem"> <image class="rankAvatar" src="' + (item.avatarUrl || '') + '"></image> <text class="rankName" value="' + (item.nickName || '微信用户') + '"></text> <text class="countText" value="' + (item.count || '') + '"></text> </view> ';
         }
     }
     out += ' </scrollview> </view></view>';
