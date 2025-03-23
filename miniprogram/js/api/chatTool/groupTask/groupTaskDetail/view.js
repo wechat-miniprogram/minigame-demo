@@ -146,7 +146,7 @@ export default function (PIXI, app, obj, callBack) {
             },
         });
     });
-    participantBox.addChild(participatedBtn, notParticipatedBtn);
+    // participantBox.addChild(participatedBtn, notParticipatedBtn);
     /**** participant ****/
     /**** Buttons ****/
     // 做任务
@@ -249,6 +249,20 @@ export default function (PIXI, app, obj, callBack) {
             drawFn() { },
         });
     });
+    function clearDraw() {
+        console.log('!!! clearDraw');
+        container.removeChild(endTaskBtn);
+        participantBox.removeChild(participatedBtn);
+        participantBox.removeChild(notParticipatedBtn);
+        container.removeChild(taskFinishedBox);
+        container.removeChild(doTaskBtn);
+        container.removeChild(Btn2);
+        container.removeChild(shareBtn);
+        callBack({
+            status: "destroyOpenDataContext",
+            drawFn() { },
+        });
+    }
     function refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus) {
         // 如果是发起人并且任务未结束，则显示结束任务按钮
         if (isOwner && !finished) {
@@ -278,6 +292,7 @@ export default function (PIXI, app, obj, callBack) {
                 taskFinishedBtnText.turnText("任务已完成");
             }
         }
+        container.addChild(Btn2);
         // 已指定参与人
         if (useAssigner) {
             // 已参与/未参与
@@ -309,6 +324,7 @@ export default function (PIXI, app, obj, callBack) {
         }
     }
     function detailRefresh() {
+        clearDraw();
         callBack({
             status: "refresh",
             drawFn(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus) {
@@ -318,7 +334,7 @@ export default function (PIXI, app, obj, callBack) {
     }
     detailRefresh();
     // 返回按钮 销毁开放数据域
-    goBack.callBack = callBack.bind(null, { status: "destroy" });
+    goBack.callBack = clearDraw;
     // 一定要加这个reload, 否则会报错
     // @ts-ignore 框架遗留
     // window.router.getNowPage((page: any) => {
@@ -329,7 +345,7 @@ export default function (PIXI, app, obj, callBack) {
     // });
     container.addChild(goBack, title, api_name, underline, taskTitleText, taskDetailText, 
     // endTaskBtn,
-    smallShareBtn, participantBox, doTaskBtn, Btn2);
+    smallShareBtn, participantBox);
     app.stage.addChild(container);
     return container;
 }

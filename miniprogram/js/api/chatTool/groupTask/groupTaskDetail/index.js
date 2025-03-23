@@ -362,7 +362,7 @@ module.exports = function (PIXI, app, obj) {
                 share();
                 drawFn();
                 break;
-            case "destroy":
+            case "destroyOpenDataContext":
                 destroyOpenDataContext();
                 break;
         }

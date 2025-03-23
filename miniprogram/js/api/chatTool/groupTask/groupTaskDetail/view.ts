@@ -172,7 +172,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     });
   });
 
-  participantBox.addChild(participatedBtn, notParticipatedBtn);
+  // participantBox.addChild(participatedBtn, notParticipatedBtn);
   /**** participant ****/
 
   /**** Buttons ****/
@@ -278,6 +278,21 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     });
   });
 
+  function clearDraw() {
+    console.log('!!! clearDraw');
+    container.removeChild(endTaskBtn);
+    participantBox.removeChild(participatedBtn);
+    participantBox.removeChild(notParticipatedBtn);
+    container.removeChild(taskFinishedBox);
+    container.removeChild(doTaskBtn);
+    container.removeChild(Btn2);
+    container.removeChild(shareBtn);
+    callBack({
+      status: "destroyOpenDataContext",
+      drawFn() {},
+    });
+  }
+
   function refreshDraw(isOwner: boolean, useAssigner: boolean,
     participantCnt: number, taskCnt: number, totalTaskNum: number,
     finished: boolean, signInStatus: boolean
@@ -308,6 +323,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       }
     }
 
+    container.addChild(Btn2);
     // 已指定参与人
     if (useAssigner) {
       // 已参与/未参与
@@ -337,6 +353,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   }
 
   function detailRefresh() {
+    clearDraw();
     callBack({
       status: "refresh",
       drawFn(isOwner: boolean, useAssigner: boolean,
@@ -350,7 +367,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   detailRefresh();
 
   // 返回按钮 销毁开放数据域
-  goBack.callBack = callBack.bind(null, { status: "destroy" });
+  goBack.callBack = clearDraw;
 
   // 一定要加这个reload, 否则会报错
   // @ts-ignore 框架遗留
@@ -371,8 +388,8 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     // endTaskBtn,
     smallShareBtn,
     participantBox,
-    doTaskBtn,
-    Btn2,
+    // doTaskBtn,
+    // Btn2,
     // shareBtn,
     // logo,
     // logoName
