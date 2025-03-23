@@ -39,52 +39,30 @@ const systemInfo = wx.getSystemInfoSync();
 const { screenWidth, screenHeight, pixelRatio } = systemInfo;
 
 const sharedCanvas = wx.getSharedCanvas();
-// sharedCanvas.width = screenWidth * pixelRatio;
-// sharedCanvas.height = screenHeight * pixelRatio;
 const sharedContext = sharedCanvas.getContext('2d');
 
-
-function getBoxSize(hasAssigned: Boolean) {
+function getGroupTaskBox(hasAssigned: Boolean) {
   if (hasAssigned) {
     return {
-      left: 16,
-      top: 0,
-      width: 342,
-      height: 215,
-      scale: screenWidth / 375,
-      pixelRatio
+      left: 0,
+      top: 50,
+      width: 343,
+      height: 329 - 50,
+      scale: (screenWidth / 375) * pixelRatio,
     };
   } else {
     return {
-      left: 16,
+      left: 0,
       top: 0,
       width: 343,
       height: 329,
-      scale: screenWidth / 375,
-      pixelRatio,
+      scale: (screenWidth / 375) * pixelRatio,
     };
   }
 }
 
-// /**
-//  * 初始化开放域
-//  */
-const initOpenDataCanvas = async () => {
-  console.log('!!! initOpenDataCanvas');
-  Layout.updateViewPort({
-    x: 0,
-    y: 0,
-    width: screenWidth,
-    height: screenHeight,
-  });
-};
-
-// initOpenDataCanvas();
-
-
 // 给定 xml 和 style，渲染至 sharedCanvas
 function LayoutWithTplAndStyle(xml: any, style: any) {
-  initOpenDataCanvas();
   Layout.clear();
   Layout.init(xml, style);
   Layout.layout(sharedContext);
@@ -96,7 +74,7 @@ function renderTips(tips = '', hasAssigned: boolean) {
     getTipsXML({
       tips,
     }),
-    getTipsStyle(getBoxSize(hasAssigned)),
+    getTipsStyle(getGroupTaskBox(hasAssigned)),
   );
 }
 
@@ -116,7 +94,7 @@ async function renderGroupTaskMembers(data: any) {
 
     if (data.renderCount) {
       // 统计每个 openid 的出现次数
-      data.members.forEach((member: string ) => {
+      data.members.forEach((member: string) => {
         if (memberCountList[member]) {
           memberCountList[member]++;
         } else {
@@ -136,7 +114,7 @@ async function renderGroupTaskMembers(data: any) {
       getGroupTaskFriendListXML({
         data: res.groupMembers,
       }),
-      getGroupTaskFriendListStyle(getBoxSize(data.hasAssigned)),
+      getGroupTaskFriendListStyle(getGroupTaskBox(data.hasAssigned)),
     );
 
     // initShareEvents();

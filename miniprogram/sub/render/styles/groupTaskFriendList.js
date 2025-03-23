@@ -1,52 +1,51 @@
 export default function getStyle(data) {
-    const { left, top, width, height, scale, pixelRatio } = data;
-    console.warn('data', data);
+    const { left, top, width, height, scale } = data;
     function r(value) {
         return value * scale;
     }
     return {
         container: {
-            top: r(top * pixelRatio),
-            left: r(left * pixelRatio),
-            width: r(width * pixelRatio),
-            height: r(height * pixelRatio),
+            top: r(top),
+            left: r(left),
+            width: r(width),
+            height: r(height),
         },
         rankList: {
-            width: r(width * pixelRatio),
-            height: r(height * pixelRatio),
+            width: r(width),
+            height: r(height),
         },
         list: {
-            width: r(width * pixelRatio),
-            height: r(height * pixelRatio),
+            width: r(width),
+            height: r(height),
         },
         listItem: {
             position: 'relative',
-            width: r(width * pixelRatio),
-            height: r(67 * pixelRatio),
+            width: r(width),
+            height: r(67),
             flexDirection: 'row',
             justifyContent: 'flex-start',
             alignItems: 'center',
         },
         rankAvatar: {
             position: 'relative',
-            marginLeft: r(10 * pixelRatio),
-            width: r(52 * pixelRatio),
-            height: r(52 * pixelRatio),
+            marginLeft: r(10),
+            width: r(52),
+            height: r(52),
         },
         rankName: {
             position: 'relative',
             verticalAlign: 'middle',
-            marginLeft: r(10 * pixelRatio),
-            width: r(150 * pixelRatio),
-            fontSize: r(17 * pixelRatio),
+            marginLeft: r(10),
+            width: r(220),
+            fontSize: r(17),
             textOverflow: 'ellipsis',
             color: '#000000',
         },
         countText: {
             position: 'relative',
             verticalAlign: 'middle',
-            marginLeft: r(0 * pixelRatio),
-            fontSize: r(17 * pixelRatio),
+            marginLeft: r(10),
+            fontSize: r(17),
             textOverflow: 'ellipsis',
             color: '#000000',
         },

@@ -18,8 +18,8 @@ const getVersionType = () => {
 };
 module.exports = function (PIXI, app, obj) {
     let drawRefresh; // 视图层回调
-    const { screenWidth, screenHeight, pixelRatio } = wx.getSystemInfoSync();
-    const SC = new ShareCanvas(342 * pixelRatio, 329 * pixelRatio, 1, 0);
+    const { screenWidth, pixelRatio } = wx.getSystemInfoSync();
+    const SC = new ShareCanvas(343, 329, 16, 231, pixelRatio, screenWidth / 375); // 设计稿宽度
     let tick = () => {
         SC.rankTiker(PIXI, app);
     };
@@ -155,9 +155,7 @@ module.exports = function (PIXI, app, obj) {
         console.log("drawRefresh start", isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus);
         drawRefresh(isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus);
     }
-    function updateChatToolMsg(params = {}) {
-        // 更新聊天工具消息
-        // @ts-ignore
+    function updateChatToolMsg(params) {
         const { targetState, parameterList } = params;
         // const templateId = '2A84254B945674A2F88CE4970782C402795EB607' // 参与
         const templateId = "4A68CBB88A92B0A9311848DBA1E94A199B166463"; // 完成
