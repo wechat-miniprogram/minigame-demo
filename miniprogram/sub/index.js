@@ -27,19 +27,21 @@ function getBoxSize(hasAssigned) {
     if (hasAssigned) {
         return {
             left: 16,
-            top: 281,
+            top: 0,
             width: 342,
             height: 215,
             scale: screenWidth / 375,
+            pixelRatio
         };
     }
     else {
         return {
             left: 16,
-            top: 231,
+            top: 0,
             width: 343,
             height: 329,
             scale: screenWidth / 375,
+            pixelRatio,
         };
     }
 }

@@ -1,7 +1,7 @@
 import view from "./view";
 import { getGroupInfo, getGroupTaskDetailPath, shareAppMessageToGroup } from "../util";
+import { ShareCanvas } from './ShareCanvas';
 import { ActivityInfo, GroupInfo } from "../types";
-import layout, { Layout } from '../../../../libs/engine';
 
 // const roleType = ["unkown", "owner", "participant", "nonParticipant"]; // 定义角色类型
 
@@ -23,6 +23,15 @@ module.exports = function (PIXI: any, app: any, obj: any) {
   let drawRefresh: (isOwner: boolean, useAssigner: boolean,
     participantCnt: number, taskCnt: number, totalTaskNum: number,
     finished: boolean, signInStatus: boolean) => void; // 视图层回调
+
+    const { screenWidth, screenHeight, pixelRatio } = wx.getSystemInfoSync();
+
+  const SC = new ShareCanvas(342 * pixelRatio, 329 * pixelRatio, 1, 0);
+
+  let tick = () => {
+      SC.rankTiker(PIXI, app);
+  }
+  let ticker = PIXI.ticker.shared;
 
   const { activityId } = obj; // 获取启动信息
 
@@ -308,37 +317,14 @@ module.exports = function (PIXI: any, app: any, obj: any) {
         });
     });
   }
-  const { screenWidth, screenHeight, pixelRatio } = wx.getSystemInfoSync();
-  // 在屏sharedCanvas
-  const openDataContext = wx.getOpenDataContext({
-    sharedCanvasMode: 'screenCanvas',
-  });
-  // const openDataContext = wx.getOpenDataContext();
-  const sharedCanvas = openDataContext.canvas;
-  sharedCanvas.width = screenWidth * pixelRatio;
-  sharedCanvas.height = screenHeight * pixelRatio;
-  // @ts-ignore
-  const context = canvas.getContext('2d');
-
-  // 每帧绘制sharecanvas
-  function drawShareCanvas() {
-    context.drawImage(sharedCanvas, 0, 0);
-  }
-
-  const startTicker = (callback: () => void) => {
-    layout.ticker.add(callback);
-  };
-
-  const stopTicker = (callback: () => void) => {
-    layout.ticker.remove(callback);
-  };
-
-  // startTicker(drawShareCanvas);
-
 
   function refreshOpenDataContext() {
+    if (!SC.sharedCanvasShowed) {
+      SC.sharedCanvasShowed = true;
+      ticker.add(tick);
+    }
     const isParticipated = !activityInfo.useAssigner || watchingParticipanted; // 未指定人或正在观看参与人
-    openDataContext.postMessage({
+    SC.openDataContext.postMessage({
       event: 'renderGroupTaskMembersInfo',
       members: isParticipated ? signIn : notSignIn,
       renderCount: isParticipated,
@@ -348,7 +334,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
   }
 
   function destroyOpenDataContext() {
-    openDataContext.postMessage({
+    SC.openDataContext.postMessage({
       event: 'close',
     });
   }
