@@ -15,13 +15,15 @@ exports.main = async (event, context) => {
         activityId: event.activityId,
         roomid: event.roomid,
         chatType: event.chatType,
-        title: event.title,
-        coverImage: event.coverImage,
-        startTime: event.startTime,
-        endTime: event.endTime,
+        // title: event.title,
+        // coverImage: event.coverImage,
+        // startTime: event.startTime,
+        // endTime: event.endTime,
         participant: event.participant,
         signIn: event.signIn,
-        targetState: event.targetState,
+        // targetState: event.targetState,
+        useAssigner: event.useAssigner,
+        finished: event.finished,
         createTime: Date.now()
       }
     })
