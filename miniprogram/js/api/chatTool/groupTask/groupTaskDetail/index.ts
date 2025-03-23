@@ -114,7 +114,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
       });
     } else { // 分享进度
       wx.downloadFile({
-        url: 'https://res.wx.qq.com/wxdoc/dist/assets/img/demo.ef5c5bef.jpg',
+        url: 'https://mmgame.qpic.cn/image/10dbccbeb9aac0348dede4c472deb32894d8c3afb957f52adf9c138cbcfc8dba/0',
         success(res) {
           // @ts-ignore 声明未更新临时处理
           wx.shareImageToGroup({
