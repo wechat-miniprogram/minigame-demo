@@ -95,17 +95,18 @@ async function renderGroupTaskMembers(data) {
         if (data.renderCount) {
             // 统计每个 openid 的出现次数
             data.members.forEach((member) => {
-                if (memberCountList[member.openid]) {
-                    memberCountList[member.openid]++;
+                if (memberCountList[member]) {
+                    memberCountList[member]++;
                 }
                 else {
-                    memberCountList[member.openid] = 1;
+                    memberCountList[member] = 1;
                 }
             });
             console.log('Member count list:', memberCountList);
             res.groupMembers.forEach((member) => {
-                member.count = memberCountList[member.openid] || 0;
+                member.count = memberCountList[member.groupOpenID] || 0;
             });
+            console.log('!!! renderGroupTaskMembers:', res.groupMembers);
         }
         LayoutWithTplAndStyle(getGroupTaskFriendListXML({
             data: res.groupMembers,

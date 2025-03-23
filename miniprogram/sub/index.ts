@@ -127,19 +127,21 @@ async function renderGroupTaskMembers(data: any) {
 
     if (data.renderCount) {
       // 统计每个 openid 的出现次数
-      data.members.forEach((member: { openid: string }) => {
-        if (memberCountList[member.openid]) {
-          memberCountList[member.openid]++;
+      data.members.forEach((member: string ) => {
+
+        if (memberCountList[member]) {
+          memberCountList[member]++;
         } else {
-          memberCountList[member.openid] = 1;
+          memberCountList[member] = 1;
         }
       });
 
       console.log('Member count list:', memberCountList);
 
       res.groupMembers.forEach((member: any) => {
-        member.count = memberCountList[member.openid] || 0;
+        member.count = memberCountList[member.groupOpenID] || 0;
       });
+      console.log('!!! renderGroupTaskMembers:', res.groupMembers);
     }
 
     LayoutWithTplAndStyle(
