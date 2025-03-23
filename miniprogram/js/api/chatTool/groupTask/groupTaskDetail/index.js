@@ -1,5 +1,6 @@
 import view from "./view";
 import { getGroupInfo, getGroupTaskDetailPath } from "../util";
+import layout from '../../../../libs/engine';
 // const roleType = ["unkown", "owner", "participant", "nonParticipant"]; // 定义角色类型
 const { envVersion } = wx.getAccountInfoSync().miniProgram;
 const getVersionType = () => {
@@ -308,8 +309,29 @@ module.exports = function (PIXI, app, obj) {
             });
         });
     }
+    const { screenWidth, screenHeight, pixelRatio } = wx.getSystemInfoSync();
+    // 在屏sharedCanvas
+    const openDataContext = wx.getOpenDataContext({
+        sharedCanvasMode: 'screenCanvas',
+    });
+    // const openDataContext = wx.getOpenDataContext();
+    const sharedCanvas = openDataContext.canvas;
+    sharedCanvas.width = screenWidth * pixelRatio;
+    sharedCanvas.height = screenHeight * pixelRatio;
+    // @ts-ignore
+    const context = canvas.getContext('2d');
+    // 每帧绘制sharecanvas
+    function drawShareCanvas() {
+        context.drawImage(sharedCanvas, 0, 0);
+    }
+    const startTicker = (callback) => {
+        layout.ticker.add(callback);
+    };
+    const stopTicker = (callback) => {
+        layout.ticker.remove(callback);
+    };
+    // startTicker(drawShareCanvas);
     function refreshOpenDataContext() {
-        let openDataContext = wx.getOpenDataContext();
         const isParticipated = !activityInfo.useAssigner || watchingParticipanted; // 未指定人或正在观看参与人
         openDataContext.postMessage({
             event: 'renderGroupTaskMembersInfo',
@@ -320,7 +342,6 @@ module.exports = function (PIXI, app, obj) {
         wx.hideLoading();
     }
     function destroyOpenDataContext() {
-        let openDataContext = wx.getOpenDataContext();
         openDataContext.postMessage({
             event: 'close',
         });

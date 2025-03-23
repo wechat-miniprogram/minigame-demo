@@ -19,23 +19,10 @@ const Layout = requirePlugin('Layout').default;
 GameGlobal.Layout = Layout;
 const systemInfo = wx.getSystemInfoSync();
 const { screenWidth, screenHeight, pixelRatio } = systemInfo;
-console.log('!!! systemInfo', screenWidth, screenHeight, pixelRatio);
 const sharedCanvas = wx.getSharedCanvas();
-sharedCanvas.width = screenWidth * pixelRatio;
-sharedCanvas.height = screenHeight * pixelRatio;
+// sharedCanvas.width = screenWidth * pixelRatio;
+// sharedCanvas.height = screenHeight * pixelRatio;
 const sharedContext = sharedCanvas.getContext('2d');
-const MessageType = {
-    UPDATE_VIEW_PORT: 'updateViewPort',
-    SHOW_FRIENDS_RANK: 'showFriendsRank',
-    SHOW_GROUP_FRIENDS_RANK: 'showGroupFriendsRank',
-    SET_USER_RECORD: 'setUserRecord',
-    RELATIONAL_CHAIN_INTERACTIVE_DATA: 'relationalChainInteractiveData',
-    DIRECTED_SHARING: 'directedSharing',
-    PC_HANDOFF: 'PCHandoff',
-    CLOSE: 'close',
-    RENDER_GROUP_TASK_MEMBERS_INFO: 'renderGroupTaskMembersInfo',
-    SHOW_FRIENDS_ONLINE_STATUS: 'showFriendsOnlineStatus',
-};
 function getBoxSize(hasAssigned) {
     if (hasAssigned) {
         return {
@@ -43,7 +30,7 @@ function getBoxSize(hasAssigned) {
             top: 281,
             width: 342,
             height: 215,
-            scale: systemInfo.screenWidth / 375,
+            scale: screenWidth / 375,
         };
     }
     else {
@@ -52,13 +39,13 @@ function getBoxSize(hasAssigned) {
             top: 231,
             width: 343,
             height: 329,
-            scale: systemInfo.screenWidth / 375,
+            scale: screenWidth / 375,
         };
     }
 }
-/**
- * 初始化开放域
- */
+// /**
+//  * 初始化开放域
+//  */
 const initOpenDataCanvas = async () => {
     console.log('!!! initOpenDataCanvas');
     Layout.updateViewPort({
@@ -68,9 +55,10 @@ const initOpenDataCanvas = async () => {
         height: screenHeight,
     });
 };
-initOpenDataCanvas();
+// initOpenDataCanvas();
 // 给定 xml 和 style，渲染至 sharedCanvas
 function LayoutWithTplAndStyle(xml, style) {
+    initOpenDataCanvas();
     Layout.clear();
     Layout.init(xml, style);
     Layout.layout(sharedContext);
@@ -283,39 +271,39 @@ function init() {
     currentMaxScore = 0;
     wx.onMessage((data) => {
         switch (data.event) {
-            case MessageType.UPDATE_VIEW_PORT:
+            case 'updateViewPort':
                 Layout.updateViewPort(data.box);
                 break;
-            case MessageType.SHOW_FRIENDS_RANK:
+            case 'showFriendRank':
                 showLoading();
                 showFriendRank();
                 break;
-            case MessageType.SHOW_GROUP_FRIENDS_RANK:
+            case 'showGroupRank':
                 showLoading();
                 showGroupRank(data.shareTicket);
                 break;
-            case MessageType.SET_USER_RECORD:
+            case 'setUserRecord':
                 setUserRecord(key, data.value);
                 break;
-            case MessageType.RELATIONAL_CHAIN_INTERACTIVE_DATA:
+            case 'relationalChaininteractiveData':
                 showLoading();
                 showFriendRank('interaction');
                 break;
-            case MessageType.DIRECTED_SHARING:
+            case 'directedSharing':
                 showLoading();
                 showPotentialFriendList();
                 break;
-            case MessageType.PC_HANDOFF:
+            case 'PCHandoff':
                 runPCHandoff();
                 break;
-            case MessageType.SHOW_FRIENDS_ONLINE_STATUS:
+            case 'showFriendsOnlineStatus':
                 showFriendsOnlineStatus();
                 break;
-            case MessageType.CLOSE:
+            case 'close':
                 Layout.clearAll();
                 break;
             /********* v2 *********/
-            case MessageType.RENDER_GROUP_TASK_MEMBERS_INFO:
+            case 'renderGroupTaskMembersInfo':
                 renderGroupTaskMembers(data);
                 break;
             /********* v2 *********/

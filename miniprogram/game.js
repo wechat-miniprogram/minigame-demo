@@ -8,9 +8,9 @@ wx.updateShareMenu({
     withShareTicket: true,
 });
 // 在屏sharedCanvas
-wx.getOpenDataContext({
-    sharedCanvasMode: 'screenCanvas',
-});
+// wx.getOpenDataContext({
+//   sharedCanvasMode: 'screenCanvas',
+// });
 const { pixelRatio, windowWidth, windowHeight } = wx.getSystemInfoSync();
 // 初始化canvas
 let app = new PIXI.Application({

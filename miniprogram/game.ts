@@ -11,9 +11,9 @@ wx.updateShareMenu({
 });
 
 // 在屏sharedCanvas
-wx.getOpenDataContext({
-  sharedCanvasMode: 'screenCanvas',
-});
+// wx.getOpenDataContext({
+//   sharedCanvasMode: 'screenCanvas',
+// });
 
 const { pixelRatio, windowWidth, windowHeight } = wx.getSystemInfoSync();
 
