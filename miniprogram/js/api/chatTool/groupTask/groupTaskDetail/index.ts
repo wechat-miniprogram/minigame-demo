@@ -98,7 +98,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
 
   function share() {
     // 分享结果
-    if (activityInfo.finished || obj.taskCnt >= obj.totalTaskNum) {
+    if (activityInfo.finished || taskCnt >= totalTaskNum) {
       wx.downloadFile({
         url: 'https://mmbiz.qpic.cn/mmbiz_gif/EXAZAY4U1KCcdEB1gicNwIL4lUrpVQ5H5jOSfiaVHJ5n4EQyPrLqgRtbb6X1hRIiaZqMIibVME51FYRf7p2kC4OdLA/0',
         success(res) {
@@ -130,8 +130,9 @@ module.exports = function (PIXI: any, app: any, obj: any) {
   }
 
   function Btn2() {
+    console.log("Btn2", activityInfo.useAssigner, activityInfo.finished, taskCnt, totalTaskNum)
     // 指定人且进行中
-    if (activityInfo.useAssigner && !activityInfo.finished && obj.taskCnt < obj.totalTaskNum) {
+    if (activityInfo.useAssigner && !activityInfo.finished && taskCnt < totalTaskNum) {
       // @ts-ignore 声明未更新临时处理
       wx.notifyGroupMembers({
         title: "公会任务",
@@ -174,7 +175,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
     // } else {
     //   role = participant?.includes(groupOpenID || '')
     //     ? roleType[2] // 参与者
-    //     : obj.isOwner
+    //     : isOwner
     //       ? roleType[1]
     //       : roleType[3]; // 创建者或非参与者
     // }
@@ -196,6 +197,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
     // });
 
     // updateProgressImage(); // 更新进度图片
+    console.log("drawRefresh start", isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus)
     drawRefresh(isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus);
   }
 

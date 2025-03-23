@@ -186,7 +186,7 @@ export default function (PIXI, app, obj, callBack) {
         radius: r(4),
         y: r(588),
     });
-    let taskFinishedBtnText = p_text(PIXI, {
+    let taskFinishedBoxText = p_text(PIXI, {
         content: "任务已完成",
         fontSize: r(17),
         fill: 0xffffff,
@@ -196,7 +196,7 @@ export default function (PIXI, app, obj, callBack) {
             containerHeight: taskFinishedBox.height,
         },
     });
-    taskFinishedBox.addChild(taskFinishedBtnText);
+    taskFinishedBox.addChild(taskFinishedBoxText);
     // 提醒未参与的人/分享结果/分享进度
     let Btn2 = p_button(PIXI, {
         width: r(196),
@@ -275,21 +275,25 @@ export default function (PIXI, app, obj, callBack) {
         taskTitleText.turnText(`加入boss战，累积打${totalTaskNum}次`);
         taskDetailText.turnText(`${participantCnt}人参与，进度${taskCnt}/${totalTaskNum}`);
         // 做任务按钮
-        if (taskCnt < totalTaskNum) {
-            container.removeChild(taskFinishedBox);
-            container.addChild(doTaskBtn);
-        }
-        else { // 任务已完成/已结束/未参与任务
+        if (finished) { // 已结束
             container.removeChild(doTaskBtn);
             container.addChild(taskFinishedBox);
-            if (finished) {
-                taskFinishedBtnText.turnText("已结束");
+            taskFinishedBoxText.turnText("已结束");
+        }
+        else {
+            if (taskCnt < totalTaskNum) { // 做任务
+                container.removeChild(taskFinishedBox);
+                container.addChild(doTaskBtn);
             }
-            else if (!signInStatus) {
-                taskFinishedBtnText.turnText("未参与任务");
-            }
-            else {
-                taskFinishedBtnText.turnText("任务已完成");
+            else { // 任务已完成/未参与任务
+                container.removeChild(doTaskBtn);
+                container.addChild(taskFinishedBox);
+                if (!signInStatus) {
+                    taskFinishedBoxText.turnText("未参与任务");
+                }
+                else {
+                    taskFinishedBoxText.turnText("任务已完成");
+                }
             }
         }
         container.addChild(Btn2);
