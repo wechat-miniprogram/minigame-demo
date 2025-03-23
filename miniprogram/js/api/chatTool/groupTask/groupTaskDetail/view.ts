@@ -289,7 +289,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     container.removeChild(shareBtn);
     callBack({
       status: "destroyOpenDataContext",
-      drawFn() {},
+      drawFn() { },
     });
   }
 
@@ -298,7 +298,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     finished: boolean, signInStatus: boolean
   ) {
     // 如果是发起人并且任务未结束，则显示结束任务按钮
-    if (isOwner && !finished) {
+    if (isOwner && !finished && taskCnt < totalTaskNum) {
       container.addChild(endTaskBtn);
     } else {
       container.removeChild(endTaskBtn);
@@ -319,14 +319,14 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       } else { // 任务已完成/未参与任务
         container.removeChild(doTaskBtn);
         container.addChild(taskFinishedBox);
-         if (!signInStatus) {
+        if (!signInStatus) {
           taskFinishedBoxText.turnText("未参与任务")
         } else {
           taskFinishedBoxText.turnText("任务已完成")
         }
       }
     }
-    
+
 
     container.addChild(Btn2);
     // 已指定参与人

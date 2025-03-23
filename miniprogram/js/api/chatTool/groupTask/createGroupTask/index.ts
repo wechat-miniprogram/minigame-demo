@@ -1,5 +1,5 @@
 import view from "./view";
-import { getGroupInfo, getGroupTaskDetailPath } from "../util";
+import { getGroupInfo, shareAppMessageToGroup } from "../util";
 
 module.exports = function (PIXI: any, app: any, obj: {
   fetchActivityList: () => void
@@ -47,14 +47,14 @@ module.exports = function (PIXI: any, app: any, obj: {
 
   function publish(drawFn: () => void) {
     console.log('publish');
+    wx.showLoading({ title: '发布中...', mask: true });
+
     if (!activityId) {
       createActivityID().then(() => {
         publish(drawFn);
       });
       return;
     }
-
-    wx.showLoading({ title: '发布中...', mask: true });
 
     getGroupInfo()
       .then((resp: any) => {
@@ -73,55 +73,25 @@ module.exports = function (PIXI: any, app: any, obj: {
             finished: false,
           },
         }).then(() => {
-          const params = {
-            withShareTicket: true,
-            isUpdatableMessage: true,
+          shareAppMessageToGroup(
             activityId,
             participant,
-            useForChatTool: true,
-            chooseType: useAssigner ? 1 : 2,
-            templateInfo: {
-              templateId: "2A84254B945674A2F88CE4970782C402795EB607", // 模版ID常量
-              parameterList: [
-                {
-                  name: 'member_count',
-                  value: '0',
-                },
-                {
-                  name: 'room_limit',
-                  value: '5',
-                },
-              ],
+            useAssigner ? 1 : 2,
+            (res) => {
+              console.log("shareAppMessageToGroup success: ", res);
+              wx.hideLoading({});
+              activityId = "";
+              createActivityID(); // 刷新待创建的活动id
+              drawFn();
             },
-          };
-          wx.updateShareMenu({
-            ...params,
-            success(res) {
-              console.info("updateShareMenu success: ", res);
-              // @ts-ignore 声明未更新临时处理
-              wx.shareAppMessageToGroup({
-                title: "群友们，为了星球而战～",
-                path: getGroupTaskDetailPath(activityId),
-                success(res) {
-                  console.info("shareAppMessageToGroup success: ", res);
-                  wx.hideLoading({});
-                  activityId = "";
-                  createActivityID(); // 刷新待创建的活动id
-                  drawFn();
-                },
-                fail(err) {
-                  console.info("shareAppMessageToGroup fail: ", err);
-                  wx.showToast({
-                    title: "分享失败",
-                    icon: "none",
-                  });
-                },
+            (err) => {
+              console.info("shareAppMessageToGroup fail: ", err);
+              wx.showToast({
+                title: "分享失败",
+                icon: "none",
               });
-            },
-            fail(res) {
-              console.info("updateShareMenu fail: ", res);
-            },
-          });
+            }
+          );
         });
       })
       .catch((err) => {

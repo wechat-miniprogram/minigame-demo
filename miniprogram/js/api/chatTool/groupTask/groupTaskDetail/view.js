@@ -265,7 +265,7 @@ export default function (PIXI, app, obj, callBack) {
     }
     function refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus) {
         // 如果是发起人并且任务未结束，则显示结束任务按钮
-        if (isOwner && !finished) {
+        if (isOwner && !finished && taskCnt < totalTaskNum) {
             container.addChild(endTaskBtn);
         }
         else {

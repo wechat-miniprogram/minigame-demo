@@ -1,5 +1,5 @@
 import view from "./view";
-import { getGroupInfo, getGroupTaskDetailPath } from "../util";
+import { getGroupInfo, getGroupTaskDetailPath, shareAppMessageToGroup } from "../util";
 import { ActivityInfo, GroupInfo } from "../types";
 import layout, { Layout } from '../../../../libs/engine';
 
@@ -51,49 +51,22 @@ module.exports = function (PIXI: any, app: any, obj: any) {
       console.warn('activityInfo._id is undefined', activityInfo);
       return;
     }
-    wx.updateShareMenu({
-      withShareTicket: true,
-      isUpdatableMessage: true,
+
+    shareAppMessageToGroup(
       activityId,
       participant,
-      useForChatTool: true,
-      chooseType: activityInfo.useAssigner ? 1 : 2,
-      templateInfo: {
-        templateId: "2A84254B945674A2F88CE4970782C402795EB607", // 模版ID常量
-        parameterList: [
-          {
-            name: 'member_count',
-            value: '0',
-          },
-          {
-            name: 'room_limit',
-            value: '5',
-          },
-        ],
+      activityInfo.useAssigner ? 1 : 2,
+      (res) => {
+        console.log("shareAppMessageToGroup success: ", res);
       },
-      success(res) {
-        console.info("updateShareMenu success: ", res);
-        // @ts-ignore 声明未更新临时处理
-        wx.shareAppMessageToGroup({
-          title: "群友们，为了星球而战～",
-          path: getGroupTaskDetailPath(activityId),
-          success(res) {
-            console.info("shareAppMessageToGroup success: ", res);
-          },
-          fail(err) {
-            console.info("shareAppMessageToGroup fail: ", err);
-            wx.showToast({
-              title: "分享失败",
-              icon: "none",
-            });
-          },
+      (err) => {
+        console.error("shareAppMessageToGroup fail: ", err);
+        wx.showToast({
+          title: "分享失败",
+          icon: "none",
         });
-      },
-      fail(err) {
-        console.info("updateShareMenu fail: ", err);
-      },
-    })
-    
+      }
+    );
   }
 
   function share() {
@@ -355,13 +328,13 @@ module.exports = function (PIXI: any, app: any, obj: any) {
   const startTicker = (callback: () => void) => {
     layout.ticker.add(callback);
   };
-  
+
   const stopTicker = (callback: () => void) => {
     layout.ticker.remove(callback);
   };
 
   // startTicker(drawShareCanvas);
-  
+
 
   function refreshOpenDataContext() {
     const isParticipated = !activityInfo.useAssigner || watchingParticipanted; // 未指定人或正在观看参与人
