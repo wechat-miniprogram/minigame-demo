@@ -1,4 +1,4 @@
-import { p_button, p_text, p_box, p_scroll, p_line, } from "../../../libs/component/index";
+import { p_button, p_text, p_box, p_scroll, p_line, p_img, } from "../../../libs/component/index";
 import fixedTemplate from "../../../libs/template/fixed";
 import { openChatTool } from "./util";
 export default function (PIXI, app, obj, callBack) {
@@ -54,17 +54,28 @@ export default function (PIXI, app, obj, callBack) {
             relative_middle: {
                 containerHeight: button.height,
             },
-        }), p_text(PIXI, {
-            content: " >",
-            x: r(291),
-            fontSize: r(17),
-            fill: 0x000000,
-            align: "center",
+        }), 
+        // p_text(PIXI, {
+        //   content: " >",
+        //   x: r(291),
+        //   fontSize: r(17),
+        //   fill: 0x000000,
+        //   align: "center",
+        //   relative_middle: {
+        //     containerHeight: button.height,
+        //   },
+        // }),
+        p_img(PIXI, {
+            width: 15 * PIXI.ratio,
+            height: 26 * PIXI.ratio,
+            x: r(295),
+            src: 'images/right_arrow.png',
             relative_middle: {
-                containerHeight: button.height,
+                containerHeight: button.height
             },
         }), p_line(PIXI, {
             width: r(1),
+            height: r(0.5),
             color: 0x000000,
             alpha: 0.1,
         }, [r(16), r(63.5)], [r(290), 0]));

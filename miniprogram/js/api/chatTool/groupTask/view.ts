@@ -4,6 +4,7 @@ import {
   p_box,
   p_scroll,
   p_line,
+  p_img,
 } from "../../../libs/component/index";
 import fixedTemplate from "../../../libs/template/fixed";
 import { ActivityInfo } from "./types";
@@ -50,6 +51,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       containerHeight: taskListBox.height,
     },
   });
+
   function taskButton(buttonNumber: number, activityId: string, roomid: string, chatType: number) {
     console.log('!!! taskButton', buttonNumber, activityId);
     let button = p_button(PIXI, {
@@ -70,20 +72,31 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
           containerHeight: button.height,
         },
       }),
-      p_text(PIXI, {
-        content: " >",
-        x: r(291),
-        fontSize: r(17),
-        fill: 0x000000,
-        align: "center",
-        relative_middle: {
-          containerHeight: button.height,
+      // p_text(PIXI, {
+      //   content: " >",
+      //   x: r(291),
+      //   fontSize: r(17),
+      //   fill: 0x000000,
+      //   align: "center",
+      //   relative_middle: {
+      //     containerHeight: button.height,
+      //   },
+      // }),
+
+      p_img(PIXI, {
+        width: 15 * PIXI.ratio,
+        height: 26 * PIXI.ratio,
+        x: r(295),
+        src: 'images/right_arrow.png',
+        relative_middle: { 
+          containerHeight: button.height
         },
       }),
       p_line(
         PIXI,
         {
           width: r(1),
+          height: r(0.5),
           color: 0x000000,
           alpha: 0.1,
         },

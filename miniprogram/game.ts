@@ -68,6 +68,7 @@ PIXI.loader
     'images/recommend.png',
     'images/visionkit-ability.png',
     'images/chatTool.png',
+    'images/right_arrow.png'
   ])
   .load(() => {
     wx.loadSubpackage({
