@@ -4,6 +4,7 @@ import {
   p_box,
   p_img,
   p_line,
+  p_textarea,
 } from "../../../../libs/component/index";
 import fixedTemplate from "../../../../libs/template/fixed";
 
@@ -27,33 +28,29 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   /**** taskTitle ****/
   // 任务示例标题
   let taskTitleText = p_text(PIXI, {
-    content: "任务（此处为示例）",
+    content: "任务名称",
     x: r(26),
     y: r(155),
     fontSize: r(14),
     fill: "rgba(0,0,0,0.5)",
     align: "center",
   });
-  // 任务示例
-  let taskTitleBox = p_box(PIXI, {
+  // 任务标题输入框
+  let taskTitleInput = p_textarea(PIXI, {
     width: contentWidth,
     height: r(72),
     y: r(179),
     radius: r(8),
-  });
-  // 任务示例文字
-  let taskTitleBoxText = p_text(PIXI, {
-    content: "加入boss战，累积打5次",
     fontSize: r(17),
-    fill: 0x000000,
-    align: "center",
-    relative_middle: {
-      containerWidth: taskTitleBox.width,
-      containerHeight: taskTitleBox.height,
-    },
+    padding: r(13),
   });
-
-  taskTitleBox.addChild(taskTitleBoxText);
+  taskTitleInput.onConfirmFn((text: string) => {
+    console.log('text', text);
+    callBack({
+      status: 'titleChange',
+      text,
+    });
+  });
   /**** taskTitle ****/
 
   /**** Participant ****/
@@ -214,26 +211,17 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   });
   /**** publish ****/
 
-  // 一定要加这个reload, 否则会报错
-  // @ts-ignore 框架遗留问题
-  window.router.getNowPage((page: any) => {
-    page.reload = function () {
-      logo.reloadImg({ src: "images/logo.png" });
-    };
-  });
-
   container.addChild(
     goBack,
     title,
     api_name,
     underline,
     taskTitleText,
-    taskTitleBox,
+    taskTitleInput,
+    // taskTitleBox,
     participantTitleText,
     BtnBox,
     publishBtn,
-    logo,
-    logoName
   );
   app.stage.addChild(container);
 

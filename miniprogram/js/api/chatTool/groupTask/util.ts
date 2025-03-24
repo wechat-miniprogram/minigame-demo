@@ -108,7 +108,7 @@ export function openChatTool(roomid?: string, chatType?: number, success?: any, 
 }
 
 export function shareAppMessageToGroup(activityId: string, participant: string[],
-  chooseType: number, success?: any, fail?: any) {
+  chooseType: number, taskTitle: string, success?: any, fail?: any) {
   const templateInfo = {
     templateId: "2A84254B945674A2F88CE4970782C402795EB607", // 模版ID常量
     parameterList: [
@@ -133,7 +133,7 @@ export function shareAppMessageToGroup(activityId: string, participant: string[]
     success(res) {
       // @ts-ignore 声明未更新临时处理
       wx.shareAppMessageToGroup({
-        title: "群友们，为了星球而战～",
+        title: taskTitle,
         imageUrl: "https://mmgame.qpic.cn/image/264eef4359b95dffc552149c15b9d53723d56d836411841a37710f1c7c3b4878/0",
         path: getGroupTaskDetailPath(activityId),
         success,

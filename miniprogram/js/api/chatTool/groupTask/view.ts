@@ -52,7 +52,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     },
   });
 
-  function taskButton(buttonNumber: number, activityId: string, roomid: string, chatType: number) {
+  function taskButton(buttonNumber: number, activityId: string, roomid: string, chatType: number, taskTitle: string) {
     console.log('!!! taskButton', buttonNumber, activityId);
     let button = p_button(PIXI, {
       parentWidth: taskList.width,
@@ -63,7 +63,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     });
     button.myAddChildFn(
       p_text(PIXI, {
-        content: "示例" + "群任务",
+        content: taskTitle,
         x: r(16),
         fontSize: r(17),
         fill: 0x000000,
@@ -117,7 +117,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     } else {
       taskListBox.removeChild(taskListBoxPrompt);
       for (let i = 0; i < activityList.length; i++) {
-        taskList.myAddChildFn(taskButton(i, activityList[i].activityId || '', activityList[i].roomid || '', activityList[i].chatType || 3));
+        taskList.myAddChildFn(taskButton(i, activityList[i].activityId || '', activityList[i].roomid || '', activityList[i].chatType || 3, activityList[i].taskTitle || '示例'));
       }
     }
   }

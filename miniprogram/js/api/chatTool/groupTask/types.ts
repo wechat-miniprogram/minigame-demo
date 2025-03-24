@@ -10,6 +10,7 @@ export interface ActivityInfo {
   _id?: string;
   finished?: boolean;
   useAssigner?: boolean;
+  taskTitle?: string;
 }
 
 // 自定义

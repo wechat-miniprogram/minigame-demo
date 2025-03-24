@@ -47,7 +47,6 @@ export default function (PIXI, app, obj, callBack) {
     endTaskBtn.onClickFn(() => {
         callBack({
             status: "endTask",
-            drawFn() { },
         });
     });
     // 分享按钮
@@ -67,7 +66,6 @@ export default function (PIXI, app, obj, callBack) {
     smallShareBtn.onClickFn(() => {
         callBack({
             status: "smallShare",
-            drawFn() { },
         });
     });
     /**** title ****/
@@ -170,8 +168,6 @@ export default function (PIXI, app, obj, callBack) {
     doTaskBtn.onClickFn(() => {
         callBack({
             status: "doTask",
-            drawFn() {
-            },
         });
     });
     // 任务已完成/已结束/未参与任务
@@ -219,7 +215,6 @@ export default function (PIXI, app, obj, callBack) {
     Btn2.onClickFn(() => {
         callBack({
             status: "Btn2",
-            drawFn() { },
         });
     });
     // 分享进度
@@ -245,7 +240,6 @@ export default function (PIXI, app, obj, callBack) {
     shareBtn.onClickFn(() => {
         callBack({
             status: "shareResult",
-            drawFn() { },
         });
     });
     function clearDraw() {
@@ -259,10 +253,10 @@ export default function (PIXI, app, obj, callBack) {
         container.removeChild(shareBtn);
         callBack({
             status: "destroyOpenDataContext",
-            drawFn() { },
         });
     }
-    function refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus) {
+    function refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus, taskTitle) {
+        api_name.turnText(taskTitle);
         // 如果是发起人并且任务未结束，则显示结束任务按钮
         if (isOwner && !finished && taskCnt < totalTaskNum) {
             container.addChild(endTaskBtn);
@@ -330,8 +324,8 @@ export default function (PIXI, app, obj, callBack) {
         clearDraw();
         callBack({
             status: "refresh",
-            drawFn(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus) {
-                refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus);
+            drawFn(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus, taskTitle) {
+                refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus, taskTitle);
             }
         });
     }

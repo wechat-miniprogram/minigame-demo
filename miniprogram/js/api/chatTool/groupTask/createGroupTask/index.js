@@ -4,6 +4,7 @@ module.exports = function (PIXI, app, obj) {
     let activityId = '';
     let useAssigner = false;
     let participant = [];
+    let taskTitle = '';
     function clickAllParticipant(drawFn) {
         console.log('clickAllParticipant');
         useAssigner = false;
@@ -40,6 +41,13 @@ module.exports = function (PIXI, app, obj) {
     }
     function publish(drawFn) {
         console.log('publish');
+        if (!taskTitle) {
+            wx.showToast({
+                title: '请输入任务名称',
+                icon: 'none',
+            });
+            return;
+        }
         wx.showLoading({ title: '发布中...', mask: true });
         if (!activityId) {
             createActivityID().then(() => {
@@ -62,9 +70,10 @@ module.exports = function (PIXI, app, obj) {
                     signIn: [],
                     useAssigner,
                     finished: false,
+                    taskTitle,
                 },
             }).then(() => {
-                shareAppMessageToGroup(activityId, participant, useAssigner ? 1 : 2, (res) => {
+                shareAppMessageToGroup(activityId, participant, useAssigner ? 1 : 2, taskTitle, (res) => {
                     console.log("shareAppMessageToGroup success: ", res);
                     wx.hideLoading({});
                     activityId = "";
@@ -88,8 +97,11 @@ module.exports = function (PIXI, app, obj) {
         });
     }
     return view(PIXI, app, obj, (data) => {
-        let { status, drawFn } = data;
+        let { status, drawFn, text } = data;
         switch (status) {
+            case 'titleChange':
+                taskTitle = text;
+                break;
             case 'allParticipant':
                 clickAllParticipant(drawFn);
                 break;

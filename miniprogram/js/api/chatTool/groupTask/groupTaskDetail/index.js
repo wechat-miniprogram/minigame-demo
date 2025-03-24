@@ -1,7 +1,7 @@
 import view from "./view";
 import { getGroupInfo, getGroupTaskDetailPath, shareAppMessageToGroup } from "../util";
 import { ShareCanvas } from './ShareCanvas';
-// const roleType = ["unkown", "owner", "participant", "nonParticipant"]; // 定义角色类型
+const roleType = ["unkown", "owner", "participant", "nonParticipant"]; // 定义角色类型
 const { envVersion } = wx.getAccountInfoSync().miniProgram;
 const getVersionType = () => {
     // 根据环境版本返回对应的版本类型
@@ -26,8 +26,7 @@ module.exports = function (PIXI, app, obj) {
     let ticker = PIXI.ticker.shared;
     const { activityId } = obj; // 获取启动信息
     let watchingParticipanted = true; // 是否正在观看参与人
-    // let members: string[] = []; // 成员列表
-    // let role = roleType[0]; // 当前用户角色
+    let role = roleType[0]; // 当前用户角色
     let activityInfo = {}; // 活动信息
     let signIn = []; // 签到成员列表
     let notSignIn = []; // 未签到成员列表
@@ -39,17 +38,12 @@ module.exports = function (PIXI, app, obj) {
     let isOwner = false; // 是否为活动创建者
     let groupInfo; // 群组信息
     let signInStatus = false; // 签到状态
-    // let activityStatusStar = ""; // 活动状态
-    // let showProgress = false; // 是否显示进度
-    // let percent = "0"; // 签到百分比
-    // let progressImage = ""; // 进度图片路径
-    // let triggered = false; // 下拉刷新触发状态;
     function shareAppMessage() {
         if (!activityInfo._id) {
             console.warn('activityInfo._id is undefined', activityInfo);
             return;
         }
-        shareAppMessageToGroup(activityId, participant, activityInfo.useAssigner ? 1 : 2, (res) => {
+        shareAppMessageToGroup(activityId, participant, activityInfo.useAssigner ? 1 : 2, activityInfo.taskTitle || '示例', (res) => {
             console.log("shareAppMessageToGroup success: ", res);
         }, (err) => {
             console.error("shareAppMessageToGroup fail: ", err);
@@ -124,36 +118,21 @@ module.exports = function (PIXI, app, obj) {
         totalTaskNum = 5; // 总任务次数
         const { creator } = activityInfo;
         notSignIn = participant?.filter((i) => !signIn?.includes(i)) || []; // 计算未签到成员
-        // const percent = participant.length
-        //   ? Math.ceil((signIn.length / participant.length) * 100)
-        //   : 0; // 计算签到百分比
         isOwner = creator === openid; // 判断是否为活动创建者
-        // if (roomid !== activityInfo.roomid) {
-        //   role = roleType[3]; // 非参与者
-        // } else {
-        //   role = participant?.includes(groupOpenID || '')
-        //     ? roleType[2] // 参与者
-        //     : isOwner
-        //       ? roleType[1]
-        //       : roleType[3]; // 创建者或非参与者
-        // }
-        // if (participant?.length === 0) {
-        //   role = roleType[2]; // 如果没有参与者，默认角色为参与者
-        // }
-        // this.setData({
-        //   role,
-        //   isOwner,
+        if (roomid !== activityInfo.roomid) {
+            role = roleType[3]; // 非参与者
+        }
+        else {
+            role = participant?.includes(groupOpenID || '')
+                ? roleType[2] // 参与者
+                : (isOwner ? roleType[1] : roleType[3]); // 创建者或非参与者
+        }
+        if (participant?.length === 0) {
+            role = roleType[2]; // 如果没有参与者，默认角色为参与者
+        }
         signInStatus = signIn?.includes(groupOpenID || '') || false;
-        // activityInfo,
-        // members = signIn || [];
-        //   signIn,
-        //   notSignIn,
-        //   participant,
-        //   percent,
-        // });
-        // updateProgressImage(); // 更新进度图片
-        console.log("drawRefresh start", isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus);
-        drawRefresh(isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus);
+        console.log("drawRefresh start", isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus, activityInfo.taskTitle);
+        drawRefresh(isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus, activityInfo.taskTitle || '示例');
     }
     function updateChatToolMsg(params) {
         const { targetState, parameterList } = params;
@@ -310,11 +289,9 @@ module.exports = function (PIXI, app, obj) {
                 break;
             case "endTask":
                 earlyTerminate();
-                drawFn();
                 break;
             case "smallShare":
                 shareAppMessage();
-                drawFn();
                 break;
             case "participated":
                 watchingParticipanted = true;
@@ -328,15 +305,12 @@ module.exports = function (PIXI, app, obj) {
                 break;
             case "doTask":
                 await doTask();
-                drawFn();
                 break;
             case "Btn2":
                 Btn2();
-                drawFn();
                 break;
             case "shareResult":
                 share();
-                drawFn();
                 break;
             case "destroyOpenDataContext":
                 destroyOpenDataContext();

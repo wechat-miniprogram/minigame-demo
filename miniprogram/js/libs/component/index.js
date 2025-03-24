@@ -8,6 +8,7 @@ import text from './text';
 import circle from './circle';
 import linearGradientBox from './linearGradientBox';
 import texture from './texture';
+import textarea from './textarea';
 
 module.exports = {
     p_box: box,
@@ -20,4 +21,5 @@ module.exports = {
     p_circle: circle,
     p_linearGradientBox: linearGradientBox,
     p_texture: texture,
+    p_textarea: textarea
 };

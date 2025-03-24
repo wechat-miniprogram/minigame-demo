@@ -24,7 +24,8 @@ exports.main = async (event, context) => {
         // targetState: event.targetState,
         useAssigner: event.useAssigner,
         finished: event.finished,
-        createTime: Date.now()
+        createTime: Date.now(),
+        taskTitle: event.taskTitle,
       }
     })
     return {

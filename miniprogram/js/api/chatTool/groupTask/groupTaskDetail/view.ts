@@ -61,7 +61,6 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   endTaskBtn.onClickFn(() => {
     callBack({
       status: "endTask",
-      drawFn() { },
     });
   });
   // 分享按钮
@@ -81,7 +80,6 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   smallShareBtn.onClickFn(() => {
     callBack({
       status: "smallShare",
-      drawFn() { },
     });
   });
   /**** title ****/
@@ -196,9 +194,6 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   doTaskBtn.onClickFn(() => {
     callBack({
       status: "doTask",
-      drawFn() {
-
-      },
     });
   });
   // 任务已完成/已结束/未参与任务
@@ -246,7 +241,6 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   Btn2.onClickFn(() => {
     callBack({
       status: "Btn2",
-      drawFn() { },
     });
   });
   // 分享进度
@@ -272,7 +266,6 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   shareBtn.onClickFn(() => {
     callBack({
       status: "shareResult",
-      drawFn() { },
     });
   });
 
@@ -287,14 +280,14 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     container.removeChild(shareBtn);
     callBack({
       status: "destroyOpenDataContext",
-      drawFn() { },
     });
   }
 
   function refreshDraw(isOwner: boolean, useAssigner: boolean,
     participantCnt: number, taskCnt: number, totalTaskNum: number,
-    finished: boolean, signInStatus: boolean
+    finished: boolean, signInStatus: boolean, taskTitle: string
   ) {
+    api_name.turnText(taskTitle);
     // 如果是发起人并且任务未结束，则显示结束任务按钮
     if (isOwner && !finished && taskCnt < totalTaskNum) {
       container.addChild(endTaskBtn);
@@ -361,8 +354,8 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       status: "refresh",
       drawFn(isOwner: boolean, useAssigner: boolean,
         participantCnt: number, taskCnt: number, totalTaskNum: number,
-        finished: boolean, signInStatus: boolean) {
-        refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus)
+        finished: boolean, signInStatus: boolean, taskTitle: string) {
+        refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus, taskTitle)
       }
     })
   }
