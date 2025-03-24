@@ -6,7 +6,7 @@ import {
   p_line,
 } from "../../../../libs/component/index";
 import fixedTemplate from "../../../../libs/template/fixed";
-import { roleType, DrawGroupTaskDetailOption } from "../types";
+import { DrawGroupTaskDetailOption } from "../types";
 
 export default function (PIXI: any, app: any, obj: any, callBack: (data: any) => void) {
   const r = (value: any) => {

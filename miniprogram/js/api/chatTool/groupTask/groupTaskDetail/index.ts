@@ -1,7 +1,7 @@
 import view from "./view";
 import { getGroupInfo, getGroupTaskDetailPath, shareAppMessageToGroup } from "../util";
 import { ShareCanvas } from './ShareCanvas';
-import { ActivityInfo, GroupInfo, roleType, DrawGroupTaskDetailOption } from "../types";
+import { ActivityInfo, GroupInfo, DrawGroupTaskDetailOption } from "../types";
 import { GROUP_TASK_RESULT_EMOJI_URL } from "../const";
 import { drawProgress } from "./drawProgress";
 
