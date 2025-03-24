@@ -211,7 +211,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     underline,
     taskListBox,
     createGroupTaskBtn,
-    refreshTaskBtn,
+    // refreshTaskBtn,
     logo,
     logoName
   );

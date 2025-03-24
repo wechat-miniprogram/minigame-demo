@@ -169,7 +169,9 @@ export default function (PIXI, app, obj, callBack) {
             logo.reloadImg({ src: "images/logo.png" });
         };
     });
-    container.addChild(goBack, title, api_name, underline, taskListBox, createGroupTaskBtn, refreshTaskBtn, logo, logoName);
+    container.addChild(goBack, title, api_name, underline, taskListBox, createGroupTaskBtn, 
+    // refreshTaskBtn,
+    logo, logoName);
     app.stage.addChild(container);
     return container;
 }
