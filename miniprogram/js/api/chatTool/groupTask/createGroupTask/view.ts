@@ -134,6 +134,13 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     x: r(16),
     y: r(42),
   });
+  let specifyParticipantBtnArrow = p_img(PIXI, {
+    src: "images/right_arrow.png",
+    width: r(7.5),
+    height: r(13),
+    x: r(136),
+    y: r(18),
+  });
   let specifyParticipantSelectedImg = p_img(PIXI, {
     src: "images/ic-line-done.png",
     x: r(282),
@@ -155,6 +162,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
         allParticipantBtn.addChild(allParticipantSelectedImg);
         specifyParticipantBtn.removeChild(specifyParticipantSelectedImg);
         specifyParticipantBtnTitleText.turnText("指定参与人");
+        specifyParticipantBtn.removeChild(specifyParticipantBtnArrow);
       },
     });
   });
@@ -168,8 +176,9 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
         specifyParticipantBtn.addChild(specifyParticipantSelectedImg);
         allParticipantBtn.removeChild(allParticipantSelectedImg);
         specifyParticipantBtnTitleText.turnText(
-          `指定参与人：${participantCnt} >`
+          `指定参与人：${participantCnt}`
         );
+        specifyParticipantBtn.addChild(specifyParticipantBtnArrow);
       },
     });
   });
