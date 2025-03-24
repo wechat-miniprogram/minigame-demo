@@ -63,6 +63,11 @@ export function getGroupInfo() {
                         getInfoSuccess(resolve, reject, res);
                     },
                     fail(err2) {
+                        wx.hideLoading();
+                        wx.showToast({
+                            title: "单聊暂不支持",
+                            icon: "none",
+                        });
                         console.error('!!! getGroupInfo fail: ', err, err2);
                         reject(err2);
                     }
