@@ -22,8 +22,8 @@ exports.main = async (event, context) => {
         participant: event.participant,
         signIn: event.signIn,
         // targetState: event.targetState,
-        useAssigner: event.useAssigner,
-        finished: event.finished,
+        isUsingSpecify: event.isUsingSpecify,
+        isFinished: event.isFinished,
         createTime: Date.now(),
         taskTitle: event.taskTitle,
       }

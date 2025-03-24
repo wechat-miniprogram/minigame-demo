@@ -61,7 +61,7 @@ async function updateChatToolMsg(event) {
   
     const updateResp = await db.collection('activity').doc(activityInfo._id).update({
       data: {
-        finished: true
+        isFinished: true
       }
     })
   }

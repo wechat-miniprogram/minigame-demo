@@ -1,18 +1,18 @@
 import view from "./view";
-import { getGroupInfo, shareAppMessageToGroup } from "../util";
+import { getGroupInfo, shareAppMessageToGroup, showToast } from "../util";
 module.exports = function (PIXI, app, obj) {
     let activityId = '';
-    let useAssigner = false;
+    let isUsingSpecify = false;
     let participant = [];
     let taskTitle = '';
     function clickAllParticipant(drawFn) {
         console.log('clickAllParticipant');
-        useAssigner = false;
+        isUsingSpecify = false;
         drawFn();
     }
     function clickSpecifyParticipant(drawFn) {
         console.log('specifyParticipant');
-        useAssigner = true;
+        isUsingSpecify = true;
         // @ts-ignore 声明未更新临时处理
         wx.selectGroupMembers({
             success: (res) => {
@@ -68,12 +68,12 @@ module.exports = function (PIXI, app, obj) {
                     // endTime: dateTextEnd,
                     participant,
                     signIn: [],
-                    useAssigner,
-                    finished: false,
+                    isUsingSpecify,
+                    isFinished: false,
                     taskTitle,
                 },
             }).then(() => {
-                shareAppMessageToGroup(activityId, participant, useAssigner ? 1 : 2, taskTitle, (res) => {
+                shareAppMessageToGroup(activityId, participant, isUsingSpecify ? 1 : 2, taskTitle, (res) => {
                     console.log("shareAppMessageToGroup success: ", res);
                     wx.hideLoading({});
                     activityId = "";
@@ -81,19 +81,13 @@ module.exports = function (PIXI, app, obj) {
                     drawFn();
                 }, (err) => {
                     console.info("shareAppMessageToGroup fail: ", err);
-                    wx.showToast({
-                        title: "分享失败",
-                        icon: "none",
-                    });
+                    showToast("分享失败");
                 });
             });
         })
             .catch((err) => {
             console.error("publish fail: ", err);
-            wx.showToast({
-                icon: "none",
-                title: "发布失败",
-            });
+            showToast("发布失败");
         });
     }
     return view(PIXI, app, obj, (data) => {

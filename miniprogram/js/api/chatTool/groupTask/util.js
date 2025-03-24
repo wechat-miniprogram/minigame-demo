@@ -63,12 +63,8 @@ export function getGroupInfo() {
                         getInfoSuccess(resolve, reject, res);
                     },
                     fail(err2) {
-                        wx.hideLoading();
-                        wx.showToast({
-                            title: "单聊暂不支持",
-                            icon: "none",
-                        });
                         console.error('!!! getGroupInfo fail: ', err, err2);
+                        showToast("获取群聊信息失败");
                         reject(err2);
                     }
                 });
@@ -93,9 +89,7 @@ export function openChatTool(roomid, chatType, success, fail) {
                 openChatTool(roomid, chatType, success, fail);
             },
             fail: (err) => {
-                wx.showToast({
-                    title: "exitChatTool fail",
-                });
+                showToast("退出聊天工具模式失败");
                 console.error('!!! exitChatTool fail: ', err);
             }
         });
@@ -145,5 +139,12 @@ export function shareAppMessageToGroup(activityId, participant, chooseType, task
         fail(err) {
             console.error("updateShareMenu fail: ", err);
         },
+    });
+}
+export function showToast(title, icon) {
+    wx.hideLoading();
+    wx.showToast({
+        title,
+        icon,
     });
 }

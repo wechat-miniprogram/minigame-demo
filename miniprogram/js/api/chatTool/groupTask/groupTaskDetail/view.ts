@@ -295,33 +295,33 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   }
 
   function refreshDraw(option: DrawGroupTaskDetailOption) {
-    const { isOwner, useAssigner, participantCnt,
-      taskCnt, totalTaskNum, finished,
-      signInStatus, taskTitle, isParticipant } = option;
+    const { isOwner, isUsingSpecify, participantCnt,
+      taskCnt, targetTaskNum, isFinished,
+      isParticipated, taskTitle, isParticipant } = option;
     api_name.turnText(taskTitle);
     // 如果是发起人并且任务未结束，则显示结束任务按钮
-    if (isOwner && !finished && taskCnt < totalTaskNum) {
+    if (isOwner && !isFinished && taskCnt < targetTaskNum) {
       container.addChild(endTaskBtn);
     } else {
       container.removeChild(endTaskBtn);
     }
     // 文字描述
-    taskTitleText.turnText(`加入boss战，累积打${totalTaskNum}次`)
-    taskDetailText.turnText(`${participantCnt}人参与，进度${taskCnt}/${totalTaskNum}`)
+    taskTitleText.turnText(`加入boss战，累积打${targetTaskNum}次`)
+    taskDetailText.turnText(`${participantCnt}人参与，进度${taskCnt}/${targetTaskNum}`)
 
     // 做任务按钮
-    if (finished) { // 已结束
+    if (isFinished) { // 已结束
       doTaskBtnRefresh(false);
       taskFinishedBoxText.turnText("已结束")
     } else {
       if (!isParticipant) {
         doTaskBtnRefresh(false);
         taskFinishedBoxText.turnText("你无需参与")
-      } else if (taskCnt < totalTaskNum) { // 做任务
+      } else if (taskCnt < targetTaskNum) { // 做任务
         doTaskBtnRefresh(true);
       } else { // 任务已完成/未参与任务
         doTaskBtnRefresh(false);
-        if (!signInStatus) {
+        if (!isParticipated) {
           taskFinishedBoxText.turnText("未参与任务")
         } else {
           taskFinishedBoxText.turnText("任务已完成")
@@ -329,15 +329,14 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       }
     }
 
-
     container.addChild(Btn2);
     // 已指定参与人
-    if (useAssigner) {
+    if (isUsingSpecify) {
       // 已参与/未参与
       participantBox.addChild(participatedBtn);
       participantBox.addChild(notParticipatedBtn);
       // 第二个按钮
-      if (finished || taskCnt >= totalTaskNum) { // 已结束/已完成
+      if (isFinished || taskCnt >= targetTaskNum) { // 已结束/已完成
         Btn2Text.turnText("分享结果")
         container.removeChild(shareBtn);
       } else { // 进行中
@@ -351,7 +350,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       // 分享进度
       container.removeChild(shareBtn);
       // 第二个按钮
-      if (finished || taskCnt >= totalTaskNum) { // 已结束/已完成
+      if (isFinished || taskCnt >= targetTaskNum) { // 已结束/已完成
         Btn2Text.turnText("分享结果")
       } else { // 进行中
         Btn2Text.turnText("分享进度")

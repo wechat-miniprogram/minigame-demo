@@ -1,6 +1,6 @@
 import view from "./view";
 import { ActivityInfo } from "./types";
-import { openChatTool } from "./util";
+import { openChatTool, showToast } from "./util";
 
 module.exports = function (PIXI: any, app: any, obj: any) {
   let activityList: ActivityInfo[] = [];
@@ -20,10 +20,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
       }
     }).catch(err => {
       console.error('fetchActivityList fail: ', err)
-      wx.showToast({
-        title: '获取活动列表失败',
-      });
-      wx.hideLoading();
+      showToast("获取活动列表失败");
     })
   }
 

@@ -1,5 +1,5 @@
 import view from "./view";
-import { openChatTool } from "./util";
+import { openChatTool, showToast } from "./util";
 module.exports = function (PIXI, app, obj) {
     let activityList = [];
     function fetchActivityList(drawFn) {
@@ -17,10 +17,7 @@ module.exports = function (PIXI, app, obj) {
             }
         }).catch(err => {
             console.error('fetchActivityList fail: ', err);
-            wx.showToast({
-                title: '获取活动列表失败',
-            });
-            wx.hideLoading();
+            showToast("获取活动列表失败");
         });
     }
     return view(PIXI, app, obj, (data) => {

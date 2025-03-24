@@ -2,9 +2,9 @@ import view from "./view";
 import { getGroupInfo, getGroupTaskDetailPath, shareAppMessageToGroup } from "../util";
 import { ShareCanvas } from './ShareCanvas';
 import { ActivityInfo, GroupInfo, DrawGroupTaskDetailOption } from "../types";
-import { GROUP_TASK_RESULT_EMOJI_URL } from "../const";
+import { GROUP_TASK_RESULT_EMOJI_URL, ACTIVITY_TEMPLATE_ID_2 } from "../const";
 import { drawProgress } from "./drawProgress";
-
+import { openChatTool, showToast } from "../util";
 const { envVersion } = wx.getAccountInfoSync().miniProgram;
 
 const getVersionType = () => {
@@ -20,33 +20,44 @@ const getVersionType = () => {
 };
 
 module.exports = function (PIXI: any, app: any, obj: any) {
+  const { activityId } = obj; // 获取启动信息
+
+  let watchingParticipanted = true; // 是否正在观看参与人
+
+  let activityInfo: ActivityInfo = {}; // 活动信息
+  let groupInfo: GroupInfo; // 群组信息
+
+  let signIn: string[] = []; // 签到成员列表
+  let notSignIn: string[] = []; // 未签到成员列表
+  let participant: string[] = []; // 参与者列表
+
+  let participantCnt = 0; // 参与人数
+  let taskCnt = 0; // 已做任务次数
+  let selfTaskCnt = 0; // 自己做的次数
+  let targetTaskNum = 0; // 目标任务次数
+
+  let isOwner = false; // 是否为活动创建者
+  let isParticipant = false; // 是否为参与者
+
   let drawRefresh: (option: DrawGroupTaskDetailOption) => void; // 视图层回调
 
   const { screenWidth, pixelRatio } = wx.getSystemInfoSync();
 
-  const SC = new ShareCanvas(343, 329, 16, 231, pixelRatio, screenWidth / 375); // 设计稿宽度
+  const SC = new ShareCanvas({
+    width: 343,
+    height: 329,
+    x: 16,
+    y: 231,
+    pixelRatio,
+    scale: screenWidth / 375, // 相对于设计稿比例
+  });
 
   let tick = () => {
     SC.rankTiker(PIXI, app);
   }
   let ticker = PIXI.ticker.shared;
 
-  const { activityId } = obj; // 获取启动信息
 
-  let watchingParticipanted = true; // 是否正在观看参与人
-
-  let activityInfo: ActivityInfo = {}; // 活动信息
-  let signIn: string[] = []; // 签到成员列表
-  let notSignIn: string[] = []; // 未签到成员列表
-  let participant: string[] = []; // 参与者列表
-  let participantCnt = 0; // 参与人数
-  let taskCnt = 0; // 已做任务次数
-  let selfTaskCnt = 0; // 自己做的次数
-  let totalTaskNum = 0; // 总任务次数
-  let isOwner = false; // 是否为活动创建者
-  let isParticipant = false; // 是否为参与者
-  let groupInfo: GroupInfo; // 群组信息
-  let signInStatus = false; // 签到状态
   function shareAppMessage() {
     if (!activityInfo._id) {
       console.warn('activityInfo._id is undefined', activityInfo);
@@ -56,24 +67,21 @@ module.exports = function (PIXI: any, app: any, obj: any) {
     shareAppMessageToGroup(
       activityId,
       participant,
-      activityInfo.useAssigner ? 1 : 2,
+      activityInfo.isUsingSpecify ? 1 : 2,
       activityInfo.taskTitle || '示例',
       (res) => {
         console.log("shareAppMessageToGroup success: ", res);
       },
       (err) => {
         console.error("shareAppMessageToGroup fail: ", err);
-        wx.showToast({
-          title: "分享失败",
-          icon: "none",
-        });
+        showToast("分享失败");
       }
     );
   }
 
   function share() {
     // 分享结果
-    if (activityInfo.finished || taskCnt >= totalTaskNum) {
+    if (activityInfo.isFinished || taskCnt >= targetTaskNum) {
       wx.downloadFile({
         url: GROUP_TASK_RESULT_EMOJI_URL,
         success(res) {
@@ -88,7 +96,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
         },
       });
     } else { // 分享进度
-      const progressCanvas = drawProgress(taskCnt, totalTaskNum, pixelRatio);
+      const progressCanvas = drawProgress(taskCnt, targetTaskNum, pixelRatio);
       progressCanvas.toTempFilePath({
         success(res) {
           // @ts-ignore 声明未更新临时处理
@@ -105,9 +113,9 @@ module.exports = function (PIXI: any, app: any, obj: any) {
   }
 
   function Btn2() {
-    console.log("Btn2", activityInfo.useAssigner, activityInfo.finished, taskCnt, totalTaskNum)
+    console.log("Btn2", activityInfo.isUsingSpecify, activityInfo.isFinished, taskCnt, targetTaskNum)
     // 指定人且进行中
-    if (activityInfo.useAssigner && !activityInfo.finished && taskCnt < totalTaskNum) {
+    if (activityInfo.isUsingSpecify && !activityInfo.isFinished && taskCnt < targetTaskNum) {
       // @ts-ignore 声明未更新临时处理
       wx.notifyGroupMembers({
         title: "公会任务",
@@ -133,7 +141,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
     selfTaskCnt = signIn.filter((i) => i === groupOpenID).length; // 自己做的次数
     const uniqueSignIn = Array.from(new Set(signIn));
     participantCnt = uniqueSignIn.length; // 参与人数
-    totalTaskNum = 5; // 总任务次数
+    targetTaskNum = 5; // 总任务次数
     const { creator } = activityInfo;
 
     notSignIn = participant?.filter((i) => !signIn?.includes(i)) || []; // 计算未签到成员
@@ -143,25 +151,23 @@ module.exports = function (PIXI: any, app: any, obj: any) {
     if (roomid !== activityInfo.roomid) { // 非当前群组活动
       isParticipant = false;
     } else {
-      if (!activityInfo.useAssigner) { // 未指定参与者
+      if (!activityInfo.isUsingSpecify) { // 未指定参与者
         isParticipant = true;
       } else { // 指定参与者
         isParticipant = participant?.includes(groupOpenID || '')
       }
     }
 
-    signInStatus = signIn?.includes(groupOpenID || '') || false;
-
     const option: DrawGroupTaskDetailOption = {
       isOwner,
-      useAssigner: activityInfo.useAssigner || false,
+      isUsingSpecify: activityInfo.isUsingSpecify || false,
+      isFinished: activityInfo.isFinished || false,
+      isParticipated: selfTaskCnt > 0,
+      isParticipant,
       participantCnt,
       taskCnt,
-      totalTaskNum,
-      finished: activityInfo.finished || false,
-      signInStatus,
+      targetTaskNum: targetTaskNum,
       taskTitle: activityInfo.taskTitle || '示例',
-      isParticipant,
     }
     console.log("!!! groupTaskDetail draw", option);
     drawRefresh(option);
@@ -169,30 +175,26 @@ module.exports = function (PIXI: any, app: any, obj: any) {
 
   function updateChatToolMsg(params: any) {
     const { targetState, parameterList } = params;
-    // const templateId = '2A84254B945674A2F88CE4970782C402795EB607' // 参与
-    const templateId = "4A68CBB88A92B0A9311848DBA1E94A199B166463"; // 完成
+    const templateId = ACTIVITY_TEMPLATE_ID_2; // 模版ID2
 
-    wx.cloud
-      .callFunction({
-        name: "openapi",
-        data: {
-          action: "updateChatToolMsg",
-          activityId,
-          targetState: targetState || 1,
-          templateId: templateId,
-          parameterList: parameterList || [],
-          versionType: getVersionType(),
-        },
-      })
-      .then((resp) => {
-        console.info("updateChatToolMsg: ", resp);
-        if (targetState === 3) {
-          fetchActivity();
-        }
-      })
-      .catch((err) => {
-        console.info("updateChatToolMsg Fail: ", err);
-      });
+    wx.cloud.callFunction({
+      name: "openapi",
+      data: {
+        action: "updateChatToolMsg",
+        activityId,
+        targetState: targetState || 1,
+        templateId: templateId,
+        parameterList: parameterList || [],
+        versionType: getVersionType(),
+      },
+    }).then((resp) => {
+      console.info("updateChatToolMsg: ", resp);
+      if (targetState === 3) {
+        fetchActivity();
+      }
+    }).catch((err) => {
+      console.info("updateChatToolMsg Fail: ", err);
+    });
   }
 
   function earlyTerminate() {
@@ -238,20 +240,14 @@ module.exports = function (PIXI: any, app: any, obj: any) {
           ],
         });
         fetchActivity();
-        wx.hideLoading();
-        wx.showToast({
-          title: `已加入，打了${selfTaskCnt}次`,
-          icon: "none",
-        });
+        showToast(`已加入，打了${selfTaskCnt}次`);
       } else {
-        wx.hideLoading();
-        wx.showToast({
-          title: "做任务失败",
-          icon: "none",
-        });
+        console.error("signIn fail: ", resp);
+        showToast("做任务失败");
       }
     }).catch((err) => {
       console.error("signIn fail: ", err);
+      showToast("做任务失败");
     });
   }
 
@@ -264,33 +260,45 @@ module.exports = function (PIXI: any, app: any, obj: any) {
     await getGroupInfo().then((_groupInfo) => {
       groupInfo = _groupInfo as GroupInfo;
 
-      wx.cloud.callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "selectRecord",
-          activityId,
-        },
-      }).then((resp: any) => {
-        console.info('!!! selectRecord resp: ', resp);
-        if (resp.result.success) {
-          activityInfo = resp.result.activityInfo;
-          refreshData(activityInfo, groupInfo);
-          refreshOpenDataContext();
-        } else {
-          wx.hideLoading();
-          wx.showToast({
-            title: "活动未找到",
-            icon: "none",
-          });
-        }
-      }).catch((err) => {
-        console.info("fetchActivity fail: ", err);
-        wx.hideLoading();
-        wx.showToast({
-          title: "加载失败",
-          icon: "none",
+      const Fn = () => {
+        wx.cloud.callFunction({
+          name: "quickstartFunctions",
+          data: {
+            type: "selectRecord",
+            activityId,
+          },
+        }).then((resp: any) => {
+          console.info('!!! selectRecord resp: ', resp);
+          if (resp.result.success) {
+            activityInfo = resp.result.activityInfo;
+            refreshData(activityInfo, groupInfo);
+            refreshOpenDataContext();
+          } else {
+            showToast("活动未找到");
+          }
+        }).catch((err) => {
+          console.info("fetchActivity fail: ", err);
+          showToast("加载活动失败");
         });
-      });
+      }
+
+      // @ts-ignore
+      if (!wx.isChatTool()) { // 若当前不为聊天工具模式（动态卡片进入），则进入聊天工具模式
+        openChatTool(
+          groupInfo.roomid,
+          groupInfo.chatType,
+          (res: any) => {
+            console.log('!!! openChatTool success', res);
+            Fn();
+          },
+          (err: any) => {
+            console.error('!!! openChatTool fail: ', err);
+            showToast("进入聊天工具模式失败");
+          }
+        )
+      } else {
+        Fn();
+      }
     });
   }
 
@@ -299,12 +307,12 @@ module.exports = function (PIXI: any, app: any, obj: any) {
       SC.sharedCanvasShowed = true;
       ticker.add(tick);
     }
-    const isParticipated = !activityInfo.useAssigner || watchingParticipanted; // 未指定人或正在观看参与人
+    const isParticipated = !activityInfo.isUsingSpecify || watchingParticipanted; // 未指定人或正在观看参与人
     SC.openDataContext.postMessage({
       event: 'renderGroupTaskMembersInfo',
       members: isParticipated ? signIn : notSignIn,
       renderCount: isParticipated,
-      hasAssigned: activityInfo.useAssigner,
+      hasAssigned: activityInfo.isUsingSpecify,
     });
     wx.hideLoading();
   }

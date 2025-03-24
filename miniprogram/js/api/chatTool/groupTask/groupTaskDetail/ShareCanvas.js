@@ -10,7 +10,8 @@ export class ShareCanvas {
     pixelRatio;
     scale;
     //均为设计稿尺寸，由scale控制屏幕适配
-    constructor(width, height, x, y, pixelRatio, scale) {
+    constructor(option) {
+        const { width, height, x, y, pixelRatio, scale } = option;
         this.openDataContext = wx.getOpenDataContext();
         this.sharedCanvas = this.openDataContext.canvas;
         this.width = width;

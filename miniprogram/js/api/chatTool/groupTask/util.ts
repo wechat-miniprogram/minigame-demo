@@ -66,12 +66,8 @@ export function getGroupInfo(): Promise<GroupInfo> {
             getInfoSuccess(resolve, reject, res);
           },
           fail(err2) {
-            wx.hideLoading();
-            wx.showToast({
-              title: "单聊暂不支持",
-              icon: "none",
-            });
             console.error('!!! getGroupInfo fail: ', err, err2)
+            showToast("获取群聊信息失败");
             reject(err2)
           }
         })
@@ -99,9 +95,7 @@ export function openChatTool(roomid?: string, chatType?: number, success?: any, 
         openChatTool(roomid, chatType, success, fail);
       },
       fail: (err: any) => {
-        wx.showToast({
-          title: "exitChatTool fail",
-        });
+        showToast("退出聊天工具模式失败");
         console.error('!!! exitChatTool fail: ', err);
       }
     });
@@ -153,4 +147,12 @@ export function shareAppMessageToGroup(activityId: string, participant: string[]
       console.error("updateShareMenu fail: ", err);
     },
   })
+}
+
+export function showToast(title: string, icon?: "success" | "error" | "loading" | "none") {
+  wx.hideLoading();
+  wx.showToast({
+    title,
+    icon,
+  });
 }

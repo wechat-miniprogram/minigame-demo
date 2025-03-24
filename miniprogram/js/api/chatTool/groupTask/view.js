@@ -36,8 +36,9 @@ export default function (PIXI, app, obj, callBack) {
             containerHeight: taskListBox.height,
         },
     });
-    function taskButton(buttonNumber, activityId, roomid, chatType, taskTitle) {
-        console.log('!!! taskButton', buttonNumber, activityId);
+    function taskButton(option) {
+        console.log('!!! taskButton', option);
+        const { buttonNumber, activityId, roomid, chatType, taskTitle } = option;
         let button = p_button(PIXI, {
             parentWidth: taskList.width,
             width: contentWidth,
@@ -88,7 +89,13 @@ export default function (PIXI, app, obj, callBack) {
         else {
             taskListBox.removeChild(taskListBoxPrompt);
             for (let i = 0; i < activityList.length; i++) {
-                taskList.myAddChildFn(taskButton(i, activityList[i].activityId || '', activityList[i].roomid || '', activityList[i].chatType || 3, activityList[i].taskTitle || '示例'));
+                taskList.myAddChildFn(taskButton({
+                    buttonNumber: i,
+                    activityId: activityList[i].activityId || '',
+                    roomid: activityList[i].roomid || '',
+                    chatType: activityList[i].chatType || 3,
+                    taskTitle: activityList[i].taskTitle || '示例'
+                }));
             }
         }
     }

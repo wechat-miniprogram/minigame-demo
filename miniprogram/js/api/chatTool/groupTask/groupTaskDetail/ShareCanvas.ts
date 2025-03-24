@@ -1,3 +1,5 @@
+import { CreateShareCanvasOption } from "../types";
+
 export class ShareCanvas {
   public sharedCanvasShowed = false;
   public openDataContext: any;
@@ -13,7 +15,8 @@ export class ShareCanvas {
   public scale: number;
 
   //均为设计稿尺寸，由scale控制屏幕适配
-  constructor(width: number, height: number, x: number, y: number, pixelRatio: number, scale?: number) {
+  constructor(option: CreateShareCanvasOption) {
+    const { width, height, x, y, pixelRatio, scale } = option;
     this.openDataContext = wx.getOpenDataContext();
     this.sharedCanvas = this.openDataContext.canvas;
 

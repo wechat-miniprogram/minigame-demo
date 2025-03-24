@@ -7,7 +7,7 @@ import {
   p_img,
 } from "../../../libs/component/index";
 import fixedTemplate from "../../../libs/template/fixed";
-import { ActivityInfo } from "./types";
+import { ActivityInfo, CreateTaskButtonOption } from "./types";
 import { openChatTool } from "./util";
 
 export default function (PIXI: any, app: any, obj: any, callBack: (data: any) => void) {
@@ -52,8 +52,9 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     },
   });
 
-  function taskButton(buttonNumber: number, activityId: string, roomid: string, chatType: number, taskTitle: string) {
-    console.log('!!! taskButton', buttonNumber, activityId);
+  function taskButton(option: CreateTaskButtonOption) {
+    console.log('!!! taskButton', option);
+    const { buttonNumber, activityId, roomid, chatType, taskTitle } = option;
     let button = p_button(PIXI, {
       parentWidth: taskList.width,
       width: contentWidth,
@@ -117,7 +118,13 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     } else {
       taskListBox.removeChild(taskListBoxPrompt);
       for (let i = 0; i < activityList.length; i++) {
-        taskList.myAddChildFn(taskButton(i, activityList[i].activityId || '', activityList[i].roomid || '', activityList[i].chatType || 3, activityList[i].taskTitle || '示例'));
+        taskList.myAddChildFn(taskButton({
+          buttonNumber: i,
+          activityId: activityList[i].activityId || '',
+          roomid: activityList[i].roomid || '',
+          chatType: activityList[i].chatType || 3,
+          taskTitle: activityList[i].taskTitle || '示例'
+        }));
       }
     }
   }
