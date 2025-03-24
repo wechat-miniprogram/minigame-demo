@@ -1,9 +1,9 @@
 // 分享进度图
-export const GROUP_TASK_PROGRESS_0_IMAGE_URL = 'https://mmgame.qpic.cn/image/ff5734d3ee0755b2f443bb682a53fdc6488542be8d44bb9019dda1e765752ba5/0';
-export const GROUP_TASK_PROGRESS_1_IMAGE_URL = 'https://mmgame.qpic.cn/image/f2ca5bd956d16057ce6749e4c03fef375fd48ce0a1736732d638dafbc3537815/0';
-export const GROUP_TASK_PROGRESS_2_IMAGE_URL = 'https://mmgame.qpic.cn/image/2e376ba9ac3cad88b19a731abcaadec8d722b44035aa22b3e5d210158f8fd85a/0';
-export const GROUP_TASK_PROGRESS_3_IMAGE_URL = 'https://mmgame.qpic.cn/image/cfe508abc765fba7df7d6cd0470c68f46e3d01511f70c7666e6bb131ea3a4845/0';
-export const GROUP_TASK_PROGRESS_4_IMAGE_URL = 'https://mmgame.qpic.cn/image/f22c0d1a813605ff05636dbcd7456352d9e38a1cf62cd81a6f1fff55d84ddfe0/0';
+// export const GROUP_TASK_PROGRESS_0_IMAGE_URL = 'https://mmgame.qpic.cn/image/ff5734d3ee0755b2f443bb682a53fdc6488542be8d44bb9019dda1e765752ba5/0';
+// export const GROUP_TASK_PROGRESS_1_IMAGE_URL = 'https://mmgame.qpic.cn/image/f2ca5bd956d16057ce6749e4c03fef375fd48ce0a1736732d638dafbc3537815/0';
+// export const GROUP_TASK_PROGRESS_2_IMAGE_URL = 'https://mmgame.qpic.cn/image/2e376ba9ac3cad88b19a731abcaadec8d722b44035aa22b3e5d210158f8fd85a/0';
+// export const GROUP_TASK_PROGRESS_3_IMAGE_URL = 'https://mmgame.qpic.cn/image/cfe508abc765fba7df7d6cd0470c68f46e3d01511f70c7666e6bb131ea3a4845/0';
+// export const GROUP_TASK_PROGRESS_4_IMAGE_URL = 'https://mmgame.qpic.cn/image/f22c0d1a813605ff05636dbcd7456352d9e38a1cf62cd81a6f1fff55d84ddfe0/0';
 
 // 分享结果 emoji
 export const GROUP_TASK_RESULT_EMOJI_URL = 'https://mmbiz.qpic.cn/mmbiz_gif/EXAZAY4U1KCcdEB1gicNwIL4lUrpVQ5H5jOSfiaVHJ5n4EQyPrLqgRtbb6X1hRIiaZqMIibVME51FYRf7p2kC4OdLA/0';
