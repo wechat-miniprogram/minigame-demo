@@ -1,6 +1,7 @@
 import view from "./view";
 import { getGroupInfo, getGroupTaskDetailPath, shareAppMessageToGroup } from "../util";
 import { ShareCanvas } from './ShareCanvas';
+import { GROUP_TASK_RESULT_EMOJI_URL, GROUP_TASK_PROGRESS_0_IMAGE_URL, GROUP_TASK_PROGRESS_1_IMAGE_URL, GROUP_TASK_PROGRESS_2_IMAGE_URL, GROUP_TASK_PROGRESS_3_IMAGE_URL, GROUP_TASK_PROGRESS_4_IMAGE_URL } from "../const";
 const roleType = ["unkown", "owner", "participant", "nonParticipant"]; // 定义角色类型
 const { envVersion } = wx.getAccountInfoSync().miniProgram;
 const getVersionType = () => {
@@ -57,7 +58,7 @@ module.exports = function (PIXI, app, obj) {
         // 分享结果
         if (activityInfo.finished || taskCnt >= totalTaskNum) {
             wx.downloadFile({
-                url: 'https://mmbiz.qpic.cn/mmbiz_gif/EXAZAY4U1KCcdEB1gicNwIL4lUrpVQ5H5jOSfiaVHJ5n4EQyPrLqgRtbb6X1hRIiaZqMIibVME51FYRf7p2kC4OdLA/0',
+                url: GROUP_TASK_RESULT_EMOJI_URL,
                 success(res) {
                     // @ts-ignore 声明未更新临时处理
                     wx.shareEmojiToGroup({
@@ -71,8 +72,28 @@ module.exports = function (PIXI, app, obj) {
             });
         }
         else { // 分享进度
+            let url = '';
+            switch (taskCnt) {
+                case 0:
+                    url = GROUP_TASK_PROGRESS_0_IMAGE_URL;
+                    break;
+                case 1:
+                    url = GROUP_TASK_PROGRESS_1_IMAGE_URL;
+                    break;
+                case 2:
+                    url = GROUP_TASK_PROGRESS_2_IMAGE_URL;
+                    break;
+                case 3:
+                    url = GROUP_TASK_PROGRESS_3_IMAGE_URL;
+                    break;
+                case 4:
+                    url = GROUP_TASK_PROGRESS_4_IMAGE_URL;
+                    break;
+                default:
+                    break;
+            }
             wx.downloadFile({
-                url: 'https://mmgame.qpic.cn/image/10dbccbeb9aac0348dede4c472deb32894d8c3afb957f52adf9c138cbcfc8dba/0',
+                url,
                 success(res) {
                     // @ts-ignore 声明未更新临时处理
                     wx.shareImageToGroup({

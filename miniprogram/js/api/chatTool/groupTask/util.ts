@@ -1,3 +1,4 @@
+import { GROUP_TASK_SHARE_APP_MESSAGE_IMAGE_URL } from "./const";
 import { GroupInfo } from "./types";
 
 export function showVersionTip() {
@@ -137,7 +138,7 @@ export function shareAppMessageToGroup(activityId: string, participant: string[]
       // @ts-ignore 声明未更新临时处理
       wx.shareAppMessageToGroup({
         title: taskTitle,
-        imageUrl: "https://mmgame.qpic.cn/image/264eef4359b95dffc552149c15b9d53723d56d836411841a37710f1c7c3b4878/0",
+        imageUrl: GROUP_TASK_SHARE_APP_MESSAGE_IMAGE_URL,
         path: getGroupTaskDetailPath(activityId),
         success,
         fail,
