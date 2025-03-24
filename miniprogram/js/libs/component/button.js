@@ -35,13 +35,26 @@ module.exports = function(PIXI, deploy = {}) {
             this.touchstart = e => {
                 maskLayer.visible = true;
                 e.recordY = e.data.global.y;
-                e.currentTarget.touchend = e => {
-                    maskLayer.visible = false;
-                    e.target.touchend = null;
+                
+                const handleTouchEnd = e => {
                     if (Math.abs(e.recordY - e.data.global.y) < 5) {
                         callBack(e);
                     }
                 };
+
+                // 无触摸时，移除maskLayer
+                const checkTouchEnd = () => {
+                    if (!e.data.originalEvent.touches.length) {
+                        maskLayer.visible = false;
+                        PIXI.ticker.shared.remove(checkTouchEnd);
+                    }
+                };
+                
+                // 添加全局检查
+                PIXI.ticker.shared.add(checkTouchEnd);
+                
+                // 保留原有的事件监听
+                this.touchend = handleTouchEnd;
             };
         }.bind(kind);
 

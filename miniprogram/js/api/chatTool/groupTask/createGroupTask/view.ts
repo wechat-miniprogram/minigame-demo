@@ -135,7 +135,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     y: r(42),
   });
   let specifyParticipantBtnArrow = p_img(PIXI, {
-    src: "images/right_arrow.png",
+    src: "images/right_arrow_black.png",
     width: r(7.5),
     height: r(13),
     x: r(136),

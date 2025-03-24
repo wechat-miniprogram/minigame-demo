@@ -1,16 +1,11 @@
 import './js/libs/weapp-adapter';
 import * as PIXI from './js/libs/pixi.min';
-//import * as PIXI from './js/libs/pixi';
 import pmgressBar from './js/libs/pmgressBar';
 import share from './js/libs/share';
 wx.cloud.init({ env: 'example-69d3b' });
 wx.updateShareMenu({
     withShareTicket: true,
 });
-// 在屏sharedCanvas
-// wx.getOpenDataContext({
-//   sharedCanvasMode: 'screenCanvas',
-// });
 const { pixelRatio, windowWidth, windowHeight } = wx.getSystemInfoSync();
 // 初始化canvas
 let app = new PIXI.Application({
@@ -55,7 +50,8 @@ PIXI.loader
     'images/recommend.png',
     'images/visionkit-ability.png',
     'images/chatTool.png',
-    'images/right_arrow.png'
+    'images/right_arrow.png',
+    'images/right_arrow_black.png',
 ])
     .load(() => {
     wx.loadSubpackage({
