@@ -208,47 +208,44 @@ module.exports = function (PIXI: any, app: any, obj: any) {
 
     const { roomid, groupOpenID } = groupInfo;
 
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "signIn",
-          roomid,
-          groupOpenID,
-          activityId,
-        },
-      })
-      .then((resp: any) => {
-        if (resp.result.success) {
-          const { signIn } = activityInfo;
-          signIn?.push(groupOpenID || '');
-          refreshData(activityInfo, groupInfo);
-          updateChatToolMsg({
-            targetState: 1,
-            parameterList: [
-              {
-                groupOpenID,
-                state: 1,
-              },
-            ],
-          });
-          fetchActivity();
-          wx.hideLoading();
-          wx.showToast({
-            title: `已加入，打了${selfTaskCnt}次`,
-            icon: "none",
-          });
-        } else {
-          wx.hideLoading();
-          wx.showToast({
-            title: "做任务失败",
-            icon: "none",
-          });
-        }
-      })
-      .catch((err) => {
-        console.error("signIn fail: ", err);
-      });
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "signIn",
+        roomid,
+        groupOpenID,
+        activityId,
+      },
+    }).then((resp: any) => {
+      if (resp.result.success) {
+        const { signIn } = activityInfo;
+        signIn?.push(groupOpenID || '');
+        refreshData(activityInfo, groupInfo);
+        updateChatToolMsg({
+          targetState: 1,
+          parameterList: [
+            {
+              groupOpenID,
+              state: 1,
+            },
+          ],
+        });
+        fetchActivity();
+        wx.hideLoading();
+        wx.showToast({
+          title: `已加入，打了${selfTaskCnt}次`,
+          icon: "none",
+        });
+      } else {
+        wx.hideLoading();
+        wx.showToast({
+          title: "做任务失败",
+          icon: "none",
+        });
+      }
+    }).catch((err) => {
+      console.error("signIn fail: ", err);
+    });
   }
 
   async function fetchActivity() {
@@ -260,36 +257,33 @@ module.exports = function (PIXI: any, app: any, obj: any) {
     await getGroupInfo().then((_groupInfo) => {
       groupInfo = _groupInfo as GroupInfo;
 
-      wx.cloud
-        .callFunction({
-          name: "quickstartFunctions",
-          data: {
-            type: "selectRecord",
-            activityId,
-          },
-        })
-        .then((resp: any) => {
-          console.info('!!! selectRecord resp: ', resp);
-          if (resp.result.success) {
-            activityInfo = resp.result.activityInfo;
-            refreshData(activityInfo, groupInfo);
-            refreshOpenDataContext();
-          } else {
-            wx.hideLoading();
-            wx.showToast({
-              title: "活动未找到",
-              icon: "none",
-            });
-          }
-        })
-        .catch((err) => {
-          console.info("fetchActivity fail: ", err);
+      wx.cloud.callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "selectRecord",
+          activityId,
+        },
+      }).then((resp: any) => {
+        console.info('!!! selectRecord resp: ', resp);
+        if (resp.result.success) {
+          activityInfo = resp.result.activityInfo;
+          refreshData(activityInfo, groupInfo);
+          refreshOpenDataContext();
+        } else {
           wx.hideLoading();
           wx.showToast({
-            title: "加载失败",
+            title: "活动未找到",
             icon: "none",
           });
+        }
+      }).catch((err) => {
+        console.info("fetchActivity fail: ", err);
+        wx.hideLoading();
+        wx.showToast({
+          title: "加载失败",
+          icon: "none",
         });
+      });
     });
   }
 

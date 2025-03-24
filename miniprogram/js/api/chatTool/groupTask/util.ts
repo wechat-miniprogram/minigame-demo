@@ -57,6 +57,9 @@ export function getGroupInfo(): Promise<GroupInfo> {
       fail(err) {
         console.log("!!! getChatToolInfo fail: ", err)
         wx.getGroupEnterInfo({
+          // @ts-ignore 声明未更新临时处理
+          allowSingleChat: true,
+          needGroupOpenID: true,
           success(res) {
             console.log("!!! getGroupEnterInfo success: ", res)
             getInfoSuccess(resolve, reject, res);

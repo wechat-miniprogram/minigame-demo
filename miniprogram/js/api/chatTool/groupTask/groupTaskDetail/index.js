@@ -177,8 +177,7 @@ module.exports = function (PIXI, app, obj) {
             mask: true,
         });
         const { roomid, groupOpenID } = groupInfo;
-        wx.cloud
-            .callFunction({
+        wx.cloud.callFunction({
             name: "quickstartFunctions",
             data: {
                 type: "signIn",
@@ -186,8 +185,7 @@ module.exports = function (PIXI, app, obj) {
                 groupOpenID,
                 activityId,
             },
-        })
-            .then((resp) => {
+        }).then((resp) => {
             if (resp.result.success) {
                 const { signIn } = activityInfo;
                 signIn?.push(groupOpenID || '');
@@ -215,8 +213,7 @@ module.exports = function (PIXI, app, obj) {
                     icon: "none",
                 });
             }
-        })
-            .catch((err) => {
+        }).catch((err) => {
             console.error("signIn fail: ", err);
         });
     }
@@ -228,15 +225,13 @@ module.exports = function (PIXI, app, obj) {
         });
         await getGroupInfo().then((_groupInfo) => {
             groupInfo = _groupInfo;
-            wx.cloud
-                .callFunction({
+            wx.cloud.callFunction({
                 name: "quickstartFunctions",
                 data: {
                     type: "selectRecord",
                     activityId,
                 },
-            })
-                .then((resp) => {
+            }).then((resp) => {
                 console.info('!!! selectRecord resp: ', resp);
                 if (resp.result.success) {
                     activityInfo = resp.result.activityInfo;
@@ -250,8 +245,7 @@ module.exports = function (PIXI, app, obj) {
                         icon: "none",
                     });
                 }
-            })
-                .catch((err) => {
+            }).catch((err) => {
                 console.info("fetchActivity fail: ", err);
                 wx.hideLoading();
                 wx.showToast({
