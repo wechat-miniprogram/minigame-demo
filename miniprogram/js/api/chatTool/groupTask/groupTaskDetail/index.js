@@ -3,7 +3,6 @@ import { getGroupInfo, getGroupTaskDetailPath, shareAppMessageToGroup } from "..
 import { ShareCanvas } from './ShareCanvas';
 import { GROUP_TASK_RESULT_EMOJI_URL } from "../const";
 import { drawProgress } from "./drawProgress";
-const roleType = ["unkown", "owner", "participant", "nonParticipant"]; // 定义角色类型
 const { envVersion } = wx.getAccountInfoSync().miniProgram;
 const getVersionType = () => {
     // 根据环境版本返回对应的版本类型
@@ -28,7 +27,6 @@ module.exports = function (PIXI, app, obj) {
     let ticker = PIXI.ticker.shared;
     const { activityId } = obj; // 获取启动信息
     let watchingParticipanted = true; // 是否正在观看参与人
-    let role = roleType[0]; // 当前用户角色
     let activityInfo = {}; // 活动信息
     let signIn = []; // 签到成员列表
     let notSignIn = []; // 未签到成员列表
@@ -38,6 +36,7 @@ module.exports = function (PIXI, app, obj) {
     let selfTaskCnt = 0; // 自己做的次数
     let totalTaskNum = 0; // 总任务次数
     let isOwner = false; // 是否为活动创建者
+    let isParticipant = false; // 是否为参与者
     let groupInfo; // 群组信息
     let signInStatus = false; // 签到状态
     function shareAppMessage() {
@@ -121,20 +120,31 @@ module.exports = function (PIXI, app, obj) {
         const { creator } = activityInfo;
         notSignIn = participant?.filter((i) => !signIn?.includes(i)) || []; // 计算未签到成员
         isOwner = creator === openid; // 判断是否为活动创建者
-        if (roomid !== activityInfo.roomid) {
-            role = roleType[3]; // 非参与者
+        if (roomid !== activityInfo.roomid) { // 非当前群组活动
+            isParticipant = false;
         }
         else {
-            role = participant?.includes(groupOpenID || '')
-                ? roleType[2] // 参与者
-                : (isOwner ? roleType[1] : roleType[3]); // 创建者或非参与者
-        }
-        if (participant?.length === 0) {
-            role = roleType[2]; // 如果没有参与者，默认角色为参与者
+            if (!activityInfo.useAssigner) { // 未指定参与者
+                isParticipant = true;
+            }
+            else { // 指定参与者
+                isParticipant = participant?.includes(groupOpenID || '');
+            }
         }
         signInStatus = signIn?.includes(groupOpenID || '') || false;
-        console.log("drawRefresh start", isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus, activityInfo.taskTitle);
-        drawRefresh(isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus, activityInfo.taskTitle || '示例');
+        const option = {
+            isOwner,
+            useAssigner: activityInfo.useAssigner || false,
+            participantCnt,
+            taskCnt,
+            totalTaskNum,
+            finished: activityInfo.finished || false,
+            signInStatus,
+            taskTitle: activityInfo.taskTitle || '示例',
+            isParticipant,
+        };
+        console.log("!!! groupTaskDetail draw", option);
+        drawRefresh(option);
     }
     function updateChatToolMsg(params) {
         const { targetState, parameterList } = params;

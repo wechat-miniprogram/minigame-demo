@@ -255,7 +255,18 @@ export default function (PIXI, app, obj, callBack) {
             status: "destroyOpenDataContext",
         });
     }
-    function refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus, taskTitle) {
+    function doTaskBtnRefresh(isBtnAvailable) {
+        if (isBtnAvailable) {
+            container.addChild(doTaskBtn);
+            container.removeChild(taskFinishedBox);
+        }
+        else {
+            container.addChild(taskFinishedBox);
+            container.removeChild(doTaskBtn);
+        }
+    }
+    function refreshDraw(option) {
+        const { isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus, taskTitle, isParticipant } = option;
         api_name.turnText(taskTitle);
         // 如果是发起人并且任务未结束，则显示结束任务按钮
         if (isOwner && !finished && taskCnt < totalTaskNum) {
@@ -269,18 +280,19 @@ export default function (PIXI, app, obj, callBack) {
         taskDetailText.turnText(`${participantCnt}人参与，进度${taskCnt}/${totalTaskNum}`);
         // 做任务按钮
         if (finished) { // 已结束
-            container.removeChild(doTaskBtn);
-            container.addChild(taskFinishedBox);
+            doTaskBtnRefresh(false);
             taskFinishedBoxText.turnText("已结束");
         }
         else {
-            if (taskCnt < totalTaskNum) { // 做任务
-                container.removeChild(taskFinishedBox);
-                container.addChild(doTaskBtn);
+            if (!isParticipant) {
+                doTaskBtnRefresh(false);
+                taskFinishedBoxText.turnText("你无需参与");
+            }
+            else if (taskCnt < totalTaskNum) { // 做任务
+                doTaskBtnRefresh(true);
             }
             else { // 任务已完成/未参与任务
-                container.removeChild(doTaskBtn);
-                container.addChild(taskFinishedBox);
+                doTaskBtnRefresh(false);
                 if (!signInStatus) {
                     taskFinishedBoxText.turnText("未参与任务");
                 }
@@ -324,8 +336,8 @@ export default function (PIXI, app, obj, callBack) {
         clearDraw();
         callBack({
             status: "refresh",
-            drawFn(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus, taskTitle) {
-                refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus, taskTitle);
+            drawFn(option) {
+                refreshDraw(option);
             }
         });
     }

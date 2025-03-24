@@ -1,10 +1,9 @@
 import view from "./view";
 import { getGroupInfo, getGroupTaskDetailPath, shareAppMessageToGroup } from "../util";
 import { ShareCanvas } from './ShareCanvas';
-import { ActivityInfo, GroupInfo } from "../types";
+import { ActivityInfo, GroupInfo, roleType, DrawGroupTaskDetailOption } from "../types";
 import { GROUP_TASK_RESULT_EMOJI_URL } from "../const";
 import { drawProgress } from "./drawProgress";
-const roleType = ["unkown", "owner", "participant", "nonParticipant"]; // 定义角色类型
 
 const { envVersion } = wx.getAccountInfoSync().miniProgram;
 
@@ -21,9 +20,7 @@ const getVersionType = () => {
 };
 
 module.exports = function (PIXI: any, app: any, obj: any) {
-  let drawRefresh: (isOwner: boolean, useAssigner: boolean,
-    participantCnt: number, taskCnt: number, totalTaskNum: number,
-    finished: boolean, signInStatus: boolean, taskTitle: string) => void; // 视图层回调
+  let drawRefresh: (option: DrawGroupTaskDetailOption) => void; // 视图层回调
 
   const { screenWidth, pixelRatio } = wx.getSystemInfoSync();
 
@@ -38,7 +35,6 @@ module.exports = function (PIXI: any, app: any, obj: any) {
 
   let watchingParticipanted = true; // 是否正在观看参与人
 
-  let role = roleType[0]; // 当前用户角色
   let activityInfo: ActivityInfo = {}; // 活动信息
   let signIn: string[] = []; // 签到成员列表
   let notSignIn: string[] = []; // 未签到成员列表
@@ -48,6 +44,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
   let selfTaskCnt = 0; // 自己做的次数
   let totalTaskNum = 0; // 总任务次数
   let isOwner = false; // 是否为活动创建者
+  let isParticipant = false; // 是否为参与者
   let groupInfo: GroupInfo; // 群组信息
   let signInStatus = false; // 签到状态
   function shareAppMessage() {
@@ -143,22 +140,31 @@ module.exports = function (PIXI: any, app: any, obj: any) {
 
     isOwner = creator === openid; // 判断是否为活动创建者
 
-    if (roomid !== activityInfo.roomid) {
-      role = roleType[3]; // 非参与者
+    if (roomid !== activityInfo.roomid) { // 非当前群组活动
+      isParticipant = false;
     } else {
-      role = participant?.includes(groupOpenID || '')
-        ? roleType[2] // 参与者
-        : (isOwner ? roleType[1] : roleType[3]); // 创建者或非参与者
-    }
-
-    if (participant?.length === 0) {
-      role = roleType[2]; // 如果没有参与者，默认角色为参与者
+      if (!activityInfo.useAssigner) { // 未指定参与者
+        isParticipant = true;
+      } else { // 指定参与者
+        isParticipant = participant?.includes(groupOpenID || '')
+      }
     }
 
     signInStatus = signIn?.includes(groupOpenID || '') || false;
 
-    console.log("drawRefresh start", isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus, activityInfo.taskTitle)
-    drawRefresh(isOwner, activityInfo.useAssigner || false, participantCnt, taskCnt, totalTaskNum, activityInfo.finished || false, signInStatus, activityInfo.taskTitle || '示例');
+    const option: DrawGroupTaskDetailOption = {
+      isOwner,
+      useAssigner: activityInfo.useAssigner || false,
+      participantCnt,
+      taskCnt,
+      totalTaskNum,
+      finished: activityInfo.finished || false,
+      signInStatus,
+      taskTitle: activityInfo.taskTitle || '示例',
+      isParticipant,
+    }
+    console.log("!!! groupTaskDetail draw", option);
+    drawRefresh(option);
   }
 
   function updateChatToolMsg(params: any) {

@@ -6,6 +6,7 @@ import {
   p_line,
 } from "../../../../libs/component/index";
 import fixedTemplate from "../../../../libs/template/fixed";
+import { roleType, DrawGroupTaskDetailOption } from "../types";
 
 export default function (PIXI: any, app: any, obj: any, callBack: (data: any) => void) {
   const r = (value: any) => {
@@ -283,10 +284,20 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     });
   }
 
-  function refreshDraw(isOwner: boolean, useAssigner: boolean,
-    participantCnt: number, taskCnt: number, totalTaskNum: number,
-    finished: boolean, signInStatus: boolean, taskTitle: string
-  ) {
+  function doTaskBtnRefresh(isBtnAvailable: boolean) {
+    if (isBtnAvailable) {
+      container.addChild(doTaskBtn);
+      container.removeChild(taskFinishedBox);
+    } else {
+      container.addChild(taskFinishedBox);
+      container.removeChild(doTaskBtn);
+    }
+  }
+
+  function refreshDraw(option: DrawGroupTaskDetailOption) {
+    const { isOwner, useAssigner, participantCnt,
+      taskCnt, totalTaskNum, finished,
+      signInStatus, taskTitle, isParticipant } = option;
     api_name.turnText(taskTitle);
     // 如果是发起人并且任务未结束，则显示结束任务按钮
     if (isOwner && !finished && taskCnt < totalTaskNum) {
@@ -300,16 +311,16 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
 
     // 做任务按钮
     if (finished) { // 已结束
-      container.removeChild(doTaskBtn);
-      container.addChild(taskFinishedBox);
+      doTaskBtnRefresh(false);
       taskFinishedBoxText.turnText("已结束")
     } else {
-      if (taskCnt < totalTaskNum) { // 做任务
-        container.removeChild(taskFinishedBox);
-        container.addChild(doTaskBtn);
+      if (!isParticipant) {
+        doTaskBtnRefresh(false);
+        taskFinishedBoxText.turnText("你无需参与")
+      } else if (taskCnt < totalTaskNum) { // 做任务
+        doTaskBtnRefresh(true);
       } else { // 任务已完成/未参与任务
-        container.removeChild(doTaskBtn);
-        container.addChild(taskFinishedBox);
+        doTaskBtnRefresh(false);
         if (!signInStatus) {
           taskFinishedBoxText.turnText("未参与任务")
         } else {
@@ -352,10 +363,8 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     clearDraw();
     callBack({
       status: "refresh",
-      drawFn(isOwner: boolean, useAssigner: boolean,
-        participantCnt: number, taskCnt: number, totalTaskNum: number,
-        finished: boolean, signInStatus: boolean, taskTitle: string) {
-        refreshDraw(isOwner, useAssigner, participantCnt, taskCnt, totalTaskNum, finished, signInStatus, taskTitle)
+      drawFn(option: DrawGroupTaskDetailOption) {
+        refreshDraw(option);
       }
     })
   }
