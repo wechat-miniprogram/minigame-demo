@@ -146,7 +146,6 @@ export default function (PIXI, app, obj, callBack) {
             },
         });
     });
-    // participantBox.addChild(participatedBtn, notParticipatedBtn);
     /**** participant ****/
     /**** Buttons ****/
     // 做任务
@@ -339,17 +338,7 @@ export default function (PIXI, app, obj, callBack) {
     detailRefresh();
     // 返回按钮 销毁开放数据域
     goBack.callBack = clearDraw;
-    // 一定要加这个reload, 否则会报错
-    // @ts-ignore 框架遗留
-    // window.router.getNowPage((page: any) => {
-    //   page.reload = function () {
-    //     logo.reloadImg({ src: "images/logo.png" });
-    //     detailRefresh();
-    //   };
-    // });
-    container.addChild(goBack, title, api_name, underline, taskTitleText, taskDetailText, 
-    // endTaskBtn,
-    smallShareBtn, participantBox);
+    container.addChild(goBack, title, api_name, underline, taskTitleText, taskDetailText, smallShareBtn, participantBox);
     app.stage.addChild(container);
     return container;
 }

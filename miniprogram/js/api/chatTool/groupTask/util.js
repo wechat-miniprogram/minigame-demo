@@ -1,3 +1,11 @@
+export function showVersionTip() {
+    wx.showModal({
+        content: '你的微信版本过低，无法演示该功能！',
+        showCancel: false,
+        confirmColor: '#02BB00',
+    });
+    wx.hideLoading();
+}
 export function getGroupInfo() {
     function getInfoSuccess(resolve, reject, res) {
         const cloudID = res.cloudID;
@@ -33,6 +41,11 @@ export function getGroupInfo() {
     }
     return new Promise((resolve, reject) => {
         // @ts-ignore 声明未更新临时处理
+        if (!wx.getChatToolInfo) {
+            showVersionTip();
+            reject("微信版本过低");
+        }
+        // @ts-ignore 声明未更新临时处理
         wx.getChatToolInfo({
             success(res) {
                 console.log("!!! getChatToolInfo success: ", res);
@@ -58,6 +71,11 @@ export function getGroupTaskDetailPath(activityId) {
     return `?pathName=groupTaskDetail&activityId=${activityId}`;
 }
 export function openChatTool(roomid, chatType, success, fail) {
+    // @ts-ignore 声明未更新临时处理
+    if (!wx.isChatTool) {
+        showVersionTip();
+        return;
+    }
     // @ts-ignore 声明未更新临时处理
     if (wx.isChatTool()) {
         // @ts-ignore 声明未更新临时处理
