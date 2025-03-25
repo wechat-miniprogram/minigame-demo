@@ -3,7 +3,7 @@ import { GroupInfo, shareAppMessageToGroupOption, openChatToolOption } from "./t
 
 export function showVersionTip() {
   wx.showModal({
-    content: '你的微信版本过低，无法演示该功能！',
+    content: '需更新到客户端版本 ≥ 8.0.57，基础库版本 ≥ 3.7.12',
     showCancel: false,
     confirmColor: '#02BB00',
   });

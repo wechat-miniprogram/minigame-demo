@@ -2,14 +2,21 @@
  * 绘制环形进度条
  * @param current 当前进度
  * @param total 总进度
+ * @param pixelRatio 像素比
  * @param options 配置选项
  * @returns 离屏Canvas对象
  */
 export function drawProgress(current, total, pixelRatio, options = {}) {
-    // 默认配置
-    const { width = 166 * pixelRatio, height = 166 * pixelRatio, radius = 55 * pixelRatio, lineWidth = 9 * pixelRatio, activeColor = '#07C160', inactiveColor = '#D9D9D9', fontSize = 22 * pixelRatio, fontColor = '#000000', fontWeight = '500', // 可以是 'normal', 'bold', '500' 等
-    borderRadius = 12 * pixelRatio // 默认圆角大小
-     } = options;
+    // 默认配置，确保所有尺寸都乘以 pixelRatio
+    const { width: rawWidth = 166, height: rawHeight = 166, radius: rawRadius = 55, lineWidth: rawLineWidth = 9, fontSize: rawFontSize = 22, borderRadius: rawBorderRadius = 0, // 圆角会有显示问题，暂时弃用
+    activeColor = '#07C160', inactiveColor = '#D9D9D9', fontColor = '#000000', fontWeight = '500' } = options;
+    // 所有尺寸都乘以 pixelRatio
+    const width = rawWidth * pixelRatio;
+    const height = rawHeight * pixelRatio;
+    const radius = rawRadius * pixelRatio;
+    const lineWidth = rawLineWidth * pixelRatio;
+    const fontSize = rawFontSize * pixelRatio;
+    const borderRadius = rawBorderRadius * pixelRatio;
     // 创建离屏canvas
     const canvas = wx.createCanvas();
     canvas.width = width;
@@ -66,21 +73,3 @@ export function drawProgress(current, total, pixelRatio, options = {}) {
     ctx.fillText(text, centerX, centerY);
     return canvas;
 }
-// 使用示例：
-/*
-const progressCanvas = drawProgress(1, 5, {
-    width: 300,
-    height: 300,
-    radius: 100,
-    lineWidth: 16,
-    activeColor: '#07C160',
-    inactiveColor: '#E5E5E5',
-    fontSize: 40,
-    fontColor: '#000000',
-    fontWeight: 'bold',  // 设置字体粗细
-    borderRadius: 16  // 设置画布圆角
-});
-
-// 将离屏Canvas绘制到目标Canvas上
-targetCtx.drawImage(progressCanvas, x, y);
-*/ 

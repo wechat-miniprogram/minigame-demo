@@ -99,9 +99,11 @@ module.exports = function (PIXI: any, app: any, obj: any) {
       const progressCanvas = drawProgress(taskCnt, targetTaskNum, pixelRatio);
       progressCanvas.toTempFilePath({
         success(res) {
+          console.log('!!! shareImageToGroup: ', res.tempFilePath, getGroupTaskDetailPath(activityId));
           // @ts-ignore 声明未更新临时处理
           wx.shareImageToGroup({
             imagePath: res.tempFilePath,
+            needShowEntrance: true,
             entrancePath: getGroupTaskDetailPath(activityId),
           });
         },
@@ -118,7 +120,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
     if (activityInfo.isUsingSpecify && !activityInfo.isFinished && taskCnt < targetTaskNum) {
       // @ts-ignore 声明未更新临时处理
       wx.notifyGroupMembers({
-        title: "公会任务",
+        title: activityInfo.taskTitle || '示例',
         type: "participate",
         members: notSignIn,
         entrancePath: getGroupTaskDetailPath(activityId),
@@ -189,9 +191,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
       },
     }).then((resp) => {
       console.info("updateChatToolMsg: ", resp);
-      if (targetState === 3) {
-        fetchActivity();
-      }
+      fetchActivity();
     }).catch((err) => {
       console.info("updateChatToolMsg Fail: ", err);
     });
@@ -231,7 +231,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
         signIn?.push(groupOpenID || '');
         refreshData(activityInfo, groupInfo);
         updateChatToolMsg({
-          targetState: 1,
+          targetState: taskCnt >= targetTaskNum ? 3 : 1, // 如果已完成，则设置任务结束
           parameterList: [
             {
               groupOpenID,
@@ -239,7 +239,6 @@ module.exports = function (PIXI: any, app: any, obj: any) {
             },
           ],
         });
-        fetchActivity();
         showToast(`已加入，打了${selfTaskCnt}次`);
       } else {
         console.error("signIn fail: ", resp);
