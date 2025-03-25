@@ -179,13 +179,14 @@ module.exports = function (PIXI: any, app: any, obj: any) {
     const { targetState, parameterList } = params;
     const templateId = ACTIVITY_TEMPLATE_ID_2; // 模版ID2
 
+    console.log('!!! updateChatToolMsg', activityId, targetState, parameterList);
     wx.cloud.callFunction({
       name: "openapi",
       data: {
         action: "updateChatToolMsg",
         activityId,
         targetState: targetState || 1,
-        templateId: templateId,
+        templateId,
         parameterList: parameterList || [],
         versionType: getVersionType(),
       },
@@ -194,6 +195,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
       fetchActivity();
     }).catch((err) => {
       console.info("updateChatToolMsg Fail: ", err);
+      showToast("更新失败");
     });
   }
 

@@ -42,9 +42,9 @@ export function drawProgress(current, total, pixelRatio, options = {}) {
     ctx.fill();
     // 应用圆角裁剪
     ctx.clip();
-    // 计算中心点
+    // 计算中心点，Y轴向上偏移
     const centerX = width / 2;
-    const centerY = height / 2;
+    const centerY = height / 2 - height * 0.05; // 整体向上偏移5%
     // 计算进度
     const progress = Math.min(current / total, 1);
     // 绘制背景圆环
@@ -58,18 +58,22 @@ export function drawProgress(current, total, pixelRatio, options = {}) {
         ctx.beginPath();
         ctx.strokeStyle = activeColor;
         ctx.lineWidth = lineWidth;
-        // 从12点钟方向开始绘制，所以需要减去90度（π/2）
         const startAngle = -Math.PI / 2;
         const endAngle = startAngle + (2 * Math.PI * progress);
         ctx.arc(centerX, centerY, radius, startAngle, endAngle);
         ctx.stroke();
     }
-    // 绘制文字
+    // 绘制进度文字
     ctx.fillStyle = fontColor;
     ctx.font = `${fontWeight} ${fontSize}px PingFang SC`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const text = `进度${current}/${total}`;
     ctx.fillText(text, centerX, centerY);
+    // 绘制底部说明文字
+    ctx.fillStyle = '#999999'; // 使用灰色
+    ctx.font = `normal ${fontSize * 0.6}px PingFang SC`; // 字号设置为进度文字的60%
+    const bottomText = '支持自定义，此图仅为示例';
+    ctx.fillText(bottomText, centerX, height - height * 0.1); // 位于底部上方10%处
     return canvas;
 }
