@@ -29,16 +29,14 @@ module.exports = function (PIXI: any, app: any, obj: any) {
 
     switch (status) {
       case "createTask":
-        openChatTool(
-          undefined,
-          undefined,
-          () => {
+        openChatTool({
+          success: () => {
             drawFn();
           },
-          (err: any) => {
+          fail: (err: any) => {
             console.error("openChatTool fail:", err);
           },
-        )
+        })
         break;
       case "fetchActivityList":
         wx.showLoading({

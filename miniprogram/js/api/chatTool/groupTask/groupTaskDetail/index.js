@@ -51,11 +51,18 @@ module.exports = function (PIXI, app, obj) {
             console.warn('activityInfo._id is undefined', activityInfo);
             return;
         }
-        shareAppMessageToGroup(activityId, participant, activityInfo.isUsingSpecify ? 1 : 2, activityInfo.taskTitle || '示例', (res) => {
-            console.log("shareAppMessageToGroup success: ", res);
-        }, (err) => {
-            console.error("shareAppMessageToGroup fail: ", err);
-            showToast("分享失败");
+        shareAppMessageToGroup({
+            activityId,
+            participant,
+            chooseType: activityInfo.isUsingSpecify ? 1 : 2,
+            taskTitle: activityInfo.taskTitle || '示例',
+            success: (res) => {
+                console.log("shareAppMessageToGroup success: ", res);
+            },
+            fail: (err) => {
+                console.error("shareAppMessageToGroup fail: ", err);
+                showToast("分享失败");
+            }
         });
     }
     function share() {
@@ -254,12 +261,17 @@ module.exports = function (PIXI, app, obj) {
             };
             // @ts-ignore
             if (!wx.isChatTool()) { // 若当前不为聊天工具模式（动态卡片进入），则进入聊天工具模式
-                openChatTool(groupInfo.roomid, groupInfo.chatType, (res) => {
-                    console.log('!!! openChatTool success', res);
-                    Fn();
-                }, (err) => {
-                    console.error('!!! openChatTool fail: ', err);
-                    showToast("进入聊天工具模式失败");
+                openChatTool({
+                    roomid: groupInfo.roomid,
+                    chatType: groupInfo.chatType,
+                    success: (res) => {
+                        console.log('!!! openChatTool success', res);
+                        Fn();
+                    },
+                    fail: (err) => {
+                        console.error('!!! openChatTool fail: ', err);
+                        showToast("进入聊天工具模式失败");
+                    }
                 });
             }
             else {

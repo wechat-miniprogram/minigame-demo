@@ -53,7 +53,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   });
 
   function taskButton(option: CreateTaskButtonOption) {
-    console.log('!!! taskButton', option);
+    // console.log('!!! taskButton', option);
     const { buttonNumber, activityId, roomid, chatType, taskTitle } = option;
     let button = p_button(PIXI, {
       parentWidth: taskList.width,
@@ -95,20 +95,20 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       )
     );
     button.onClickFn(() => {
-      openChatTool(
+      openChatTool({
         roomid,
         chatType,
-        (res: any) => {
+        success: (res: any) => {
           console.log('!!! openChatTool success', res);
           // @ts-ignore 框架遗留
           window.router.navigateTo("groupTaskDetail", {
             activityId,
           });
         },
-        (err: any) => {
+        fail: (err: any) => {
           console.error('!!! openChatTool fail: ', err);
         }
-      )
+      })
     });
     return button;
   }

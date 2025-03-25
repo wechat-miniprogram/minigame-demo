@@ -81,23 +81,23 @@ module.exports = function (PIXI: any, app: any, obj: {
             taskTitle,
           },
         }).then(() => {
-          shareAppMessageToGroup(
+          shareAppMessageToGroup({
             activityId,
             participant,
-            isUsingSpecify ? 1 : 2,
+            chooseType: isUsingSpecify ? 1 : 2,
             taskTitle,
-            (res) => {
+            success: (res) => {
               console.log("shareAppMessageToGroup success: ", res);
-              wx.hideLoading({});
+              wx.hideLoading();
               activityId = "";
               createActivityID(); // 刷新待创建的活动id
               drawFn();
             },
-            (err) => {
+            fail: (err) => {
               console.info("shareAppMessageToGroup fail: ", err);
               showToast("分享失败");
             }
-          );
+          });
         });
       })
       .catch((err) => {

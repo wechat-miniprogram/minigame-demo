@@ -64,19 +64,19 @@ module.exports = function (PIXI: any, app: any, obj: any) {
       return;
     }
 
-    shareAppMessageToGroup(
+    shareAppMessageToGroup({
       activityId,
       participant,
-      activityInfo.isUsingSpecify ? 1 : 2,
-      activityInfo.taskTitle || '示例',
-      (res) => {
+      chooseType: activityInfo.isUsingSpecify ? 1 : 2,
+      taskTitle: activityInfo.taskTitle || '示例',
+      success: (res) => {
         console.log("shareAppMessageToGroup success: ", res);
       },
-      (err) => {
+      fail: (err) => {
         console.error("shareAppMessageToGroup fail: ", err);
         showToast("分享失败");
       }
-    );
+    });
   }
 
   function share() {
@@ -284,18 +284,18 @@ module.exports = function (PIXI: any, app: any, obj: any) {
 
       // @ts-ignore
       if (!wx.isChatTool()) { // 若当前不为聊天工具模式（动态卡片进入），则进入聊天工具模式
-        openChatTool(
-          groupInfo.roomid,
-          groupInfo.chatType,
-          (res: any) => {
+        openChatTool({
+          roomid: groupInfo.roomid,
+          chatType: groupInfo.chatType,
+          success: (res: any) => {
             console.log('!!! openChatTool success', res);
             Fn();
           },
-          (err: any) => {
+          fail: (err: any) => {
             console.error('!!! openChatTool fail: ', err);
             showToast("进入聊天工具模式失败");
           }
-        )
+        })
       } else {
         Fn();
       }

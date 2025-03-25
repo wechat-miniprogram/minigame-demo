@@ -75,7 +75,9 @@ export function getGroupInfo() {
 export function getGroupTaskDetailPath(activityId) {
     return `?pathName=groupTaskDetail&activityId=${activityId}`;
 }
-export function openChatTool(roomid, chatType, success, fail) {
+export function openChatTool(option) {
+    console.log('!!! openChatTool option: ', option);
+    const { roomid, chatType, success, fail } = option;
     // @ts-ignore 声明未更新临时处理
     if (!wx.isChatTool) {
         showVersionTip();
@@ -86,7 +88,7 @@ export function openChatTool(roomid, chatType, success, fail) {
         // @ts-ignore 声明未更新临时处理
         wx.exitChatTool({
             success: () => {
-                openChatTool(roomid, chatType, success, fail);
+                openChatTool({ roomid, chatType, success, fail });
             },
             fail: (err) => {
                 showToast("退出聊天工具模式失败");
@@ -104,7 +106,9 @@ export function openChatTool(roomid, chatType, success, fail) {
         });
     }
 }
-export function shareAppMessageToGroup(activityId, participant, chooseType, taskTitle, success, fail) {
+export function shareAppMessageToGroup(option) {
+    console.log('!!! shareAppMessageToGroup option: ', option);
+    const { activityId, participant, chooseType, taskTitle, success, fail } = option;
     const templateInfo = {
         templateId: "2A84254B945674A2F88CE4970782C402795EB607", // 模版ID常量
         parameterList: [

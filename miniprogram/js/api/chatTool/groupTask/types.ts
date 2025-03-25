@@ -50,3 +50,19 @@ export interface CreateShareCanvasOption {
   pixelRatio: number,
   scale?: number
 }
+
+export interface shareAppMessageToGroupOption {
+  activityId: string,
+  participant: string[],
+  chooseType: number,
+  taskTitle: string,
+  success?: any,
+  fail?: any
+}
+
+export interface openChatToolOption {
+  roomid?: string,
+  chatType?: number,
+  success?: any,
+  fail?: any
+}

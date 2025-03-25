@@ -1,5 +1,5 @@
 import { GROUP_TASK_SHARE_APP_MESSAGE_IMAGE_URL } from "./const";
-import { GroupInfo } from "./types";
+import { GroupInfo, shareAppMessageToGroupOption, openChatToolOption } from "./types";
 
 export function showVersionTip() {
   wx.showModal({
@@ -80,7 +80,9 @@ export function getGroupTaskDetailPath(activityId: string) {
   return `?pathName=groupTaskDetail&activityId=${activityId}`
 }
 
-export function openChatTool(roomid?: string, chatType?: number, success?: any, fail?: any) {
+export function openChatTool(option: openChatToolOption) {
+  console.log('!!! openChatTool option: ', option)
+  const { roomid, chatType, success, fail } = option
   // @ts-ignore 声明未更新临时处理
   if (!wx.isChatTool) {
     showVersionTip();
@@ -92,7 +94,7 @@ export function openChatTool(roomid?: string, chatType?: number, success?: any, 
     // @ts-ignore 声明未更新临时处理
     wx.exitChatTool({
       success: () => {
-        openChatTool(roomid, chatType, success, fail);
+        openChatTool({ roomid, chatType, success, fail });
       },
       fail: (err: any) => {
         showToast("退出聊天工具模式失败");
@@ -110,8 +112,9 @@ export function openChatTool(roomid?: string, chatType?: number, success?: any, 
   }
 }
 
-export function shareAppMessageToGroup(activityId: string, participant: string[],
-  chooseType: number, taskTitle: string, success?: any, fail?: any) {
+export function shareAppMessageToGroup(option: shareAppMessageToGroupOption) {
+  console.log('!!! shareAppMessageToGroup option: ', option)
+  const { activityId, participant, chooseType, taskTitle, success, fail } = option
   const templateInfo = {
     templateId: "2A84254B945674A2F88CE4970782C402795EB607", // 模版ID常量
     parameterList: [

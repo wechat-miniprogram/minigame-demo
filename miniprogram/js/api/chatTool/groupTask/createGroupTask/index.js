@@ -73,15 +73,22 @@ module.exports = function (PIXI, app, obj) {
                     taskTitle,
                 },
             }).then(() => {
-                shareAppMessageToGroup(activityId, participant, isUsingSpecify ? 1 : 2, taskTitle, (res) => {
-                    console.log("shareAppMessageToGroup success: ", res);
-                    wx.hideLoading({});
-                    activityId = "";
-                    createActivityID(); // 刷新待创建的活动id
-                    drawFn();
-                }, (err) => {
-                    console.info("shareAppMessageToGroup fail: ", err);
-                    showToast("分享失败");
+                shareAppMessageToGroup({
+                    activityId,
+                    participant,
+                    chooseType: isUsingSpecify ? 1 : 2,
+                    taskTitle,
+                    success: (res) => {
+                        console.log("shareAppMessageToGroup success: ", res);
+                        wx.hideLoading();
+                        activityId = "";
+                        createActivityID(); // 刷新待创建的活动id
+                        drawFn();
+                    },
+                    fail: (err) => {
+                        console.info("shareAppMessageToGroup fail: ", err);
+                        showToast("分享失败");
+                    }
                 });
             });
         })

@@ -37,7 +37,7 @@ export default function (PIXI, app, obj, callBack) {
         },
     });
     function taskButton(option) {
-        console.log('!!! taskButton', option);
+        // console.log('!!! taskButton', option);
         const { buttonNumber, activityId, roomid, chatType, taskTitle } = option;
         let button = p_button(PIXI, {
             parentWidth: taskList.width,
@@ -70,14 +70,19 @@ export default function (PIXI, app, obj, callBack) {
             alpha: 0.1,
         }, [r(16), r(63.5)], [r(290), 0]));
         button.onClickFn(() => {
-            openChatTool(roomid, chatType, (res) => {
-                console.log('!!! openChatTool success', res);
-                // @ts-ignore 框架遗留
-                window.router.navigateTo("groupTaskDetail", {
-                    activityId,
-                });
-            }, (err) => {
-                console.error('!!! openChatTool fail: ', err);
+            openChatTool({
+                roomid,
+                chatType,
+                success: (res) => {
+                    console.log('!!! openChatTool success', res);
+                    // @ts-ignore 框架遗留
+                    window.router.navigateTo("groupTaskDetail", {
+                        activityId,
+                    });
+                },
+                fail: (err) => {
+                    console.error('!!! openChatTool fail: ', err);
+                }
             });
         });
         return button;

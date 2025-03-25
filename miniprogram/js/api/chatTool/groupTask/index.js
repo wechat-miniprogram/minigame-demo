@@ -24,10 +24,13 @@ module.exports = function (PIXI, app, obj) {
         let { status, drawFn } = data;
         switch (status) {
             case "createTask":
-                openChatTool(undefined, undefined, () => {
-                    drawFn();
-                }, (err) => {
-                    console.error("openChatTool fail:", err);
+                openChatTool({
+                    success: () => {
+                        drawFn();
+                    },
+                    fail: (err) => {
+                        console.error("openChatTool fail:", err);
+                    },
                 });
                 break;
             case "fetchActivityList":
