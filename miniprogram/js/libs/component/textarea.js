@@ -40,7 +40,8 @@ module.exports = function(PIXI, deploy = {}) {
                 fill: text.color,
                 wordWrap: true,
                 wordWrapWidth: width - padding * 2,
-                lineHeight: lineHeight
+                lineHeight: lineHeight,
+                align: 'center',
             }),
             // placeholder显示
             placeholder_text = new PIXI.Text(placeholder.content, {
@@ -48,7 +49,8 @@ module.exports = function(PIXI, deploy = {}) {
                 fill: placeholder.color,
                 wordWrap: true,
                 wordWrapWidth: width - padding * 2,
-                lineHeight: lineHeight
+                lineHeight: lineHeight,
+                align: 'center'
             });
 
         // 设置位置
@@ -61,8 +63,21 @@ module.exports = function(PIXI, deploy = {}) {
             .endFill();
 
         // 设置文本位置
-        content_text.position.set(padding, padding);
-        placeholder_text.position.set(padding, padding);
+        content_text.position.set(
+            padding, 
+            (height - content_text.height) / 2
+        );
+        placeholder_text.position.set(
+            padding,
+            (height - placeholder_text.height) / 2
+        );
+
+        // 设置锚点使文本水平居中
+        content_text.anchor.set(0, 0);
+        content_text.x = (width - content_text.width) / 2;
+        
+        placeholder_text.anchor.set(0, 0);
+        placeholder_text.x = (width - placeholder_text.width) / 2;
 
         // 添加到容器
         container.addChild(background_layer, content_text, placeholder_text);
@@ -71,17 +86,27 @@ module.exports = function(PIXI, deploy = {}) {
         // 当前文本内容
         let current_text = '';
 
+        // 添加更新文本位置的函数
+        const updateTextPosition = (text) => {
+            text.x = (width - text.width) / 2;
+            text.y = (height - text.height) / 2;
+        };
+
         // 处理输入法
         const handleKeyboardInput = (res) => {
             current_text = res.value;
             content_text.text = current_text;
             placeholder_text.visible = !current_text;
+            // 更新content_text位置
+            updateTextPosition(content_text);
         };
 
         const handleKeyboardConfirm = (res) => {
             current_text = res.value;
             content_text.text = current_text;
             placeholder_text.visible = !current_text;
+            // 更新content_text位置
+            updateTextPosition(content_text);
             wx.hideKeyboard();
             this.onConfirm && this.onConfirm(current_text);
         };
@@ -130,6 +155,8 @@ module.exports = function(PIXI, deploy = {}) {
             current_text = str || '';
             content_text.text = current_text;
             placeholder_text.visible = !current_text;
+            // 更新content_text位置
+            updateTextPosition(content_text);
         };
 
         // 获取文本内容
@@ -173,6 +200,10 @@ module.exports = function(PIXI, deploy = {}) {
             wx.hideKeyboard();
             PIXI.Container.prototype.destroy.call(this);
         };
+
+        // 初始化时设置位置
+        updateTextPosition(content_text);
+        updateTextPosition(placeholder_text);
     }
 
     Textarea.prototype = new PIXI.Container();
