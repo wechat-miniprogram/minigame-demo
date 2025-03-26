@@ -23,7 +23,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       {
         obj,
         title: "聊天工具",
-        api_name: "群任务",
+        api_name: "群活动",
       }
     );
   /**** taskList ****/

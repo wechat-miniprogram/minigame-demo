@@ -55,8 +55,7 @@ module.exports = function (PIXI, app, obj) {
             });
             return;
         }
-        getGroupInfo()
-            .then((resp) => {
+        getGroupInfo().then((resp) => {
             wx.cloud.callFunction({
                 name: "quickstartFunctions",
                 data: {
@@ -91,8 +90,7 @@ module.exports = function (PIXI, app, obj) {
                     }
                 });
             });
-        })
-            .catch((err) => {
+        }).catch((err) => {
             console.error("publish fail: ", err);
             showToast("发布失败");
         });

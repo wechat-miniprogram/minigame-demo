@@ -9,7 +9,7 @@ export default function (PIXI, app, obj, callBack) {
     let container = new PIXI.Container(), { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
         obj,
         title: "聊天工具",
-        api_name: "群任务",
+        api_name: "群活动",
     });
     /**** taskList ****/
     // 任务列表

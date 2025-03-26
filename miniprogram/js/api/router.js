@@ -386,32 +386,22 @@ const signIn = [
         name: 'chatTool',
         children: [
           {
-            label: '群任务',
+            label: '群活动',
             name: 'groupTask',
             path: 'chatTool/groupTask/index',
             children: [
               {
-                label: "创建群任务",
+                label: "创建群活动",
                 name: "createGroupTask",
                 path: "chatTool/groupTask/createGroupTask/index",
               },
               {
-                label: '群任务详情',
+                label: '群活动详情',
                 name: 'groupTaskDetail',
                 path: 'chatTool/groupTask/groupTaskDetail/index',
               },
             ],
           },
-          // {
-          //   label: '创建群任务',
-          //   name: 'createGroupTask',
-          //   path: 'chatTool/groupTask/createGroupTask/index',
-          // },
-          // {
-          //   label: '群任务详情',
-          //   name: 'groupTaskDetail',
-          //   path: 'chatTool/groupTask/groupTaskDetail/index',
-          // },
         ],
       },
       {

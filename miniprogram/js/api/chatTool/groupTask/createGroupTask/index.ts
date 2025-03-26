@@ -63,47 +63,45 @@ module.exports = function (PIXI: any, app: any, obj: {
       return;
     }
 
-    getGroupInfo()
-      .then((resp: any) => {
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: {
-            type: "addRecord",
-            activityId,
-            roomid: resp.roomid,
-            chatType: resp.chatType,
-            // startTime: dateTextStart,
-            // endTime: dateTextEnd,
-            participant,
-            signIn: [],
-            isUsingSpecify,
-            isFinished: false,
-            taskTitle,
+    getGroupInfo().then((resp: any) => {
+      wx.cloud.callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "addRecord",
+          activityId,
+          roomid: resp.roomid,
+          chatType: resp.chatType,
+          // startTime: dateTextStart,
+          // endTime: dateTextEnd,
+          participant,
+          signIn: [],
+          isUsingSpecify,
+          isFinished: false,
+          taskTitle,
+        },
+      }).then(() => {
+        shareAppMessageToGroup({
+          activityId,
+          participant,
+          chooseType: isUsingSpecify ? 1 : 2,
+          taskTitle,
+          success: (res) => {
+            console.log("shareAppMessageToGroup success: ", res);
+            wx.hideLoading();
+            activityId = "";
+            createActivityID(); // 刷新待创建的活动id
+            drawFn();
           },
-        }).then(() => {
-          shareAppMessageToGroup({
-            activityId,
-            participant,
-            chooseType: isUsingSpecify ? 1 : 2,
-            taskTitle,
-            success: (res) => {
-              console.log("shareAppMessageToGroup success: ", res);
-              wx.hideLoading();
-              activityId = "";
-              createActivityID(); // 刷新待创建的活动id
-              drawFn();
-            },
-            fail: (err) => {
-              console.info("shareAppMessageToGroup fail: ", err);
-              showToast("分享失败");
-            }
-          });
+          fail: (err) => {
+            console.info("shareAppMessageToGroup fail: ", err);
+            showToast("分享失败");
+          }
         });
-      })
-      .catch((err) => {
-        console.error("publish fail: ", err);
-        showToast("发布失败");
       });
+    }).catch((err) => {
+      console.error("publish fail: ", err);
+      showToast("发布失败");
+    });
   }
 
   return view(PIXI, app, obj, (data: any) => {

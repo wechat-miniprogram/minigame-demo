@@ -19,7 +19,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       {
         obj,
         title: "创建任务",
-        api_name: "群任务",
+        api_name: "群活动",
       }
     );
 
@@ -28,7 +28,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   /**** taskTitle ****/
   // 任务示例标题
   let taskTitleText = p_text(PIXI, {
-    content: "任务名称",
+    content: "活动名",
     x: r(26),
     y: r(155),
     fontSize: r(14),
@@ -43,22 +43,67 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     radius: r(8),
     fontSize: r(17),
     padding: r(13),
+    placeholder: {
+      content: "请输入活动名",
+      color: "rgba(0,0,0,0.3)",
+    },
   });
   taskTitleInput.onConfirmFn((text: string) => {
-    console.log('text', text);
+    refreshPublishBtn(text);
     callBack({
       status: 'titleChange',
       text,
     });
   });
+
+  function refreshPublishBtn(btnText: string) {
+    console.log('活动名：', btnText);
+    if (btnText.length > 0) {
+      container.removeChild(publishBox);
+      container.addChild(publishBtn);
+    } else {
+      container.removeChild(publishBtn);
+      container.addChild(publishBox);
+    }
+  }
   /**** taskTitle ****/
+
+  /**** taskDesc ****/
+  // 任务描述
+  let taskDescText = p_text(PIXI, {
+    content: "任务（此处为示例）",
+    x: r(26),
+    y: r(282),
+    fontSize: r(14),
+    fill: "rgba(0,0,0,0.5)",
+    align: "center",
+  });
+  let taskDescBox = p_box(PIXI, {
+    width: contentWidth,
+    height: r(72),
+    x: r(26),
+    y: r(306),
+    radius: r(8),
+  });
+  let taskDescBoxText = p_text(PIXI, {
+    content: "加入boss战，累计打5次",
+    fontSize: r(17),
+    fill: 0x000000,
+    align: "center",
+    relative_middle: {
+      containerHeight: taskDescBox.height,
+      containerWidth: taskDescBox.width,
+    },
+  });
+  taskDescBox.addChild(taskDescBoxText);
+  /**** taskDesc ****/
 
   /**** Participant ****/
   // 参与人标题
   let participantTitleText = p_text(PIXI, {
     content: "参与人",
     x: r(26),
-    y: r(263),
+    y: r(394),
     fontSize: r(14),
     fill: "rgba(0,0,0,0.5)",
     align: "center",
@@ -66,7 +111,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   let BtnBox = p_box(PIXI, {
     width: contentWidth,
     height: r(134),
-    y: r(287),
+    y: r(418),
     radius: r(8),
   });
   // 全员可参与
@@ -185,8 +230,9 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   let publishBtn = p_button(PIXI, {
     width: r(196),
     height: r(48),
+    y: r(666),
+    radius: r(4),
     color: 0x07c160,
-    y: BtnBox.y + BtnBox.height + r(245),
   });
   let publishBtnText = p_text(PIXI, {
     content: "发布",
@@ -209,6 +255,28 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       },
     });
   });
+
+  let publishBox = p_box(PIXI, {
+    width: r(196),
+    height: r(48),
+    y: r(666),
+    radius: r(4),
+    background: {
+      color: 0x07c160,
+      alpha: 0.3,
+    },
+  });
+  let publishBoxText = p_text(PIXI, {
+    content: "发布",
+    fontSize: r(17),
+    fill: 0xffffff,
+    align: "center",
+    relative_middle: {
+      containerWidth: publishBox.width,
+      containerHeight: publishBox.height,
+    },
+  });
+  publishBox.addChild(publishBoxText);
   /**** publish ****/
 
   container.addChild(
@@ -218,10 +286,13 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
     underline,
     taskTitleText,
     taskTitleInput,
+    taskDescText,
+    taskDescBox,
     // taskTitleBox,
     participantTitleText,
     BtnBox,
-    publishBtn,
+    publishBox,
+    // publishBtn,
   );
   app.stage.addChild(container);
 
