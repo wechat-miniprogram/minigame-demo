@@ -10,7 +10,8 @@
 export const GROUP_TASK_RESULT_EMOJI_URL = 'https://mmgame.qpic.cn/rimage/751e092d57e5e2922c9d3b61940d164522a594924b683037409533612decb526';
 
 // 分享app图
-export const GROUP_TASK_SHARE_APP_MESSAGE_IMAGE_URL = 'https://mmgame.qpic.cn/image/264eef4359b95dffc552149c15b9d53723d56d836411841a37710f1c7c3b4878/0';
+// export const GROUP_TASK_SHARE_APP_MESSAGE_IMAGE_URL = 'https://mmgame.qpic.cn/image/264eef4359b95dffc552149c15b9d53723d56d836411841a37710f1c7c3b4878/0';
+export const GROUP_TASK_SHARE_APP_MESSAGE_IMAGE_URL = 'https://mmgame.qpic.cn/image/5cfaadec5e565a145c63bbe62583b6e7695d783f526faf601febf0fb6ae7be65/0';
 
 // 动态消息模版ID
 export const ACTIVITY_TEMPLATE_ID_1 = '2A84254B945674A2F88CE4970782C402795EB607'; // 参与
