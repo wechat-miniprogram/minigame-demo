@@ -5,7 +5,8 @@
 // export const GROUP_TASK_PROGRESS_3_IMAGE_URL = 'https://mmgame.qpic.cn/image/cfe508abc765fba7df7d6cd0470c68f46e3d01511f70c7666e6bb131ea3a4845/0';
 // export const GROUP_TASK_PROGRESS_4_IMAGE_URL = 'https://mmgame.qpic.cn/image/f22c0d1a813605ff05636dbcd7456352d9e38a1cf62cd81a6f1fff55d84ddfe0/0';
 // 分享结果 emoji
-export const GROUP_TASK_RESULT_EMOJI_URL = 'https://mmbiz.qpic.cn/mmbiz_gif/EXAZAY4U1KCcdEB1gicNwIL4lUrpVQ5H5jOSfiaVHJ5n4EQyPrLqgRtbb6X1hRIiaZqMIibVME51FYRf7p2kC4OdLA/0';
+// export const GROUP_TASK_RESULT_EMOJI_URL = 'https://mmbiz.qpic.cn/mmbiz_gif/EXAZAY4U1KCcdEB1gicNwIL4lUrpVQ5H5jOSfiaVHJ5n4EQyPrLqgRtbb6X1hRIiaZqMIibVME51FYRf7p2kC4OdLA/0';
+export const GROUP_TASK_RESULT_EMOJI_URL = 'https://mmgame.qpic.cn/rimage/751e092d57e5e2922c9d3b61940d164522a594924b683037409533612decb526';
 // 分享app图
 export const GROUP_TASK_SHARE_APP_MESSAGE_IMAGE_URL = 'https://mmgame.qpic.cn/image/264eef4359b95dffc552149c15b9d53723d56d836411841a37710f1c7c3b4878/0';
 // 动态消息模版ID

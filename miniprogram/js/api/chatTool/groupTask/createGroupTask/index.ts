@@ -53,6 +53,12 @@ module.exports = function (PIXI: any, app: any, obj: {
         icon: 'none',
       });
       return;
+    } else if (taskTitle.includes(' ')) {
+      wx.showToast({
+        title: '任务名称不能包含空格',
+        icon: 'none',
+      });
+      return;
     }
     wx.showLoading({ title: '发布中...', mask: true });
 

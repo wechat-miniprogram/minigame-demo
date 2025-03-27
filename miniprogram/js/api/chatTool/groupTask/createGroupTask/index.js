@@ -48,6 +48,13 @@ module.exports = function (PIXI, app, obj) {
             });
             return;
         }
+        else if (taskTitle.includes(' ')) {
+            wx.showToast({
+                title: '任务名称不能包含空格',
+                icon: 'none',
+            });
+            return;
+        }
         wx.showLoading({ title: '发布中...', mask: true });
         if (!activityId) {
             createActivityID().then(() => {
