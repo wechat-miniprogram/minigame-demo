@@ -23,8 +23,6 @@ PIXI.interaction.InteractionManager.prototype.mapPositionToPoint = (point, x, y)
     point.x = x * pixelRatio;
     point.y = y * pixelRatio;
 };
-// TMP
-// eslint-disable-next-line no-import-assign
 PIXI.ratio = (windowWidth * pixelRatio) / 750;
 let loadingFn = pmgressBar(PIXI, app, {
     width: windowWidth * pixelRatio,

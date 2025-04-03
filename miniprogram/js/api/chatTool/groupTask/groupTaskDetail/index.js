@@ -4,9 +4,13 @@ import { ShareCanvas } from './ShareCanvas';
 import { GROUP_TASK_RESULT_EMOJI_URL, ACTIVITY_TEMPLATE_ID_2 } from "../const";
 import { drawProgress } from "./drawProgress";
 import { openChatTool, showToast } from "../util";
+// 获取当前小程序环境版本
 const { envVersion } = wx.getAccountInfoSync().miniProgram;
+/**
+ * 根据环境版本返回对应的版本类型
+ * @returns {number} 0: 正式版, 1: 开发版, 2: 体验版
+ */
 const getVersionType = () => {
-    // 根据环境版本返回对应的版本类型
     if (envVersion === "release") {
         return 0;
     }
@@ -18,34 +22,53 @@ const getVersionType = () => {
     }
     return 0;
 };
+/**
+ * 群任务详情页面的主模块
+ * @param {any} PIXI - PIXI.js 实例
+ * @param {any} app - 应用实例
+ * @param {any} obj - 传入的参数对象
+ */
 module.exports = function (PIXI, app, obj) {
-    const { activityId } = obj; // 获取启动信息
-    let watchingParticipanted = true; // 是否正在观看参与人
-    let activityInfo = {}; // 活动信息
-    let groupInfo; // 群组信息
-    let signIn = []; // 签到成员列表
+    const { activityId } = obj; // 从启动参数中获取活动ID
+    // 活动信息对象
+    let activityInfo = {};
+    // 群组信息对象
+    let groupInfo;
+    // 成员列表相关
+    let signIn = []; // 已签到成员列表
     let notSignIn = []; // 未签到成员列表
-    let participant = []; // 参与者列表
+    let participant = []; // 所有参与者列表
+    // 任务统计相关
     let participantCnt = 0; // 参与人数
-    let taskCnt = 0; // 已做任务次数
-    let selfTaskCnt = 0; // 自己做的次数
-    let targetTaskNum = 0; // 目标任务次数
+    let taskCnt = 0; // 已完成任务次数
+    let selfTaskCnt = 0; // 自己完成的任务次数
+    let targetTaskNum = 0; // 目标任务总次数
+    // 用户身份标识
     let isOwner = false; // 是否为活动创建者
     let isParticipant = false; // 是否为参与者
-    let drawRefresh; // 视图层回调
+    // 开放数据域显示状态
+    let watchingParticipanted = true;
+    // 视图刷新回调函数
+    let drawRefresh;
+    // 获取屏幕信息
     const { screenWidth, pixelRatio } = wx.getSystemInfoSync();
+    // 初始化分享画布
     const SC = new ShareCanvas({
         width: 343,
         height: 329,
         x: 16,
         y: 231,
         pixelRatio,
-        scale: screenWidth / 375, // 相对于设计稿比例
+        scale: screenWidth / 375, // 相对于设计稿的缩放比例
     });
+    // 定时器相关
     let tick = () => {
         SC.rankTiker(PIXI, app);
     };
     let ticker = PIXI.ticker.shared;
+    /**
+     * 分享活动消息到群聊
+     */
     function shareAppMessage() {
         if (!activityInfo._id) {
             console.warn('activityInfo._id is undefined', activityInfo);
@@ -54,7 +77,7 @@ module.exports = function (PIXI, app, obj) {
         shareAppMessageToGroup({
             activityId,
             participant,
-            chooseType: activityInfo.isUsingSpecify ? 1 : 2,
+            chooseType: activityInfo.isUsingSpecify ? 1 : 2, // 1: 指定人, 2: 所有人
             taskTitle: activityInfo.taskTitle || '示例',
             success: (res) => {
                 console.log("shareAppMessageToGroup success: ", res);
@@ -65,8 +88,11 @@ module.exports = function (PIXI, app, obj) {
             }
         });
     }
+    /**
+     * 分享任务结果或进度到群聊
+     */
     function share() {
-        // 分享结果
+        // 如果活动已完成或达到目标次数，分享结果表情
         if (activityInfo.isFinished || taskCnt >= targetTaskNum) {
             wx.downloadFile({
                 url: GROUP_TASK_RESULT_EMOJI_URL,
@@ -82,7 +108,7 @@ module.exports = function (PIXI, app, obj) {
                 },
             });
         }
-        else { // 分享进度
+        else { // 否则分享任务进度
             const progressCanvas = drawProgress(taskCnt, targetTaskNum, pixelRatio);
             progressCanvas.toTempFilePath({
                 success(res) {
@@ -100,9 +126,13 @@ module.exports = function (PIXI, app, obj) {
             });
         }
     }
+    /**
+     * 处理按钮2的点击事件
+     * 根据活动状态执行不同的操作
+     */
     function Btn2() {
         console.log("Btn2", activityInfo.isUsingSpecify, activityInfo.isFinished, taskCnt, targetTaskNum);
-        // 指定人且进行中
+        // 如果是指定人且活动未完成且未达到目标次数，则通知未签到成员
         if (activityInfo.isUsingSpecify && !activityInfo.isFinished && taskCnt < targetTaskNum) {
             // @ts-ignore 声明未更新临时处理
             wx.notifyGroupMembers({
@@ -115,10 +145,15 @@ module.exports = function (PIXI, app, obj) {
                 },
             });
         }
-        else {
+        else { // 否则分享任务结果或进度
             share();
         }
     }
+    /**
+     * 刷新活动数据
+     * @param {ActivityInfo} activityInfo - 活动信息
+     * @param {GroupInfo} groupInfo - 群组信息
+     */
     function refreshData(activityInfo, groupInfo) {
         console.log('!!! refreshData', activityInfo, groupInfo);
         const { groupOpenID, roomid, openid } = groupInfo;
@@ -158,6 +193,10 @@ module.exports = function (PIXI, app, obj) {
         console.log("!!! groupTaskDetail draw", option);
         drawRefresh(option);
     }
+    /**
+     * 更新聊天工具消息
+     * @param {any} params - 更新参数
+     */
     function updateChatToolMsg(params) {
         const { targetState, parameterList } = params;
         const templateId = ACTIVITY_TEMPLATE_ID_2; // 模版ID2
@@ -180,6 +219,9 @@ module.exports = function (PIXI, app, obj) {
             showToast("更新失败");
         });
     }
+    /**
+     * 提前终止活动
+     */
     function earlyTerminate() {
         wx.showLoading({
             title: '结束中',
@@ -190,7 +232,9 @@ module.exports = function (PIXI, app, obj) {
             targetState: 3,
         });
     }
-    // 做任务
+    /**
+     * 执行任务
+     */
     function doTask() {
         wx.showLoading({
             title: '做任务中',
@@ -230,6 +274,9 @@ module.exports = function (PIXI, app, obj) {
             showToast("做任务失败");
         });
     }
+    /**
+     * 获取活动信息
+     */
     async function fetchActivity() {
         console.log('!!! fetchActivity');
         wx.showLoading({
@@ -238,7 +285,7 @@ module.exports = function (PIXI, app, obj) {
         });
         await getGroupInfo().then((_groupInfo) => {
             groupInfo = _groupInfo;
-            const Fn = () => {
+            const selectRecord = () => {
                 wx.cloud.callFunction({
                     name: "quickstartFunctions",
                     data: {
@@ -267,7 +314,7 @@ module.exports = function (PIXI, app, obj) {
                     chatType: groupInfo.chatType,
                     success: (res) => {
                         console.log('!!! openChatTool success', res);
-                        Fn();
+                        selectRecord();
                     },
                     fail: (err) => {
                         console.error('!!! openChatTool fail: ', err);
@@ -276,10 +323,13 @@ module.exports = function (PIXI, app, obj) {
                 });
             }
             else {
-                Fn();
+                selectRecord();
             }
         });
     }
+    /**
+     * 刷新开放数据域上下文
+     */
     function refreshOpenDataContext() {
         if (!SC.sharedCanvasShowed) {
             SC.sharedCanvasShowed = true;
@@ -294,6 +344,9 @@ module.exports = function (PIXI, app, obj) {
         });
         wx.hideLoading();
     }
+    /**
+     * 销毁开放数据域上下文
+     */
     function destroyOpenDataContext() {
         SC.openDataContext.postMessage({
             event: 'close',
@@ -323,7 +376,7 @@ module.exports = function (PIXI, app, obj) {
                 drawFn();
                 break;
             case "doTask":
-                await doTask();
+                doTask();
                 break;
             case "Btn2":
                 Btn2();

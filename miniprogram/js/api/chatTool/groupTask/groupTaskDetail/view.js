@@ -342,7 +342,7 @@ export default function (PIXI, app, obj, callBack) {
         });
     }
     detailRefresh();
-    // 返回按钮 销毁开放数据域
+    // 点击返回按钮时销毁开放数据域
     goBack.callBack = clearDraw;
     container.addChild(goBack, title, api_name, underline, taskTitleText, taskDetailText, smallShareBtn, participantBox);
     app.stage.addChild(container);

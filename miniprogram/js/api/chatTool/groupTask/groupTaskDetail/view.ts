@@ -370,7 +370,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
 
   detailRefresh();
 
-  // 返回按钮 销毁开放数据域
+  // 点击返回按钮时销毁开放数据域
   goBack.callBack = clearDraw;
 
   container.addChild(
