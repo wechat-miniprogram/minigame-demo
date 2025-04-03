@@ -283,7 +283,7 @@ module.exports = function (PIXI: any, app: any, obj: any) {
         });
       }
 
-      // @ts-ignore
+      // @ts-ignore 声明未更新临时处理
       if (!wx.isChatTool()) { // 若当前不为聊天工具模式（动态卡片进入），则进入聊天工具模式
         openChatTool({
           roomid: groupInfo.roomid,

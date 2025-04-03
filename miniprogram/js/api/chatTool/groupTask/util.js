@@ -41,7 +41,6 @@ export function getGroupInfo() {
         });
     }
     return new Promise((resolve, reject) => {
-        // @ts-ignore 声明未更新临时处理
         if (!wx.getChatToolInfo) {
             showVersionTip();
             reject("微信版本过低");

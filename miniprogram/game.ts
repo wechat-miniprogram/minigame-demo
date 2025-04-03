@@ -1,3 +1,15 @@
+declare global {
+  interface Window {
+    router: {
+      navigateTo: (pathName: string, query: any, options?: any) => void;
+      navigateBack: () => void;
+      getNowPage: (callback: (page: any) => void) => void;
+    };
+    query?: any;
+  }
+  const canvas: HTMLCanvasElement;
+}
+
 import './js/libs/weapp-adapter';
 import * as PIXI from './js/libs/pixi.min';
 import pmgressBar from './js/libs/pmgressBar';
@@ -15,7 +27,6 @@ const { pixelRatio, windowWidth, windowHeight } = wx.getSystemInfoSync();
 let app = new PIXI.Application({
   width: windowWidth * pixelRatio,
   height: windowHeight * pixelRatio,
-  // @ts-ignore
   view: canvas,
   backgroundColor: 0xf6f6f6,
   preserveDrawingBuffer: true,
@@ -82,31 +93,24 @@ PIXI.loader
         share(); //全局分享
 
         if (Object.keys(query).length && query.pathName) {
-          // @ts-ignore 框架遗留
           window.router.navigateTo(query.pathName, query, options);
         }
 
         wx.onShow((res) => {
-          // @ts-ignore 框架遗留
           let query = Object.assign(window.query || {}, res.query),
             noNavigateToRequired = !['VoIPChat'].includes(query.pathName);
 
           if (Object.keys(query).length && query.pathName) {
-            // @ts-ignore 框架遗留
             noNavigateToRequired && window.router.navigateBack();
 
-            // @ts-ignore 框架遗留
             !window.query &&
               !noNavigateToRequired &&
-              // @ts-ignore 框架遗留
               window.router.navigateTo(query.pathName, query, res);
 
             noNavigateToRequired &&
-              // @ts-ignore 框架遗留
               window.router.navigateTo(query.pathName, query, res);
           }
 
-          // @ts-ignore 框架遗留
           noNavigateToRequired && (window.query = null);
         });
 

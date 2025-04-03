@@ -75,7 +75,6 @@ export default function (PIXI, app, obj, callBack) {
                 chatType,
                 success: (res) => {
                     console.log('!!! openChatTool success', res);
-                    // @ts-ignore 框架遗留
                     window.router.navigateTo("groupTaskDetail", {
                         activityId,
                     });
@@ -137,7 +136,6 @@ export default function (PIXI, app, obj, callBack) {
         callBack({
             status: "createTask",
             drawFn() {
-                // @ts-ignore 框架遗留
                 window.router.navigateTo("createGroupTask", {
                     fetchActivityList, // 创建成功后刷新任务列表
                 });
@@ -168,7 +166,6 @@ export default function (PIXI, app, obj, callBack) {
     /**** 刷新任务列表 ****/
     fetchActivityList();
     // 一定要加这个reload, 否则会报错
-    // @ts-ignore 框架遗留
     window.router.getNowPage((page) => {
         page.reload = function () {
             logo.reloadImg({ src: "images/logo.png" });
