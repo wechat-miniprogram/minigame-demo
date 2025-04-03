@@ -24,107 +24,14 @@ let key = 'rankid';
 let currentMaxScore = 0;
 let selfIndex = 0;
 
-/********* v2 *********/
-
-import getTipsXML from './render/tpls/tips.js';
-import getTipsStyle from './render/styles/tips.js';
-import getGroupTaskFriendListXML from './render/tpls/groupTaskFriendList.js';
-import getGroupTaskFriendListStyle from './render/styles/groupTaskFriendList.js';
-import { getGroupMembersInfo } from './data/index';
-
 const Layout = requirePlugin('Layout').default;
 GameGlobal.Layout = Layout;
 
 const systemInfo = wx.getSystemInfoSync();
-const { screenWidth, screenHeight, pixelRatio } = systemInfo;
+const { screenWidth, pixelRatio } = systemInfo;
 
 const sharedCanvas = wx.getSharedCanvas();
 const sharedContext = sharedCanvas.getContext('2d');
-
-function getGroupTaskBox(hasAssigned: Boolean) {
-  if (hasAssigned) {
-    return {
-      left: 0,
-      top: 50,
-      width: 343,
-      height: 329 - 50,
-      scale: (screenWidth / 375) * pixelRatio,
-    };
-  } else {
-    return {
-      left: 0,
-      top: 0,
-      width: 343,
-      height: 329,
-      scale: (screenWidth / 375) * pixelRatio,
-    };
-  }
-}
-
-// 给定 xml 和 style，渲染至 sharedCanvas
-function LayoutWithTplAndStyle(xml: any, style: any) {
-  Layout.clear();
-  Layout.init(xml, style);
-  Layout.layout(sharedContext);
-}
-
-// 仅仅渲染一些提示，比如数据加载中、当前无授权等
-function renderTips(tips = '', hasAssigned: boolean) {
-  LayoutWithTplAndStyle(
-    getTipsXML({
-      tips,
-    }),
-    getTipsStyle(getGroupTaskBox(hasAssigned)),
-  );
-}
-
-async function renderGroupTaskMembers(data: any) {
-  showLoading();
-  const memberCountList: Record<string, number> = {}; // 用于存储每个 openid 的计数
-
-  try {
-    console.log('!!! renderGroupTaskMembers openid:', data);
-    const res = await getGroupMembersInfo(data.members);
-    console.log('!!! renderGroupTaskMembers res:', res);
-
-    if (!res.groupMembers.length) {
-      renderTips('暂无参与记录', data.hasAssigned);
-      return;
-    }
-
-    if (data.renderCount) {
-      // 统计每个 openid 的出现次数
-      data.members.forEach((member: string) => {
-        if (memberCountList[member]) {
-          memberCountList[member]++;
-        } else {
-          memberCountList[member] = 1;
-        }
-      });
-
-      console.log('Member count list:', memberCountList);
-
-      res.groupMembers.forEach((member: any) => {
-        member.count = memberCountList[member.groupOpenID] || 0;
-      });
-      console.log('!!! renderGroupTaskMembers:', res.groupMembers);
-    }
-
-    LayoutWithTplAndStyle(
-      getGroupTaskFriendListXML({
-        data: res.groupMembers,
-      }),
-      getGroupTaskFriendListStyle(getGroupTaskBox(data.hasAssigned)),
-    );
-
-    // initShareEvents();
-  } catch (e) {
-    console.error('renderGroupTaskMembersInfo error', e);
-  }
-}
-
-/********* v2 *********/
-
 
 function draw(title: any, data: any = []) {
   Layout.clearAll();
@@ -304,11 +211,112 @@ function runPCHandoff() {
   });
 }
 
+// 给定 xml 和 style，渲染至 sharedCanvas
+function LayoutWithTplAndStyle(xml: any, style: any) {
+  // 清空布局
+  Layout.clear();
+  // 使用xml和style初始化布局
+  Layout.init(xml, style);
+  // 在sharedCanvas上渲染布局
+  Layout.layout(sharedContext);
+}
+
+// 仅仅渲染一些提示，比如数据加载中、当前无授权等
+function renderTips(tips = '', boxData: {
+  left: number,
+  top: number,
+  width: number,
+  height: number,
+  scale: number,
+}) {
+  LayoutWithTplAndStyle(
+    getTipsXML({
+      tips,
+    }),
+    getTipsStyle(boxData),
+  );
+}
+
+/********* 群活动 *********/
+import getTipsXML from './render/tpls/tips.js';
+import getTipsStyle from './render/styles/tips.js';
+import getGroupTaskFriendListXML from './render/tpls/groupTaskFriendList.js';
+import getGroupTaskFriendListStyle from './render/styles/groupTaskFriendList.js';
+import { getGroupMembersInfo } from './data/index';
+
+// 获取群活动成员参与信息布局
+function getGroupTaskBox(hasAssigned: Boolean) {
+  // 有指定人时
+  if (hasAssigned) {
+    return {
+      left: 0,
+      top: 50,
+      width: 343,
+      height: 329 - 50,
+      scale: (screenWidth / 375) * pixelRatio, // 设计稿屏幕宽度375
+    };
+  } else { // 无指定人时
+    return {
+      left: 0,
+      top: 0,
+      width: 343,
+      height: 329,
+      scale: (screenWidth / 375) * pixelRatio,
+    };
+  }
+}
+
+async function renderGroupTaskMembers(data: any) {
+  // 显示加载中
+  showLoading();
+  const memberCountList: Record<string, number> = {}; // 用于存储每个 openid 的计数
+  try {
+    // 开放数据域 获取群成员信息
+    const res = await getGroupMembersInfo(data.members);
+
+    // 没有参与记录时
+    if (!res.groupMembers.length) {
+      renderTips('暂无参与记录', getGroupTaskBox(data.hasAssigned));
+      return;
+    }
+
+    if (data.renderCount) {
+      // 统计每个 openid 的出现次数，用于计算每个成员参与次数
+      data.members.forEach((member: string) => {
+        if (memberCountList[member]) {
+          memberCountList[member]++;
+        } else {
+          memberCountList[member] = 1;
+        }
+      });
+
+      // 计算每个成员参与次数
+      res.groupMembers.forEach((member: any) => {
+        member.count = memberCountList[member.groupOpenID] || 0;
+      });
+    }
+
+    // 渲染群活动成员参与信息
+    LayoutWithTplAndStyle(
+      getGroupTaskFriendListXML({
+        data: res.groupMembers,
+      }),
+      getGroupTaskFriendListStyle(getGroupTaskBox(data.hasAssigned)),
+    );
+
+    // initShareEvents();
+  } catch (e) {
+    console.error('renderGroupTaskMembersInfo error', e);
+  }
+}
+/********* 群活动 *********/
+
 function init() {
   currentMaxScore = 0;
 
   wx.onMessage((data) => {
     switch (data.event) {
+      // 更新Layout视口
       case 'updateViewPort':
         Layout.updateViewPort(data.box);
         break;
@@ -337,14 +345,14 @@ function init() {
       case 'showFriendsOnlineStatus':
         showFriendsOnlineStatus();
         break;
+      // 关闭开放数据域Canvas
       case 'close':
         Layout.clearAll();
         break;
-      /********* v2 *********/
+      // 渲染群活动成员参与信息
       case 'renderGroupTaskMembersInfo':
         renderGroupTaskMembers(data);
         break;
-      /********* v2 *********/
     }
   });
 }
