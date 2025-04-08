@@ -18,7 +18,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       PIXI,
       {
         obj,
-        title: "聊天工具",
+        title: "群活动",
         api_name: "示例",
       }
     );

@@ -6,7 +6,7 @@ export default function (PIXI, app, obj, callBack) {
     };
     let container = new PIXI.Container(), { goBack, title, api_name, underline, logo, logoName } = fixedTemplate(PIXI, {
         obj,
-        title: "聊天工具",
+        title: "群活动",
         api_name: "示例",
     });
     const contentWidth = r(343);
