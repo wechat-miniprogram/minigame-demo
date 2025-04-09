@@ -16,6 +16,7 @@
           <text class="countText" value="{{= item.count || '' }}"></text>
         </view>
       {{~}}
+        <text class="participantTips" value="{{= "— " + (it.participantTips || '') + " —"}}"></text>
     </scrollview>
   </view>
 </view>
@@ -35,6 +36,6 @@ export default function anonymous(it) {
             out += ' <view class="listItem"> <image class="rankAvatar" src="' + (item.avatarUrl || '') + '"></image> <text class="rankName" value="' + (item.nickName || '微信用户') + '"></text> <text class="countText" value="' + (item.count || '') + '"></text> </view> ';
         }
     }
-    out += ' </scrollview> </view></view>';
+    out += ' <text class="participantTips" value="' + ("— " + (it.participantTips || '') + " —") + '"></text> </scrollview> </view></view>';
     return out;
 }

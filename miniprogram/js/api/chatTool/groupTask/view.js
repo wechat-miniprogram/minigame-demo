@@ -97,7 +97,7 @@ export default function (PIXI, app, obj, callBack) {
                     buttonNumber: i,
                     activityId: activityList[i].activityId || '',
                     roomid: activityList[i].roomid || '',
-                    chatType: activityList[i].chatType || 3,
+                    chatType: activityList[i].chatType || 3, // 默认为普通群聊
                     taskTitle: activityList[i].taskTitle || '示例'
                 }));
             }

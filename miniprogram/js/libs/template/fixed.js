@@ -1,5 +1,6 @@
 import { p_goBackBtn, p_line, p_text, p_img } from '../component/index';
 module.exports = function(PIXI, { obj, title, api_name, underline = true }) {
+    const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
     let goBack, logo, logoName, desc;
 
     goBack = p_goBackBtn(PIXI, 'navigateBack');
@@ -9,7 +10,8 @@ module.exports = function(PIXI, { obj, title, api_name, underline = true }) {
             content: title,
             fontSize: 36 * PIXI.ratio,
             fill: 0x353535,
-            y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
+            // y: 52 * Math.ceil(PIXI.ratio) + 22 * PIXI.ratio,
+            y: menuButtonInfo.top * PIXI.ratio * 2,
             relative_middle: { containerWidth: obj.width }
         }));
 

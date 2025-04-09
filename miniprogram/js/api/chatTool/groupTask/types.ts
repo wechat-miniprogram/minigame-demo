@@ -20,7 +20,7 @@ export interface ActivityInfo {
  */
 export interface GroupInfo {
   openid?: string; // 用户openid
-  groupOpenID?: string; // 群组openid
+  groupOpenID?: string; // 用户在群组中的openid
   roomid?: string; // 群聊ID
   chatType?: number; // 聊天类型
 }

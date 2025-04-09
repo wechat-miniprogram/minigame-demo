@@ -25,6 +25,9 @@ export default function getStyle(data: {
     list: {
       width: r(width),
       height: r(height),
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
     },
 
     listItem: {
@@ -60,6 +63,16 @@ export default function getStyle(data: {
       fontSize: r(17),
       textOverflow: 'ellipsis',
       color: '#000000',
+    },
+
+    participantTips: {
+      position: 'relative',
+      marginTop: r(16),
+      verticalAlign: 'middle',
+      fontSize: r(14),
+      textOverflow: 'ellipsis',
+      color: '#000000',
+      opacity: 0.3,
     },
   };
 }

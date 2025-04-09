@@ -9,7 +9,8 @@
 /**
 
 <view id="container">
-  <text class="tips"  value="{{= it.tips || '' }}"></text>
+  <text class="tips" value="{{= it.tips || '' }}"></text>
+  <text class="subTips" value="{{= it.subTips || '' }}"></text>
 </view>
 
 */
@@ -19,7 +20,7 @@
  * 因为小游戏不支持new Function，模板函数只能外部编译
  * 可直接拷贝本函数到小游戏中使用
  */
-export default function anonymous(it: any) {
-  const out = `<view id="container"> <text class="tips"  value="${it.tips || ''}"></text></view>`;
+export default function anonymous(it) {
+  var out = '<view id="container"> <text class="tips" value="' + (it.tips || '') + '"></text> <text class="subTips" value="' + (it.subTips || '') + '"></text></view>';
   return out;
 }

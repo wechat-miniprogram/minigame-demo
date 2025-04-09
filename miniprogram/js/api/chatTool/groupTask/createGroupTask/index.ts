@@ -95,39 +95,56 @@ module.exports = function (PIXI: any, app: any, obj: {
 
     // 获取群信息并发布任务
     getGroupInfo().then((resp: any) => {
-      wx.cloud.callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "addRecord",
-          activityId,
-          roomid: resp.roomid,
-          chatType: resp.chatType,
-          participant,
-          signIn: [],
-          isUsingSpecify,
-          isFinished: false,
-          taskTitle,
-        },
-      }).then(() => {
-        // 发布成功后分享到群聊
-        shareAppMessageToGroup({
-          activityId,
-          participant,
-          chooseType: isUsingSpecify ? 1 : 2, // 1: 指定人, 2: 所有人
-          taskTitle,
-          success: (res) => {
-            console.log("shareAppMessageToGroup success: ", res);
-            wx.hideLoading();
-            activityId = ""; // 清空活动ID
-            createActivityID(); // 创建新的活动id
-            drawFn();
+      function Fn() {
+        wx.cloud.callFunction({
+          name: "quickstartFunctions",
+          data: {
+            type: "addRecord",
+            activityId,
+            roomid: resp.roomid,
+            chatType: resp.chatType,
+            participant,
+            signIn: [],
+            isUsingSpecify,
+            isFinished: false,
+            taskTitle,
           },
-          fail: (err) => {
-            console.info("shareAppMessageToGroup fail: ", err);
-            showToast("分享失败");
-          }
+        }).then(() => {
+          // 发布成功后分享到群聊
+          shareAppMessageToGroup({
+            activityId,
+            participant,
+            chooseType: isUsingSpecify ? 1 : 2, // 1: 指定人, 2: 所有人
+            taskTitle,
+            success: (res) => {
+              console.log("shareAppMessageToGroup success: ", res);
+              wx.hideLoading();
+              activityId = ""; // 清空活动ID
+              createActivityID(); // 创建新的活动id
+              drawFn();
+            },
+            fail: (err) => {
+              console.info("shareAppMessageToGroup fail: ", err);
+              showToast("分享失败");
+            }
+          });
         });
-      });
+      }
+      if (resp.chatType === 1 && participant.length === 0) { // 单聊强制上传参与双方，以便于在开放数据域中显示
+        // @ts-ignore 声明未更新临时处理
+        wx.selectGroupMembers({
+          success: (res: any) => {
+            console.log('!!! selectGroupMembers success', res);
+            participant = res.members; // 更新参与者列表
+            Fn();
+          },
+          fail: (err: any) => {
+            console.error('!!! selectGroupMembers fail', err);
+          },
+        });
+      } else {
+        Fn();
+      }
     }).catch((err) => {
       console.error("publish fail: ", err);
       showToast("发布失败");

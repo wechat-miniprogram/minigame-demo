@@ -99,20 +99,19 @@ module.exports = function(PIXI, deploy = {}) {
             placeholder_text.visible = !current_text;
             // 更新content_text位置
             updateTextPosition(content_text);
+            this.onInput && this.onInput(current_text);
         };
 
-        const handleKeyboardConfirm = (res) => {
-            current_text = res.value;
-            content_text.text = current_text;
-            placeholder_text.visible = !current_text;
-            // 更新content_text位置
-            updateTextPosition(content_text);
-            wx.hideKeyboard();
-            this.onConfirm && this.onConfirm(current_text);
+        const handleKeyboardComplete = (res) => {
+            this.onComplete && this.onComplete(current_text);
         };
 
         // 绑定点击事件
-        this.onConfirmFn = function(callBack) {
+        this.initFn = function(data) {
+            const {
+                onComplete,
+                onInput,
+            } = data;
             container.interactive = true;
             container.touchstart = e => {
                 // 先显示键盘
@@ -125,7 +124,7 @@ module.exports = function(PIXI, deploy = {}) {
                     success: () => {
                         // 键盘显示成功后再绑定事件监听
                         wx.onKeyboardInput(handleKeyboardInput);
-                        wx.onKeyboardConfirm(handleKeyboardConfirm);
+                        wx.onKeyboardComplete(handleKeyboardComplete);
                         this.onFocus && this.onFocus();
                     },
                     fail: (err) => {
@@ -140,13 +139,13 @@ module.exports = function(PIXI, deploy = {}) {
             };
 
             // 保存回调
-            this.onConfirm = callBack;
+            this.onComplete = onComplete;
+            this.onInput = onInput;
         };
 
         // 清理事件监听
         const cleanup = () => {
             wx.offKeyboardInput(handleKeyboardInput);
-            wx.offKeyboardConfirm(handleKeyboardConfirm);
             wx.offKeyboardComplete();
         };
 

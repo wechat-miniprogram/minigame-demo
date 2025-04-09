@@ -57,7 +57,7 @@ module.exports = function (PIXI, app, obj) {
         width: 343,
         height: 329,
         x: 16,
-        y: 231,
+        y: 187,
         pixelRatio,
         scale: screenWidth / 375, // 相对于设计稿的缩放比例
     });
@@ -339,8 +339,11 @@ module.exports = function (PIXI, app, obj) {
         SC.openDataContext.postMessage({
             event: 'renderGroupTaskMembersInfo',
             members: isParticipated ? signIn : notSignIn,
-            renderCount: isParticipated,
-            hasAssigned: activityInfo.isUsingSpecify,
+            isRenderCount: isParticipated,
+            isUsingSpecify: activityInfo.isUsingSpecify,
+            chatType: groupInfo.chatType, // 聊天类型 1：单聊，3：群聊
+            roomid: groupInfo.roomid, // 群聊/单聊唯一标识
+            participant: participant, // 仅单聊使用，所有参与者列表
         });
         wx.hideLoading();
     }

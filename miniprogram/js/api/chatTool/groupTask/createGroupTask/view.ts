@@ -48,13 +48,14 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       color: "rgba(0,0,0,0.3)",
     },
   });
-  taskTitleInput.onConfirmFn((text: string) => {
+  const taskTitleInputCompleteFn = (text: string) => {
     refreshPublishBtn(text);
     callBack({
       status: 'titleChange',
       text,
     });
-  });
+  };
+  taskTitleInput.initFn({ onComplete: taskTitleInputCompleteFn });
 
   function refreshPublishBtn(btnText: string) {
     console.log('活动名：', btnText);

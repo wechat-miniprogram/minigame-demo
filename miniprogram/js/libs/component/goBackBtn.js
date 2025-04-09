@@ -1,11 +1,12 @@
 import line from './line';
 module.exports = function(PIXI, type, callBack) {
     function GoBackBtn() {
+        const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
         this.beginFill(0xffffff, 0)
             .drawRoundedRect(0, 0, 80 * PIXI.ratio, 80 * PIXI.ratio, 0)
             .endFill();
-        this.position.set(0, 52 * Math.ceil(PIXI.ratio));
-
+        // this.position.set(0, 52 * Math.ceil(PIXI.ratio));
+        this.position.set(0, menuButtonInfo.top * PIXI.ratio * 2 - 22 * PIXI.ratio); // 根据menuButtonInfo计算位置
         this.addChild(
             line(
                 PIXI,

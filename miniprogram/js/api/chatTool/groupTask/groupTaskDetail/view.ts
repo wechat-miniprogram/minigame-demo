@@ -30,7 +30,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   let taskTitleText = p_text(PIXI, {
     content: "加入boss战，累积打5次",
     x: r(16),
-    y: r(155),
+    y: r(115),
     fontSize: r(17),
     fill: 0x000000,
     align: "center",
@@ -39,17 +39,17 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   let taskDetailText = p_text(PIXI, {
     content: "0人参与，进度0/5",
     x: r(16),
-    y: r(181),
+    y: r(143),
     fontSize: r(14),
     fill: "rgba(0,0,0,0.7)",
     align: "center",
   });
   // 结束任务
   let endTaskBtn = p_button(PIXI, {
+    x: r(149),
+    y: r(143),
     width: r(56),
     height: r(20),
-    x: r(149),
-    y: r(181),
     alpha: 0,
   });
   let endTaskBtnText = p_text(PIXI, {
@@ -66,10 +66,10 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   });
   // 分享按钮
   let smallShareBtn = p_button(PIXI, {
+    x: r(335),
+    y: r(115),
     width: r(24),
     height: r(24),
-    x: r(335),
-    y: r(155),
     alpha: 0,
   });
   let shareBtnImg = p_img(PIXI, {
@@ -87,16 +87,16 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
 
   /**** participant ****/
   let participantBox = p_box(PIXI, {
+    x: r(16),
+    y: r(187),
     width: contentWidth,
     height: r(329),
-    x: r(16),
-    y: r(231),
   });
   // 已参与按钮
   let participatedBtn = p_button(PIXI, {
+    x: 0,
     width: r(170),
     height: r(46),
-    x: 0,
     alpha: 0,
   });
   let participatedBtnText = p_text(PIXI, {
@@ -175,11 +175,11 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   /**** Buttons ****/
   // 做任务
   let doTaskBtn = p_button(PIXI, {
+    y: r(543),
     width: r(196),
     height: r(48),
     color: 0x07c160,
     radius: r(4),
-    y: r(588),
   });
   let doTaskBtnText = p_text(PIXI, {
     content: "做任务",
@@ -199,6 +199,7 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   });
   // 任务已完成/已结束/未参与任务
   let taskFinishedBox = p_box(PIXI, {
+    y: r(543),
     width: r(196),
     height: r(48),
     background: {
@@ -206,7 +207,6 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
       alpha: 0.3,
     },
     radius: r(4),
-    y: r(588),
   });
   let taskFinishedBoxText = p_text(PIXI, {
     content: "任务已完成",
@@ -221,12 +221,12 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   taskFinishedBox.addChild(taskFinishedBoxText);
   // 提醒未参与的人/分享结果/分享进度
   let Btn2 = p_button(PIXI, {
+    y: r(603),
     width: r(196),
     height: r(48),
     color: 0x000000,
     alpha: 0.05,
     radius: r(4),
-    y: r(648),
   });
   let Btn2Text = p_text(PIXI, {
     content: "提醒未参与的人",
@@ -246,12 +246,12 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   });
   // 分享进度
   let shareBtn = p_button(PIXI, {
+    y: r(663),
     width: r(196),
     height: r(48),
     color: 0x000000,
     alpha: 0.05,
     radius: r(4),
-    y: r(708),
   });
   let shareBtnText = p_text(PIXI, {
     content: "分享进度",
@@ -376,8 +376,8 @@ export default function (PIXI: any, app: any, obj: any, callBack: (data: any) =>
   container.addChild(
     goBack,
     title,
-    api_name,
-    underline,
+    // api_name,
+    // underline,
     taskTitleText,
     taskDetailText,
     smallShareBtn,

@@ -222,7 +222,7 @@ function LayoutWithTplAndStyle(xml: any, style: any) {
 }
 
 // 仅仅渲染一些提示，比如数据加载中、当前无授权等
-function renderTips(tips = '', boxData: {
+function renderTips(tips = '', subTips = '', boxData: {
   left: number,
   top: number,
   width: number,
@@ -232,6 +232,7 @@ function renderTips(tips = '', boxData: {
   LayoutWithTplAndStyle(
     getTipsXML({
       tips,
+      subTips,
     }),
     getTipsStyle(boxData),
   );
@@ -266,45 +267,96 @@ function getGroupTaskBox(hasAssigned: Boolean) {
   }
 }
 
-async function renderGroupTaskMembers(data: any) {
+async function renderGroupTaskMembers(data: {
+  event: string,
+  members: string[],
+  isRenderCount: boolean,
+  isUsingSpecify: boolean,
+  chatType: number,
+  roomid: string,
+  participant: string[],
+}) {
+  console.log("!!! renderGroupTaskMembers: ", data);
   // 显示加载中
   showLoading();
   const memberCountList: Record<string, number> = {}; // 用于存储每个 openid 的计数
   try {
     // 开放数据域 获取群成员信息
-    const res = await getGroupMembersInfo(data.members);
+    const groupMembersInfo = await getGroupMembersInfo(data.members);
 
-    // 没有参与记录时
-    if (!res.groupMembers.length) {
-      renderTips('暂无参与记录', getGroupTaskBox(data.hasAssigned));
-      return;
+    // 单聊用
+    let participantInfo: any;
+    // 群聊用
+    let groupInfo: any;
+
+    function Fn() {
+      // 参与人提示信息
+      let participantTips;
+      if (data.chatType === 1) {
+        participantTips = data.participant.length === 2 // 旧版本单聊上传的数据participant可能为[]
+          ? `仅${participantInfo.groupMembers[0].nickName}、${participantInfo.groupMembers[1].nickName}可参与`
+          : '';
+      } else {
+        participantTips = data.isUsingSpecify
+          ? `仅${groupInfo.name}群指定成员可参与`
+          : `仅${groupInfo.name}群成员可参与`;
+      }
+
+      // 没有参与记录时
+      if (!groupMembersInfo.groupMembers.length) {
+        renderTips(
+          '暂无记录',
+          participantTips,
+          getGroupTaskBox(data.isUsingSpecify)
+        );
+        return;
+      }
+
+      if (data.isRenderCount) {
+        // 统计每个 openid 的出现次数，用于计算每个成员参与次数
+        data.members.forEach((member: string) => {
+          if (memberCountList[member]) {
+            memberCountList[member]++;
+          } else {
+            memberCountList[member] = 1;
+          }
+        });
+
+        // 计算每个成员参与次数
+        groupMembersInfo.groupMembers.forEach((member: any) => {
+          member.count = memberCountList[member.groupOpenID] || 0;
+        });
+      }
+
+      // 渲染群活动成员参与信息
+      LayoutWithTplAndStyle(
+        getGroupTaskFriendListXML({
+          data: groupMembersInfo.groupMembers,
+          participantTips,
+        }),
+        getGroupTaskFriendListStyle(getGroupTaskBox(data.isUsingSpecify)),
+      );
     }
 
-    if (data.renderCount) {
-      // 统计每个 openid 的出现次数，用于计算每个成员参与次数
-      data.members.forEach((member: string) => {
-        if (memberCountList[member]) {
-          memberCountList[member]++;
-        } else {
-          memberCountList[member] = 1;
-        }
-      });
-
-      // 计算每个成员参与次数
-      res.groupMembers.forEach((member: any) => {
-        member.count = memberCountList[member.groupOpenID] || 0;
+    // 单聊首先获取参与成员信息
+    if (data.chatType === 1) {
+      participantInfo = await getGroupMembersInfo(data.participant);
+      console.log("!!! participantInfo: ", participantInfo);
+      Fn();
+    } else { // 群聊首先获取群名称
+      // 开放数据域 获取群名称
+      wx.getGroupInfo({
+        openGId: data.roomid,
+        success: (res) => {
+          console.log("!!! groupName: ", res);
+          groupInfo = res;
+          Fn();
+        },
+        fail: (err) => {
+          console.error("!!! getGroupInfo error: ", err);
+        },
       });
     }
-
-    // 渲染群活动成员参与信息
-    LayoutWithTplAndStyle(
-      getGroupTaskFriendListXML({
-        data: res.groupMembers,
-      }),
-      getGroupTaskFriendListStyle(getGroupTaskBox(data.hasAssigned)),
-    );
-
-    // initShareEvents();
   } catch (e) {
     console.error('renderGroupTaskMembersInfo error', e);
   }

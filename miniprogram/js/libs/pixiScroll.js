@@ -238,17 +238,22 @@ function pixiScroll(PIXI, app, property) {
         sc.scrollContainer.addChild(this.po);
     }
 
+    const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
+
     function Title() {
         this.box = new PIXI.Graphics();
         this.box
             .beginFill(0, 0)
-            .drawRect(0, 0, property.width, 135 * (property.height / 1334))
+            // .drawRect(0, 0, property.width, 135 * (property.height / 1334))
+            .drawRect(0, 0, property.width, menuButtonInfo.top * PIXI.ratio / 3 * 4 * 2) // 根据menuButtonInfo计算高度
             .endFill();
         this.text = new PIXI.Text('小游戏示例', {
             fontSize: `${36 * PIXI.ratio}px`,
             fill: 0x353535,
         });
-        this.text.position.set((property.width - this.text.width) / 2, 52 * Math.ceil(PIXI.ratio) + 15 * PIXI.ratio);
+        // this.text.position.set((property.width - this.text.width) / 2, 52 * Math.ceil(PIXI.ratio) + 15 * PIXI.ratio);
+        console.log("!!! menuButtonInfo: ", menuButtonInfo)
+        this.text.position.set((property.width - this.text.width) / 2, menuButtonInfo.top * PIXI.ratio * 2); // 根据menuButtonInfo计算位置
         this.box.addChild(this.text);
     }
 
