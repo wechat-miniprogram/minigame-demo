@@ -285,9 +285,9 @@ async function renderGroupTaskMembers(data: {
     const groupMembersInfo = await getGroupMembersInfo(data.members);
 
     // 单聊用
-    let participantInfo: any;
+    let participantInfo: any = {};
     // 群聊用
-    let groupInfo: any;
+    let groupInfo: any = {};
 
     function Fn() {
       // 参与人提示信息
@@ -348,12 +348,19 @@ async function renderGroupTaskMembers(data: {
       wx.getGroupInfo({
         openGId: data.roomid,
         success: (res) => {
-          console.log("!!! groupName: ", res);
+          console.log("!!! getGroupInfo success: ", res);
           groupInfo = res;
           Fn();
         },
-        fail: (err) => {
+        fail: (err: any) => {
           console.error("!!! getGroupInfo error: ", err);
+          if (err.err_code === -12006) { // 未授权
+            wx.showToast({
+              title: '未授权',
+              icon: 'none',
+            });
+            Fn();
+          }
         },
       });
     }
