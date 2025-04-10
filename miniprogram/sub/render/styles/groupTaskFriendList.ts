@@ -68,6 +68,7 @@ export default function getStyle(data: {
     participantTips: {
       position: 'relative',
       marginTop: r(16),
+      height: r(20),
       verticalAlign: 'middle',
       fontSize: r(14),
       textOverflow: 'ellipsis',

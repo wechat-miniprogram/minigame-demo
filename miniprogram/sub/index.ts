@@ -356,7 +356,7 @@ async function renderGroupTaskMembers(data: {
           console.error("!!! getGroupInfo error: ", err);
           if (err.err_code === -12006) { // 未授权
             wx.showToast({
-              title: '未授权',
+              title: 'getGroupInfo未授权',
               icon: 'none',
             });
             Fn();
