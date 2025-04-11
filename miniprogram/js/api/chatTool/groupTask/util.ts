@@ -172,7 +172,7 @@ export function shareAppMessageToGroup(option: shareAppMessageToGroupOption) {
       // 该接口需在聊天工具模式下才可使用
       // @ts-ignore 声明未更新临时处理
       wx.shareAppMessageToGroup({
-        title: taskTitle,
+        title: '快来参加' + taskTitle + '活动',
         imageUrl: GROUP_TASK_SHARE_APP_MESSAGE_IMAGE_URL,
         path: getGroupTaskDetailPath(activityId),
         success,
