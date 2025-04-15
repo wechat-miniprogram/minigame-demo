@@ -15,9 +15,10 @@ const systemInfo = wx.getSystemInfoSync();
 const { screenWidth, pixelRatio } = systemInfo;
 const sharedCanvas = wx.getSharedCanvas();
 const sharedContext = sharedCanvas.getContext('2d');
-function draw(title, data = []) {
+function draw(title, data = [], type) {
     Layout.clearAll();
-    let isBillboard = typeof arguments[arguments.length - 1] !== 'string', template = tplFn({
+    const isBillboard = !type;
+    const template = tplFn({
         title: isBillboard ? title : null,
         data,
         self: selfData,
@@ -58,7 +59,7 @@ function renderData(data, info, title = '排行榜', mock = false, type) {
             data[i].nickname = 'mock__user';
         }
     }
-    draw(title, data);
+    draw(title, data, type);
     // 关系链互动
     type === 'interaction' && interactive(data, selfData);
 }
@@ -106,10 +107,10 @@ function showFriendRank(type) {
 function showPotentialFriendList() {
     wx.getPotentialFriendList({
         success(res) {
-            // res.list.potential = true; // 声明里没有 暂时注释了
+            res.list.potential = true; // 一定要加，否则定向分享无法正常显示
             res.list.length > 4 && res.list.pop();
             // 定向分享
-            draw('', res.list);
+            draw('', res.list, 'directional');
             directional(res.list);
             refreshDirected(showPotentialFriendList);
         },
