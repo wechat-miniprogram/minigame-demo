@@ -107,6 +107,7 @@ function showFriendRank(type) {
 function showPotentialFriendList() {
     wx.getPotentialFriendList({
         success(res) {
+            // @ts-ignore
             res.list.potential = true; // 一定要加，否则定向分享无法正常显示
             res.list.length > 4 && res.list.pop();
             // 定向分享
