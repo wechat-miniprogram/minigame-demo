@@ -27,10 +27,12 @@ export default function getStyle(data: {
       verticalAlign: 'middle',
     },
     subTips: {
-      margin: r(3),
+      margin: r(5),
+      marginTop: r(16),
       color: '#a9a9a9',
       fontSize: r(16),
       textAlign: 'center',
+      width: r(width),
       verticalAlign: 'middle',
     },
   };

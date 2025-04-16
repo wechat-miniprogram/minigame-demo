@@ -66,12 +66,14 @@ export default function getStyle(data: {
     },
 
     participantTips: {
+      width: r(width),
+      whiteSpace: 'normal',
       position: 'relative',
       marginTop: r(16),
-      height: r(20),
+      height: r(50),
       verticalAlign: 'middle',
+      textAlign: 'center',
       fontSize: r(14),
-      textOverflow: 'ellipsis',
       color: '#000000',
       opacity: 0.3,
     },

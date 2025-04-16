@@ -239,17 +239,19 @@ async function renderGroupTaskMembers(data) {
             let participantTips;
             if (data.chatType === 1) {
                 participantTips = data.participant.length === 2 // 旧版本单聊上传的数据participant可能为[]
-                    ? `仅${participantInfo.groupMembers[0].nickName}、${participantInfo.groupMembers[1].nickName}可参与`
+                    ? `仅「${participantInfo.groupMembers[0].nickName}、${participantInfo.groupMembers[1].nickName}」可参与`
                     : '';
             }
             else {
                 participantTips = data.isUsingSpecify
-                    ? `仅${groupInfo.name}群指定成员可参与`
-                    : `仅${groupInfo.name}群成员可参与`;
+                    ? `仅「${groupInfo.name}」群指定成员可参与`
+                    : `仅「${groupInfo.name}」群成员可参与`;
             }
             // 没有参与记录时
             if (!groupMembersInfo.groupMembers.length) {
                 renderTips('暂无记录', participantTips, getGroupTaskBox(data.isUsingSpecify));
+                const ele = Layout.getElementsByClassName('participantTips')[0];
+                console.log(ele);
                 return;
             }
             if (data.isRenderCount) {

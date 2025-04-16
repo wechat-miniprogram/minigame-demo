@@ -16,7 +16,7 @@
           <text class="countText" value="{{= item.count || '' }}"></text>
         </view>
       {{~}}
-        <text class="participantTips" value="{{= "— " + (it.participantTips || '') + " —"}}"></text>
+        <text class="participantTips" value="{{= it.participantTips || ''}}"></text>
     </scrollview>
   </view>
 </view>
@@ -26,8 +26,8 @@
  * 因为小游戏不支持new Function，模板函数只能外部编译
  * 可直接拷贝本函数到小游戏中使用
  */
-export default function anonymous(it) {
-    var out = '<view class="container" id="main"> <view class="rankList"> <scrollview class="list" scrollY="true"> ';
+export default function tplFunc(it) {
+    var out = ' <view class="container" id="main"> <view class="rankList"> <scrollview class="list" scrollY="true"> ';
     var arr1 = it.data;
     if (arr1) {
         var item, index = -1, l1 = arr1.length - 1;
@@ -36,6 +36,6 @@ export default function anonymous(it) {
             out += ' <view class="listItem"> <image class="rankAvatar" src="' + (item.avatarUrl || '') + '"></image> <text class="rankName" value="' + (item.nickName || '微信用户') + '"></text> <text class="countText" value="' + (item.count || '') + '"></text> </view> ';
         }
     }
-    out += ' <text class="participantTips" value="' + ("— " + (it.participantTips || '') + " —") + '"></text> </scrollview> </view></view>';
+    out += ' <text class="participantTips" value="' + (it.participantTips || '') + '"></text> </scrollview> </view></view>';
     return out;
 }
