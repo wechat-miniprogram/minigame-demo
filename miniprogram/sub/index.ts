@@ -46,7 +46,6 @@ function draw(title: any, data: any = [], type?: string) {
     selfIndex,
     isBillboard,
   });
-
   Layout.init(template, style);
   Layout.layout(sharedContext);
 }
@@ -75,14 +74,14 @@ function renderData(data: any, info: any, title = '排行榜', mock = false, typ
   }
 
   // mock
-  if (mock) {
-    for (let i = data.length; i < 20; i++) {
-      data[i] = JSON.parse(JSON.stringify(selfData));
-      data[i].rank = i;
-      data[i].score = 0;
-      data[i].nickname = 'mock__user';
-    }
-  }
+  // if (true) {
+  //   for (let i = 0; i < 5; i++) {
+  //     data[i] = JSON.parse(JSON.stringify(selfData));
+  //     data[i].rank = i;
+  //     data[i].score = 0;
+  //     data[i].nickname = '这是一个很长很长很长的昵称，试试会不会换行';
+  //   }
+  // }
 
   draw(title, data, type);
 

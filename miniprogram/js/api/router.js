@@ -405,27 +405,6 @@ const signIn = [
         ],
       },
       {
-        label: '推荐组件',
-        name: 'recommend',
-        children: [
-          {
-            label: '小游戏推荐banner',
-            name: 'createGameBanner',
-            path: 'recommend/createGameBanner/index',
-          },
-          {
-            label: '小游戏推荐弹窗',
-            name: 'createGamePortal',
-            path: 'recommend/createGamePortal/index',
-          },
-          {
-            label: '小游戏推荐icon',
-            name: 'createGameIcon',
-            path: 'recommend/createGameIcon/index',
-          },
-        ],
-      },
-      {
         label: 'VisionKit视觉能力',
         name: 'visionkit-ability',
         children: [

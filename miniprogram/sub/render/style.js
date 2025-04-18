@@ -179,7 +179,7 @@ export default {
         marginLeft : 10,
         height: 150,
         lineHeight: 150,
-        width: 300,
+        width: 100,
         textAlign: 'right',
     },
 
@@ -194,9 +194,9 @@ export default {
     listItemName:{
         fontSize: 36,
         height: 150,
-        lineHeight: 150,
-        width: 350,
+        width: 550,
         marginLeft: 30,
+        verticalAlign: 'middle'
     },
 
     name: {

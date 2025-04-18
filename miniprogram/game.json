@@ -34,7 +34,7 @@
     "navigateToMiniProgramAppIdList": ["wx4f4a4549a1069d03"],
     "plugins":{
         "Layout": {
-          "version": "dev-a31e53999cdb6f3379fa55f18c9d27ba",
+          "version": "dev-09e1d448085b898dd886ffa73ad5b09c",
           "provider": "wx7a727ff7d940bb3f",
           "contexts":[{"type":"openDataContext"}]
         }
