@@ -25,6 +25,7 @@ function draw(title, data = [], type) {
         selfIndex,
         isBillboard,
     });
+    // console.log('template', template)
     Layout.init(template, style);
     Layout.layout(sharedContext);
 }

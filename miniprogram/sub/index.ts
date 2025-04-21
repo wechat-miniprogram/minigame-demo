@@ -46,6 +46,8 @@ function draw(title: any, data: any = [], type?: string) {
     selfIndex,
     isBillboard,
   });
+
+  // console.log('template', template)
   Layout.init(template, style);
   Layout.layout(sharedContext);
 }

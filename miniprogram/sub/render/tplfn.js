@@ -197,7 +197,7 @@ export default function tplFunc(it) {
         }
         out += ' ';
         if (!it.isBillboard) {
-          out += ' <image class="listHeadImg headImg" src="' + (item.avatarUrl) + '"></image> <text class="listItemName name" value="' + (item.nickname.length > 10 ? item.nickname.slice(0, 10) + '...' : item.nickname) + '"></text> <view class="itemButton"> <text class="itemButtonText" value="                       ';
+          out += ' <image class="listHeadImg headImg" src="' + (item.avatarUrl) + '"></image> <text class="listItemName name" value="' + (item.nickname) + '"></text> <view class="itemButton"> <text class="itemButtonText" value="                       ';
           if (!it.data.potential) {
             out += '送金币';
           }
@@ -214,7 +214,7 @@ export default function tplFunc(it) {
     if (it.isBillboard) {
       out += ' <text class="listTips" value="仅展示' + (it.data.onLine ? '20位好友的在线状态' : '前20位好友排名') + '"></text>';
       if (!it.data.onLine) {
-        out += '<view class="listItem selfListItem"><text class="listItemNum" value="' + (it.selfIndex) + '"></text><image class="listHeadImg" src="' + (it.self.avatarUrl) + '"></image><text class="listItemName" value="' + (it.self.nickname.length > 10 ? it.self.nickname.slice(0, 10) + '...' : it.self.nickname) + '"></text><text class="listItemScore" value="' + (it.self.score) + '"></text><text class="listScoreUnit" value="分"></text></view>';
+        out += '<view class="listItem selfListItem"><text class="listItemNum" value="' + (it.selfIndex) + '"></text><image class="listHeadImg" src="' + (it.self.avatarUrl) + '"></image><text class="listItemName" value="' + (it.self.nickname) + '"></text><text class="listItemScore" value="' + (it.self.score) + '"></text><text class="listScoreUnit" value="分"></text></view>';
       }
       out += ' ';
     }
