@@ -287,6 +287,11 @@ const signIn = [
                         name: 'camera',
                         path: 'media/camera/index',
                     },
+                    {
+                        label: '视频解码器',
+                        name: 'videoDecoder',
+                        path: 'media/videoDecoder/index',
+                    }
                 ],
             },
             {
