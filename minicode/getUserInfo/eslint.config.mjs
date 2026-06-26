@@ -1,36 +1,51 @@
-module.exports = {
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    project: 'tsconfig.json',
-    tsconfigRootDir: __dirname,
-    sourceType: 'module',
-  },
-  plugins: ['@typescript-eslint/eslint-plugin'],
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
-  ],
-  root: true,
-  env: {
-    node: true,
-    jest: true,
-  },
-  ignorePatterns: ['.eslintrc.js'],
-  rules: {
-    curly: 'error', // 大括号约定
-    'no-plusplus': 'off', // 允许++
-    'no-undef': 'off', // eslint和ts冲突
-    'no-empty': 'off',
-    'no-debugger': 'error', // 禁用debugger
-    'no-param-reassign': 'off', // 允许在for循环内直接操作对象
-    '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-require-imports': ['off'], // 忽略no-require-imports规则
-    '@typescript-eslint/prefer-optional-chain': 'off', // 忽略prefer-optional-chain规则
-    '@typescript-eslint/no-explicit-any': 'error', // 允许any
-    '@typescript-eslint/no-empty-function': 'off', // 允许有空函数
-    'max-len': [
+import path from "path";
+import { fileURLToPath } from "url";
+import typescriptParser from "@typescript-eslint/parser";
+import globals from "globals";
+import { defineConfig, globalIgnores } from "@eslint/config-helpers";
+import { FlatCompat } from "@eslint/eslintrc";
+import { fixupConfigRules } from "@eslint/compat";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+  const compat = new FlatCompat({
+    baseDirectory: __dirname,
+  });
+export default defineConfig([
+  globalIgnores(["node_modules","dist",'.eslintrc.js']),
+  {
+    extends: fixupConfigRules(compat.extends(
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended"
+    )),
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.jest
+      },
+      sourceType: 'module',
+      parser: typescriptParser,
+      parserOptions: {
+        project: 'tsconfig.json',
+        tsconfigRootDir: __dirname
+      }
+    },
+    rules: {
+      curly: 'error',
+      "no-plusplus": 'off',
+      "no-undef": 'off',
+      "no-empty": 'off',
+      "no-debugger": 'error',
+      "no-param-reassign": 'off',
+      "@typescript-eslint/interface-name-prefix": 'off',
+      "@typescript-eslint/explicit-function-return-type": 'off',
+      "@typescript-eslint/explicit-module-boundary-types": 'off',
+      "@typescript-eslint/no-require-imports": ['off'],
+      "@typescript-eslint/prefer-optional-chain": 'off',
+      "@typescript-eslint/no-explicit-any": 'error',
+      "@typescript-eslint/no-empty-function": 'off',
+      "max-len": [
       'error',
       {
         code: 120,
@@ -40,8 +55,7 @@ module.exports = {
         ignoreRegExpLiterals: true, // 忽略正则
       },
     ],
-    // 命名规范
-    '@typescript-eslint/naming-convention': [
+      "@typescript-eslint/naming-convention": [
       'error',
       // 函数可以使用驼峰
       // FIXME: #197 为了兼容 React 函数组件允许使用 PascalCase，但在未来 React 规则推出后将删除
@@ -94,11 +108,10 @@ module.exports = {
         format: ['camelCase', 'snake_case'],
       },
     ],
-    'implicit-arrow-linebreak': 0,
-    'operator-linebreak': 0,
-
-    // await相关
-    "require-await": "error",
-    "no-return-await": "error",
-  },
-};
+      "implicit-arrow-linebreak": 0,
+      "operator-linebreak": 0,
+      "require-await": "error",
+      "no-return-await": "error"
+    },
+  }
+]);
