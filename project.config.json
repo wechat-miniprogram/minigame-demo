@@ -35,20 +35,26 @@
     "minifyWXSS": true,
     "disableUseStrict": false,
     "showES6CompileOption": false,
-    "useCompilerPlugins": false
+    "useCompilerPlugins": false,
+    "compileWorklet": false,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "compileType": "game",
-  "libVersion": "2.21.0",
+  "libVersion": "3.15.2",
   "appid": "wx20afc706a711eefc",
   "projectname": "miniGameExample",
-  "miniprogramRoot": "miniprogram/",
+  "miniprogramRoot": "dist/",
   "cloudfunctionRoot": "cloudfunction/",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
   "jsserverRoot": "jsserver/",
   "condition": {},
-  "srcMiniprogramRoot": "miniprogram/",
+  "srcMiniprogramRoot": "minigame/",
   "packOptions": {
     "ignore": [],
     "include": []
@@ -56,5 +62,6 @@
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  }
+  },
+  "isGameTourist": false
 }

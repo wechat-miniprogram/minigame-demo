@@ -1,4 +1,12 @@
 .DS_Store
-.vscode/c_cpp_properties.json
+.vscode/
+.wechatide/
 node_modules/
-package-lock.json
+
+# 构建产物
+dist/
+*.tsbuildinfo
+*.log
+
+# CodeBuddy IDE 本地数据
+.codebuddy/

@@ -1,26 +1,28 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
   env: {
     browser: true,
-    es6: true,
+    es2020: true,
   },
-  extends: ['eslint:recommended', 'plugin:prettier/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+  ],
   globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
     wx: 'readonly',
     canvas: 'readonly',
-    require: 'readonly',
-    module: 'readonly',
     worker: 'readonly',
-    exports: 'readonly',
     GameGlobal: 'readonly',
     requirePlugin: 'readonly',
   },
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: 'module',
   },
   rules: {
-    'prettier/prettier': 'error', // 确保Prettier的规则被ESLint检查
+    'prettier/prettier': 'error',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
   },
 };

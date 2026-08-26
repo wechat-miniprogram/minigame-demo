@@ -1,4 +1,5 @@
 node_modules
 dist
-libs
-*.js
+minigame/js/vendor
+cloudfunction
+jsserver

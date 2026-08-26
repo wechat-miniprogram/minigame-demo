@@ -1,0 +1,9 @@
+{
+  "name": "genDemoQRCodes",
+  "version": "1.0.0",
+  "description": "批量生成示例小程序码并上传到云存储",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

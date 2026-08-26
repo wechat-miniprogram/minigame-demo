@@ -4,6 +4,7 @@ const createCollection = require('./createCollection/index');
 const fetchGoodsList = require('./fetchGoodsList/index');
 const genMpQrcode = require('./genMpQrcode/index');
 const getGroupEnterInfo = require('./getGroupEnterInfo/index')
+const getWeRunData = require('./getWeRunData/index')
 const addRecord = require('./addRecord')
 const selectRecord = require('./selectRecord/index');
 const signIn = require('./signIn/index');
@@ -28,6 +29,8 @@ exports.main = async (event, context) => {
       return await genMpQrcode.main(event, context);
     case 'getGroupEnterInfo':
       return await getGroupEnterInfo.main(event, context);
+    case 'getWeRunData':
+      return await getWeRunData.main(event, context);
     case 'addRecord': 
       return await addRecord.main(event, context)
     case 'fetchActivityList':

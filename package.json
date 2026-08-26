@@ -1,6 +1,11 @@
 {
+  "name": "minigame-demo",
+  "version": "1.0.0",
+  "description": "微信小游戏官方 API 示例项目",
+  "license": "MIT",
+  "showStatusBar": true,
   "scripts": {
-    "build": "tsc",
+    "build": "node scripts/build.js",
     "watch": "tsc -w",
     "lint": "eslint \"**/*.ts\" --fix"
   },
